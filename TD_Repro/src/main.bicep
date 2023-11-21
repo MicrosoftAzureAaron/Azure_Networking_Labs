@@ -25,9 +25,12 @@ param acceleratedNetworking bool = true
 
 param scenario_Name string
 
-// param storageAccount_ID string
+@description('Number of Client Virtual Machines to be used as the source of the traffic')
+param numberOfClientVMs int
 
+@description('Number of Server Virtual Machines to be used as the destination of the traffic')
 param numberOfServerVMs int
+
 
 // param usingAzureFirewall bool = true
 
@@ -69,26 +72,24 @@ module clientToServerPeering '../../modules/Microsoft.Network/VirtualNetworkPeer
   }
 }
 
-module clientVM_Linux '../../modules/Microsoft.Compute/Ubuntu20/VirtualMachine.bicep' = {
-  name: 'clientVM'
+module clientVM_Linux '../../modules/Microsoft.Compute/Ubuntu20/VirtualMachine.bicep' = [ for i in range(0, numberOfClientVMs):  {
+  name: 'clientVM${i}'
   params: {
     acceleratedNetworking: acceleratedNetworking
     location: locationClient
     subnet_ID: virtualNetwork_Client.outputs.general_SubnetID
     virtualMachine_AdminPassword: virtualMachine_adminPassword
     virtualMachine_AdminUsername: virtualMachine_adminUsername
-    virtualMachine_Name: 'clientVM-Linux'
+    virtualMachine_Name: 'ClientVM${i}'
     virtualMachine_Size: virtualMachine_Size
     virtualMachine_ScriptFileLocation: 'https://raw.githubusercontent.com/jimgodden/Azure_Networking_Labs/main/scripts/'
     virtualMachine_ScriptFileName: 'conntestClient.sh'
     commandToExecute: './conntestClient.sh ${privateEndpoint_NIC.outputs.privateEndpoint_IPAddress} ${scenario_Name} ${storageAccount.outputs.storageAccount_Name} ${storageAccount.outputs.storageAccountFileShare_Name} ${storageAccount.outputs.storageAccount_key0}'
   }
   dependsOn: [
-    // filesharePrivateEndpoints
-    // blobPrivateEndpoints
     storageAccount
   ]
-}
+} ]
 
 module ServerVM_Linux '../../modules/Microsoft.Compute/Ubuntu20/VirtualMachine.bicep' = [ for i in range(0, numberOfServerVMs): {
   name: 'serverVM${i}'
@@ -105,8 +106,7 @@ module ServerVM_Linux '../../modules/Microsoft.Compute/Ubuntu20/VirtualMachine.b
     commandToExecute: './conntestServer.sh ${scenario_Name} ${storageAccount.outputs.storageAccount_Name} ${storageAccount.outputs.storageAccountFileShare_Name} ${storageAccount.outputs.storageAccount_key0}'
   }
   dependsOn: [
-    // filesharePrivateEndpoints
-    // blobPrivateEndpoints
+
     storageAccount
   ]
 } ]
@@ -200,8 +200,6 @@ module privateLink '../../modules/Microsoft.Network/PrivateLink.bicep' = {
     tcpPort: 5001
   }
 }
-
-
 
 module privateEndpoint_NIC '../../modules/Microsoft.Network/PrivateEndpointNetworkInterface.bicep' = {
   name: 'pe_NIC'

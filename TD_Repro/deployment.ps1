@@ -24,7 +24,6 @@ $scenario_Name = "privatelink${iteration}"
 $rgName = "Connection_${scenario_Name}_Sandbox"
 $locationClient = 'westeurope'
 $locationServer = 'westeurope'
-# $storageAccount_ID = '/subscriptions/a2c8e9b2-b8d3-4f38-8a72-642d0012c518/resourceGroups/Main/providers/Microsoft.Storage/storageAccounts/mainjamesgstorage'
 $randomFiveLetterString = .\scripts\deployment_Scripts\Get-LetterGUID.ps1
 
 # Might have to test with the same size VM the customer uses.
@@ -41,9 +40,9 @@ New-AzResourceGroupDeployment -ResourceGroupName $rgName -TemplateFile $mainBice
     -virtualMachine_Size $virtualMachine_Size `
     -storageAccount_Name "plconntestsa${randomFiveLetterString}" `
     -scenario_Name $scenario_Name `
+    -numberOfClientVMs 1
     -numberOfServerVMs 1
     # -usingAzureFirewall $false
-    # -storageAccount_ID $storageAccount_ID `
 
 $end = get-date -UFormat "%s"
 $timeTotalSeconds = $end - $start

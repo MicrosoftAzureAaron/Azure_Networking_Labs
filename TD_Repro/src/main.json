@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.18.4.5664",
-      "templateHash": "17137947962618032404"
+      "templateHash": "1062174384464806016"
     }
   },
   "parameters": {
@@ -52,8 +52,17 @@
     "scenario_Name": {
       "type": "string"
     },
+    "numberOfClientVMs": {
+      "type": "int",
+      "metadata": {
+        "description": "Number of Client Virtual Machines to be used as the source of the traffic"
+      }
+    },
     "numberOfServerVMs": {
-      "type": "int"
+      "type": "int",
+      "metadata": {
+        "description": "Number of Server Virtual Machines to be used as the destination of the traffic"
+      }
     },
     "storageAccount_Name": {
       "type": "string",
@@ -904,9 +913,13 @@
       ]
     },
     {
+      "copy": {
+        "name": "clientVM_Linux",
+        "count": "[length(range(0, parameters('numberOfClientVMs')))]"
+      },
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2022-09-01",
-      "name": "clientVM",
+      "name": "[format('clientVM{0}', range(0, parameters('numberOfClientVMs'))[copyIndex()])]",
       "properties": {
         "expressionEvaluationOptions": {
           "scope": "inner"
@@ -929,7 +942,7 @@
             "value": "[parameters('virtualMachine_adminUsername')]"
           },
           "virtualMachine_Name": {
-            "value": "clientVM-Linux"
+            "value": "[format('ClientVM{0}', range(0, parameters('numberOfClientVMs'))[copyIndex()])]"
           },
           "virtualMachine_Size": {
             "value": "[parameters('virtualMachine_Size')]"
