@@ -19,27 +19,29 @@ if (!$subID) {
 Set-AzContext -Subscription $subID
 
 
-$iteration = "4"
+$iteration = "10"
 $scenario_Name = "privatelink${iteration}"
 $rgName = "Connection_${scenario_Name}_Sandbox"
-$locationA = 'westeurope'
-$locationB = 'westeurope'
+$locationClient = 'westeurope'
+$locationServer = 'westeurope'
+$privateLinkServiceId = '/subscriptions/a2c8e9b2-b8d3-4f38-8a72-642d0012c518/resourceGroups/Main/providers/Microsoft.Storage/storageAccounts/mainjamesgstorage'
 $randomFiveLetterString = .\scripts\deployment_Scripts\Get-LetterGUID.ps1
 
 # Might have to test with the same size VM the customer uses.
+# --Update 11/20 - Could not repro with same size as customer's VM
 # $virtualMachine_Size = 'Standard_E48s_v5'
-
-
 $virtualMachine_Size = 'Standard_E4d_v5'
 
 Write-Host "Creating ${rgName}"
-New-AzResourceGroup -Name $rgName -Location $locationA
+New-AzResourceGroup -Name $rgName -Location $locationClient
 
 Write-Host "`nStarting Bicep Deployment.."
 New-AzResourceGroupDeployment -ResourceGroupName $rgName -TemplateFile $mainBicepFile -TemplateParameterFile $mainParameterFile `
-    -locationA $locationA -locationB $locationB `
+    -locationClient $locationClient -locationServer $locationServer `
     -virtualMachine_Size $virtualMachine_Size `
-    -scenario_Name $scenario_Name
+    -privateLinkServiceId $privateLinkServiceId `
+    -scenario_Name $scenario_Name `
+    -numberOfServerVMs 2
     # -usingAzureFirewall $false
     # -storageAccount_Name "jamesgsa${randomFiveLetterString}"
 
