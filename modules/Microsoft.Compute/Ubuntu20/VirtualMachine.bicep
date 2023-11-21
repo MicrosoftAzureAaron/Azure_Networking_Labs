@@ -40,30 +40,40 @@ param commandToExecute string = 'Ubuntu20_DNS_Config.sh'
 @description('Joins the file path and the file name together')
 var virtualMachine_ScriptFileUri = '${virtualMachine_ScriptFileLocation}${virtualMachine_ScriptFileName}'
 
-resource networkInterface 'Microsoft.Network/networkInterfaces@2022-09-01' = {
+module networkInterface '../../Microsoft.Network/NetworkInterface.bicep' = {
   name: networkInterface_Name
-  location: location
-  properties: {
-    ipConfigurations: [
-      {
-        name: 'ipconfig1'
-        type: 'Microsoft.Network/networkInterfaces/ipConfigurations'
-        properties: {
-          privateIPAllocationMethod: 'Dynamic'
-          subnet: {
-            id: subnet_ID
-          }
-          primary: true
-          privateIPAddressVersion: 'IPv4'
-        }
-      }
-    ]
-    enableAcceleratedNetworking: acceleratedNetworking
-    enableIPForwarding: false
-    disableTcpStateTracking: false
-    nicType: 'Standard'
+  params: {
+    acceleratedNetworking: acceleratedNetworking
+    location: location
+    networkInterface_Name: networkInterface_Name
+    subnet_ID: subnet_ID
   }
 }
+
+// resource networkInterface 'Microsoft.Network/networkInterfaces@2022-09-01' = {
+//   name: networkInterface_Name
+//   location: location
+//   properties: {
+//     ipConfigurations: [
+//       {
+//         name: 'ipconfig0'
+//         type: 'Microsoft.Network/networkInterfaces/ipConfigurations'
+//         properties: {
+//           privateIPAllocationMethod: 'Dynamic'
+//           subnet: {
+//             id: subnet_ID
+//           }
+//           primary: true
+//           privateIPAddressVersion: 'IPv4'
+//         }
+//       }
+//     ]
+//     enableAcceleratedNetworking: acceleratedNetworking
+//     enableIPForwarding: false
+//     disableTcpStateTracking: false
+//     nicType: 'Standard'
+//   }
+// }
 
 resource virtualMachine_Linux 'Microsoft.Compute/virtualMachines@2023-03-01' = {
   name: virtualMachine_Name
@@ -106,7 +116,7 @@ resource virtualMachine_Linux 'Microsoft.Compute/virtualMachines@2023-03-01' = {
     networkProfile: {
       networkInterfaces: [
         {
-          id: networkInterface.id
+          id: networkInterface.outputs.networkInterface_ID
           properties: {
             deleteOption: 'Delete'
           }
@@ -156,5 +166,9 @@ resource vm_CustomScriptExtension 'Microsoft.Compute/virtualMachines/extensions@
   }
 }
 
-output networkInterface_Name string = networkInterface.name
-output networkInterface_IPConfig0_Name string = networkInterface.properties.ipConfigurations[0].name
+output networkInterface_Name string = networkInterface.outputs.networkInterface_Name
+output networkInterface_ID string = networkInterface.outputs.networkInterface_ID
+
+output networkInterface_IPConfig0_Name string = networkInterface.outputs.networkInterface_IPConfig0_Name
+output networkInterface_IPConfig0_ID string = networkInterface.outputs.networkInterface_IPConfig0_ID
+output networkInterface_PrivateIPAddress string = networkInterface.outputs.networkInterface_PrivateIPAddress

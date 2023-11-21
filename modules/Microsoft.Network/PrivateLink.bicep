@@ -20,26 +20,30 @@ param privateLink_Name string = 'pl'
 param privateLink_SubnetID string
 
 @description('Name of the NIC of the Virtual Machine that will be put behind the Private Link Service and Load Balancer')
-param networkInterface_Name string
+param networkInterface_Names array
 
 @description('Subnet ID of the NIC of the Virtual Machine that will be put behind the Private Link Service and Load Balancer')
 param networkInterface_SubnetID string
 
 @description('Name of the ipconfig of the NIC of the Virtual Machine that will be put behind the Private Link Service and Load Balancer')
-param networkInterface_IPConfig_Name string
+param networkInterface_IPConfig_Names array
+
+@description('True enables Accelerated Networking and False disabled it.  Not all virtualMachine sizes support Accel Net')
+param acceleratedNetworking bool
 
 @description('TCP Port that will be used for connecting to the Virtual Machine behind the Private Link Service and Load Balancer')
 param tcpPort int = 443
 
 // Modifies the existing Virtual Machine NIC to add it to the backend pool of the Load Balancer behind the Private Link Service
-resource networkInterface 'Microsoft.Network/networkInterfaces@2023-04-01' = {
-  name: networkInterface_Name
+resource networkInterface 'Microsoft.Network/networkInterfaces@2023-04-01' = [for i in range(0, length(networkInterface_Names)): {
+  name: '${networkInterface_Names[i]}'
   location: location
   properties: {
     ipConfigurations: [
       {
-        name: networkInterface_IPConfig_Name
+        name: '${networkInterface_IPConfig_Names[i]}'
         properties: {
+          privateIPAllocationMethod: 'Dynamic'
           subnet: {
             id: networkInterface_SubnetID
           }
@@ -51,8 +55,12 @@ resource networkInterface 'Microsoft.Network/networkInterfaces@2023-04-01' = {
         }
       }
     ]
+    enableAcceleratedNetworking: acceleratedNetworking
+    enableIPForwarding: false
+    disableTcpStateTracking: false
+    nicType: 'Standard'
   }
-}
+} ]
 
 resource internalLoadBalancer 'Microsoft.Network/loadBalancers@2022-09-01' = {
   name: internalLoadBalancer_Name
