@@ -257,3 +257,8 @@ resource virtualNetworkLink_File 'Microsoft.Network/privateDnsZones/virtualNetwo
 
 output storageaccount_Blob_FQDN string = blobFQDN
 output storageaccount_File_FQDN string = fileFQDN
+
+output storageAccount_Name string = storageAccount.name
+output storageAccountFileShare_Name string = storageAccount_File_FileShare.name
+
+output storageAccount_key0 string = storageAccount.listKeys().keys[0].value
