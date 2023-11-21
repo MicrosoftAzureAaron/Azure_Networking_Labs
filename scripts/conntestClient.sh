@@ -18,11 +18,14 @@ chmod 600 /etc/smbcredentials/$3.cred
 echo "//$3.file.core.windows.net/$4 /mnt/$4 cifs nofail,credentials=/etc/smbcredentials/$3.cred,dir_mode=0777,file_mode=0777,serverino,nosharesock,actimeo=30" >> /etc/fstab
 mount -t cifs //$3.file.core.windows.net/$4 /mnt/$4 -o credentials=/etc/smbcredentials/$3.cred,dir_mode=0777,file_mode=0777,serverino,nosharesock,actimeo=30
 
+directory="/mnt/$4/$2"
 
+if [ ! -d $directory ]; then
+    mkdir -p $directory
+fi
 
+chmod 600 $directory
 
-mkdir /mnt/$4/$2
-chmod 600 /mnt/$4/$2
 
 nohup tcpdump -w /mnt/$4/$2/$hname-trace-%m-%d-%H-%M-%S.pcap host $1 -G 3800 -C 500M -s 120 -K -n &
 

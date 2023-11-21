@@ -19,7 +19,7 @@ if (!$subID) {
 Set-AzContext -Subscription $subID
 
 
-$iteration = "11"
+$iteration = "12"
 $scenario_Name = "privatelink${iteration}"
 $rgName = "Connection_${scenario_Name}_Sandbox"
 $locationClient = 'westeurope'

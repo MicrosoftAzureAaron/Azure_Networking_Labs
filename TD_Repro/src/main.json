@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.18.4.5664",
-      "templateHash": "5545878306786827099"
+      "templateHash": "17137947962618032404"
     }
   },
   "parameters": {
@@ -52,14 +52,8 @@
     "scenario_Name": {
       "type": "string"
     },
-    "storageAccount_ID": {
-      "type": "string"
-    },
     "numberOfServerVMs": {
       "type": "int"
-    },
-    "fileshare_Name": {
-      "type": "string"
     },
     "storageAccount_Name": {
       "type": "string",
