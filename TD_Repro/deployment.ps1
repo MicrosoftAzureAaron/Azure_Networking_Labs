@@ -19,12 +19,12 @@ if (!$subID) {
 Set-AzContext -Subscription $subID
 
 
-$iteration = "10"
+$iteration = "11"
 $scenario_Name = "privatelink${iteration}"
 $rgName = "Connection_${scenario_Name}_Sandbox"
 $locationClient = 'westeurope'
 $locationServer = 'westeurope'
-$privateLinkServiceId = '/subscriptions/a2c8e9b2-b8d3-4f38-8a72-642d0012c518/resourceGroups/Main/providers/Microsoft.Storage/storageAccounts/mainjamesgstorage'
+# $storageAccount_ID = '/subscriptions/a2c8e9b2-b8d3-4f38-8a72-642d0012c518/resourceGroups/Main/providers/Microsoft.Storage/storageAccounts/mainjamesgstorage'
 $randomFiveLetterString = .\scripts\deployment_Scripts\Get-LetterGUID.ps1
 
 # Might have to test with the same size VM the customer uses.
@@ -39,11 +39,11 @@ Write-Host "`nStarting Bicep Deployment.."
 New-AzResourceGroupDeployment -ResourceGroupName $rgName -TemplateFile $mainBicepFile -TemplateParameterFile $mainParameterFile `
     -locationClient $locationClient -locationServer $locationServer `
     -virtualMachine_Size $virtualMachine_Size `
-    -privateLinkServiceId $privateLinkServiceId `
+    -storageAccount_Name "plconntestsa${randomFiveLetterString}" `
     -scenario_Name $scenario_Name `
-    -numberOfServerVMs 2
+    -numberOfServerVMs 1
     # -usingAzureFirewall $false
-    # -storageAccount_Name "jamesgsa${randomFiveLetterString}"
+    # -storageAccount_ID $storageAccount_ID `
 
 $end = get-date -UFormat "%s"
 $timeTotalSeconds = $end - $start

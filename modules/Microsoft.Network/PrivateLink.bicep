@@ -150,11 +150,6 @@ resource privateendpoint 'Microsoft.Network/privateEndpoints@2022-09-01' = {
   }
 }
 
-resource privateEndpoint_NIC 'Microsoft.Network/networkInterfaces@2023-05-01' existing = {
-  name: privateendpoint.properties.customNetworkInterfaceName
-
-}
-
 resource privateLink 'Microsoft.Network/privateLinkServices@2022-09-01' = {
   name: privateLink_Name
   location: location
