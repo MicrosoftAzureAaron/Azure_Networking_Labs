@@ -17,7 +17,7 @@ bicep build $mainBicepFile --outfile $mainJSONFile
 if (!$subID) {
     $subID = Read-Host "Please enter the Subscription ID that you want to deploy this Resource Group to: "
 }
-Set-AzContext -Subscription $subID
+#Set-AzContext -Subscription $subID
 
 $iteration = "0012"
 $scenario_Name = "privatelink${iteration}"
