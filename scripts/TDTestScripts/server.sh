@@ -42,6 +42,7 @@ chmod 600 /mnt/$saDirectory/$hname
 
 #install scapy
 pip install scapy
+sudo apt-get install -y scapy
 
 #import scapy func
 from scapy.all import IP, TCP, send, sniff
