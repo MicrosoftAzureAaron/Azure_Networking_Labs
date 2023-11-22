@@ -3,7 +3,7 @@ import time
 from scapy.all import IP, TCP, send, sniff
 
 sourceIPPrefix = sys.argv[1]
-dur = sys.argv[2]
+dur = int(sys.argv[2])
 
 # Function to handle incoming SYN packets and send SYN-ACK responses
 def syn_packet_handler(packet):
