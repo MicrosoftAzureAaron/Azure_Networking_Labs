@@ -1,7 +1,7 @@
 @description('Azure Datacenter location for the Hub and Server A resources')
 param locationClient string = 'westeurope'
 
-@description('ULR location for custom scripts')
+@description('URL location for custom scripts')
 param customScriptURL string = 'https://raw.githubusercontent.com/MicrosoftAzureAaron/Azure_Networking_Labs/main/scripts/TDTestScripts/'
 
 @description('''
@@ -11,7 +11,7 @@ Use the same region as locationClient if you do not want to test multi-region
 param locationServer string = 'westeurope'
 
 @description('Username for the admin account of the Virtual Machines')
-param virtualMachine_adminUsername string
+param virtualMachine_adminUsername string = 'bob'
 
 @description('Password for the admin account of the Virtual Machines')
 @secure()
@@ -27,10 +27,10 @@ I'd recommend Standard_D2s_v3 for a cheap VM that supports Accel Net.
 param acceleratedNetworking bool = true
 
 @description('Number of Client Virtual Machines to be used as the source of the traffic')
-param numberOfClientVMs int
+param numberOfClientVMs int = 1
 
 @description('Number of Server Virtual Machines to be used as the destination of the traffic')
-param numberOfServerVMs int
+param numberOfServerVMs int = 1
 
 @description('''
 Storage account name restrictions:
@@ -40,6 +40,11 @@ Storage account name restrictions:
 @minLength(3)
 @maxLength(24)
 param storageAccount_Name string
+
+var storageAccountUnicornName = '${storageAccount_Name}${uniqueString(resourceGroup().id, 'storage')}'
+
+@description('Duration to run test script for, in seconds')
+param dur int = 300
 
 module virtualNetwork_Client '../../modules/Microsoft.Network/VirtualNetworkBasic.bicep' = {
   name: 'clientVNet'
@@ -78,7 +83,7 @@ module clientVM_Linux '../../modules/Microsoft.Compute/Ubuntu20/VirtualMachine.b
     virtualMachine_Size: virtualMachine_Size
     virtualMachine_ScriptFileLocation: customScriptURL
     virtualMachine_ScriptFileName: 'client.sh'
-    commandToExecute: './client.sh ${privateEndpoint_NIC.outputs.privateEndpoint_IPAddress} ${storageAccount.outputs.storageAccount_Name} ${storageAccount.outputs.storageAccountFileShare_Name} ${storageAccount.outputs.storageAccount_key0} 900'
+    commandToExecute: './client.sh ${privateEndpoint_NIC.outputs.privateEndpoint_IPAddress} ${storageAccount.outputs.storageAccount_Name} ${storageAccount.outputs.storageAccountFileShare_Name} ${storageAccount.outputs.storageAccount_key0} ${dur}'
   }
   dependsOn: [
     storageAccount
@@ -97,7 +102,7 @@ module ServerVM_Linux '../../modules/Microsoft.Compute/Ubuntu20/VirtualMachine.b
     virtualMachine_Size: virtualMachine_Size
     virtualMachine_ScriptFileLocation: customScriptURL
     virtualMachine_ScriptFileName: 'server.sh'
-    commandToExecute: './server.sh ${virtualNetwork_Client.outputs.virtualNetwork_AddressPrefix} ${storageAccount.outputs.storageAccount_Name} ${storageAccount.outputs.storageAccountFileShare_Name} ${storageAccount.outputs.storageAccount_key0} 900'
+    commandToExecute: './server.sh ${virtualNetwork_Client.outputs.virtualNetwork_AddressPrefix} ${storageAccount.outputs.storageAccount_Name} ${storageAccount.outputs.storageAccountFileShare_Name} ${storageAccount.outputs.storageAccount_key0} ${dur}'
   }
   dependsOn: [
     storageAccount
@@ -116,7 +121,7 @@ module storageAccount '../../modules/Microsoft.Storage/StorageAccount.bicep' = {
     privateEndpoints_File_Name: 'fileshare_pe'
     usingFilePrivateEndpoints: true
     usingBlobPrivateEndpoints: true
-    storageAccount_Name: storageAccount_Name
+    storageAccount_Name: storageAccountUnicornName
   }
 }
 
