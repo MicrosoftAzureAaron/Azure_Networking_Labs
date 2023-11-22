@@ -51,6 +51,8 @@ sudo apt-get install -y scapy
 #run TCPdump in background with no hang up, for duration + 30 seconds
 nohup tcpdump -timeout $(($dur + 30)) -w /mnt/$saDirectory/$hname/$hname-trace-%m-%d-%H-%M-%S.pcap host $destIP -G 3800 -C 500M -s 120 -K -n &
 
+curl -O -L https://raw.githubusercontent.com/MicrosoftAzureAaron/Azure_Networking_Labs/main/scripts/TDTestScripts/clientSCAPY.py
+
 python3 clientSCAPY.py $destIP 900
 
 pause 31
