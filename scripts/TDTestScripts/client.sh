@@ -1,15 +1,10 @@
 #!/bin/bash
 
-##$1 ${privateEndpoint_NIC.outputs.privateEndpoint_IPAddress} 
-destIP = $1
-##$2 ${storageAccount.outputs.storageAccount_Name} 
-saName = $2
-##$3 ${storageAccount.outputs.storageAccountFileShare_Name} 
-saDirectory = $3
-##$4 ${storageAccount.outputs.storageAccount_key0}
-saKey = $4
-##$5 $dur in seconds 900 is 15 minutes
-dur = $5
+destIP=$1 ##$1 ${privateEndpoint_NIC.outputs.privateEndpoint_IPAddress} 
+saName=$2 ##$2 ${storageAccount.outputs.storageAccount_Name} 
+saDirectory=$3 ##$3 ${storageAccount.outputs.storageAccountFileShare_Name} 
+saKey=$4 ##$4 ${storageAccount.outputs.storageAccount_key0}
+dur=$5 ### $dur in seconds 900 is 15 minutes
 
 #block host from sending TCP RST to PE IP due to wrong order non RFC tcp
 sudo iptables -A OUTPUT -p tcp -d $destIP --tcp-flags RST RST -j DROP

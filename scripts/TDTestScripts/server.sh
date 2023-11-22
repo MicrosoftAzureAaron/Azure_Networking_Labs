@@ -1,9 +1,9 @@
 #!/bin/bash
 
-saName = $1 ### ${storageAccount.outputs.storageAccount_Name} 
-saDirectory = $2 ### ${storageAccount.outputs.storageAccountFileShare_Name} 
-saKey = $3 ### ${storageAccount.outputs.storageAccount_key0}'
-sourceIPPrefix = $4
+saName=$1 ### ${storageAccount.outputs.storageAccount_Name} 
+saDirectory=$2 ### ${storageAccount.outputs.storageAccountFileShare_Name} 
+saKey=$3 ### ${storageAccount.outputs.storageAccount_key0}'
+sourceIPPrefix=$4 ### ${virtualNetwork_Client.outputs.virtualNetwork_AddressPrefix}
 
 #get hostname for pcapfile
 hname=$(hostname)
