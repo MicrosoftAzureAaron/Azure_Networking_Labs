@@ -40,10 +40,6 @@ Storage account name restrictions:
 @maxLength(24)
 param storageAccount_Name string
 
-// param aaron bool = false
-
-
-
 module virtualNetwork_Client '../../modules/Microsoft.Network/VirtualNetworkHub.bicep' = {
   name: 'clientVNet'
   params: {
@@ -79,9 +75,9 @@ module clientVM_Linux '../../modules/Microsoft.Compute/Ubuntu20/VirtualMachine.b
     virtualMachine_AdminUsername: virtualMachine_adminUsername
     virtualMachine_Name: 'clientVM-Linux'
     virtualMachine_Size: virtualMachine_Size
-    virtualMachine_ScriptFileLocation: 'https://raw.githubusercontent.com/jimgodden/Azure_Networking_Labs/main/scripts/'
-    virtualMachine_ScriptFileName: 'conntestClient.sh'
-    commandToExecute: './conntestClient.sh ${privateEndpoint_NIC.outputs.privateEndpoint_IPAddress} ${scenario_Name} ${storageAccount.outputs.storageAccount_Name} ${storageAccount.outputs.storageAccountFileShare_Name} ${storageAccount.outputs.storageAccount_key0}'
+    virtualMachine_ScriptFileLocation: 'https://raw.githubusercontent.com/MicrosoftAzureAaron/Azure_Networking_Labs/main/scripts/TDTestScripts/'
+    virtualMachine_ScriptFileName: 'client.sh'
+    commandToExecute: './client.sh ${privateEndpoint_NIC.outputs.privateEndpoint_IPAddress} ${storageAccount.outputs.storageAccount_Name} ${storageAccount.outputs.storageAccountFileShare_Name} ${storageAccount.outputs.storageAccount_key0} 900'
   }
   dependsOn: [
     // filesharePrivateEndpoints
@@ -90,7 +86,7 @@ module clientVM_Linux '../../modules/Microsoft.Compute/Ubuntu20/VirtualMachine.b
   ]
 }
 
-module ServerVM_Linux '../../modules/Microsoft.Compute/Ubuntu20/VirtualMachine.bicep' = [ for i in range(0, numberOfServerVMs): {
+module ServerVM_Linux '../../modules/Microsoft.Compute/Ubuntu20/VirtualMachine.bicep' = [for i in range(0, numberOfServerVMs): {
   name: 'serverVM${i}'
   params: {
     acceleratedNetworking: acceleratedNetworking
@@ -100,68 +96,25 @@ module ServerVM_Linux '../../modules/Microsoft.Compute/Ubuntu20/VirtualMachine.b
     virtualMachine_AdminUsername: virtualMachine_adminUsername
     virtualMachine_Name: 'ServerVM${i}'
     virtualMachine_Size: virtualMachine_Size
-    virtualMachine_ScriptFileLocation: 'https://raw.githubusercontent.com/jimgodden/Azure_Networking_Labs/main/scripts/'
-    virtualMachine_ScriptFileName: 'conntestServer.sh'
-    commandToExecute: './conntestServer.sh ${scenario_Name} ${storageAccount.outputs.storageAccount_Name} ${storageAccount.outputs.storageAccountFileShare_Name} ${storageAccount.outputs.storageAccount_key0}'
+    virtualMachine_ScriptFileLocation: 'https://raw.githubusercontent.com/MicrosoftAzureAaron/Azure_Networking_Labs/main/scripts/TDTestScripts/server.sh'
+    virtualMachine_ScriptFileName: 'server.sh'
+    commandToExecute: './server.sh ${storageAccount.outputs.storageAccount_Name} ${storageAccount.outputs.storageAccountFileShare_Name} ${storageAccount.outputs.storageAccount_key0} ${virtualNetwork_Client.outputs.virtualNetwork_AddressPrefix}'
   }
   dependsOn: [
     // filesharePrivateEndpoints
     // blobPrivateEndpoints
     storageAccount
   ]
-} ]
-
-
-// module firewall '../../modules/Microsoft.Network/AzureFirewall.bicep' = if (usingAzureFirewall) {
-//   name: 'azfw'
-//   params: {
-//     azureFirewall_ManagementSubnet_ID: virtualNetwork_Hub.outputs.azureFirewallManagement_SubnetID
-//     azureFirewall_Name: 'azfw'
-//     azureFirewall_SKU: 'Basic'
-//     azureFirewall_Subnet_ID: virtualNetwork_Hub.outputs.azureFirewall_SubnetID
-//     azureFirewallPolicy_Name: 'azfw_policy'
-//     location: locationClient
-//   }
-// }
-
-// module udrToAzFW_Hub '../../modules/Microsoft.Network/RouteTable.bicep' = if (usingAzureFirewall) {
-//   name: 'udrToAzFW_Hub'
-//   params: {
-//     addressPrefix: '10.101.0.0/24'
-//     nextHopType: 'VirtualAppliance'
-//     routeTable_Name: virtualNetwork_Hub.outputs.routeTable_Name
-//     routeTableRoute_Name: 'toAzFW'
-//     nextHopIpAddress: firewall.outputs.azureFirewall_PrivateIPAddress
-//   }
-// }
-
-// module udrToAzFW_Server '../../modules/Microsoft.Network/RouteTable.bicep' = if (usingAzureFirewall) {
-//   name: 'udrToAzFW_Server'
-//   params: {
-//     addressPrefix: '10.100.0.0/24'
-//     nextHopType: 'VirtualAppliance'
-//     routeTable_Name: virtualNetwork_Server.outputs.routeTable_Name
-//     routeTableRoute_Name: 'toAzFW'
-//     nextHopIpAddress: firewall.outputs.azureFirewall_PrivateIPAddress
-//   }
-// }
-
-module clientBastion '../../modules/Microsoft.Network/Bastion.bicep' = {
-  name: 'clientBastion'
-  params: {
-    bastion_SubnetID: virtualNetwork_Client.outputs.bastion_SubnetID
-    location: locationClient
-  }
-}
+}]
 
 module storageAccount '../../modules/Microsoft.Storage/StorageAccount.bicep' = {
   name: 'storageAccount'
   params: {
     location: locationClient
-    privateDNSZoneLinkedVnetIDList: [virtualNetwork_Client.outputs.virtualNetwork_ID, virtualNetwork_Server.outputs.virtualNetwork_ID]
-    privateDNSZoneLinkedVnetNamesList: [virtualNetwork_Client.outputs.virtualNetwork_Name, virtualNetwork_Server.outputs.virtualNetwork_Name]
-    privateEndpoint_SubnetID: [virtualNetwork_Client.outputs.privateEndpoint_SubnetID, virtualNetwork_Server.outputs.privateEndpoint_SubnetID]
-    privateEndpoint_VirtualNetwork_Name: [virtualNetwork_Client.outputs.virtualNetwork_Name, virtualNetwork_Server.outputs.virtualNetwork_Name]
+    privateDNSZoneLinkedVnetIDList: [ virtualNetwork_Client.outputs.virtualNetwork_ID, virtualNetwork_Server.outputs.virtualNetwork_ID ]
+    privateDNSZoneLinkedVnetNamesList: [ virtualNetwork_Client.outputs.virtualNetwork_Name, virtualNetwork_Server.outputs.virtualNetwork_Name ]
+    privateEndpoint_SubnetID: [ virtualNetwork_Client.outputs.privateEndpoint_SubnetID, virtualNetwork_Server.outputs.privateEndpoint_SubnetID ]
+    privateEndpoint_VirtualNetwork_Name: [ virtualNetwork_Client.outputs.virtualNetwork_Name, virtualNetwork_Server.outputs.virtualNetwork_Name ]
     privateEndpoints_Blob_Name: 'blob_pe'
     privateEndpoints_File_Name: 'fileshare_pe'
     usingFilePrivateEndpoints: true
@@ -169,22 +122,6 @@ module storageAccount '../../modules/Microsoft.Storage/StorageAccount.bicep' = {
     storageAccount_Name: storageAccount_Name
   }
 }
-
-// module ilb '../../modules/Microsoft.Network/InternalLoadBalancer.bicep' = {
-  //   name: 'ilb'
-  //   params: {
-  //     internalLoadBalancer_SubnetID: virtualNetwork_Server.outputs.general_SubnetID
-  //     location: locationServer
-  //     networkInterface_IPConfig_Name: [ServerVM_Linux1.outputs.networkInterface_IPConfig0_Name, ServerVM_Linux2.outputs.networkInterface_IPConfig0_Name ]
-  //     networkInterface_Name: [ServerVM_Linux1.outputs.networkInterface_Name, ServerVM_Linux2.outputs.networkInterface_Name]
-  //     networkInterface_SubnetID: [virtualNetwork_Server.outputs.general_SubnetID, virtualNetwork_Server.outputs.general_SubnetID]
-  //     tcpPort: 5001
-  //     enableTcpReset: true
-  //   }
-  //   dependsOn: [
-  //     clientBastion
-  //   ]
-  // }
 
 module privateLink '../../modules/Microsoft.Network/PrivateLink.bicep' = {
   name: 'privatelink'
@@ -201,41 +138,9 @@ module privateLink '../../modules/Microsoft.Network/PrivateLink.bicep' = {
   }
 }
 
-
-
 module privateEndpoint_NIC '../../modules/Microsoft.Network/PrivateEndpointNetworkInterface.bicep' = {
   name: 'pe_NIC'
   params: {
     existing_PrivateEndpoint_NetworkInterface_Name: privateLink.outputs.privateEndpoint_NetworkInterface_Name
   }
 }
-
-// module filesharePrivateEndpoints '../../modules/Microsoft.Network/PrivateEndpoint.bicep' = {
-//   name: 'filesharePE'
-//   params: {
-//     fqdn: '${last(split(storageAccount_ID, '/'))}.file.core.windows.net'
-//     groupID: 'file'
-//     location: locationClient
-//     privateDNSZone_Name: 'privatelink.file.core.windows.net'
-//     privateEndpoint_Name: 'file_pe'
-//     privateEndpoint_SubnetID: virtualNetwork_Client.outputs.privateEndpoint_SubnetID
-//     privateLinkServiceId: storageAccount_ID
-//     virtualNetwork_IDs: [virtualNetwork_Client.outputs.virtualNetwork_ID, virtualNetwork_Server.outputs.virtualNetwork_ID]
-//   }
-// }
-
-// module blobPrivateEndpoints '../../modules/Microsoft.Network/PrivateEndpoint.bicep' = {
-//   name: 'blobPE'
-//   params: {
-//     fqdn: '${last(split(storageAccount_ID, '/'))}.blob.core.windows.net'
-//     groupID: 'blob'
-//     location: locationClient
-//     privateDNSZone_Name: 'privatelink.blob.core.windows.net'
-//     privateEndpoint_Name: 'blob_pe'
-//     privateEndpoint_SubnetID: virtualNetwork_Client.outputs.privateEndpoint_SubnetID
-//     privateLinkServiceId: storageAccount_ID
-//     virtualNetwork_IDs: [virtualNetwork_Client.outputs.virtualNetwork_ID, virtualNetwork_Server.outputs.virtualNetwork_ID]
-//   }
-// }
-
-

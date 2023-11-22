@@ -18,8 +18,7 @@ if (!$subID) {
 }
 Set-AzContext -Subscription $subID
 
-
-$iteration = "11"
+$iteration = "0012"
 $scenario_Name = "privatelink${iteration}"
 $rgName = "Connection_${scenario_Name}_Sandbox"
 $locationClient = 'westeurope'
@@ -42,8 +41,8 @@ New-AzResourceGroupDeployment -ResourceGroupName $rgName -TemplateFile $mainBice
     -storageAccount_Name "plconntestsa${randomFiveLetterString}" `
     -scenario_Name $scenario_Name `
     -numberOfServerVMs 1
-    # -usingAzureFirewall $false
-    # -storageAccount_ID $storageAccount_ID `
+# -usingAzureFirewall $false
+# -storageAccount_ID $storageAccount_ID `
 
 $end = get-date -UFormat "%s"
 $timeTotalSeconds = $end - $start
