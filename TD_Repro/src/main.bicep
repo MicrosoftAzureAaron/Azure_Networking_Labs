@@ -25,9 +25,12 @@ param acceleratedNetworking bool = true
 
 param scenario_Name string
 
-// param storageAccount_ID string
+@description('Number of Client Virtual Machines to be used as the source of the traffic')
+param numberOfClientVMs int
 
+@description('Number of Server Virtual Machines to be used as the destination of the traffic')
 param numberOfServerVMs int
+
 
 // param usingAzureFirewall bool = true
 
@@ -65,26 +68,24 @@ module clientToServerPeering '../../modules/Microsoft.Network/VirtualNetworkPeer
   }
 }
 
-module clientVM_Linux '../../modules/Microsoft.Compute/Ubuntu20/VirtualMachine.bicep' = {
-  name: 'clientVM'
+module clientVM_Linux '../../modules/Microsoft.Compute/Ubuntu20/VirtualMachine.bicep' = [ for i in range(0, numberOfClientVMs):  {
+  name: 'clientVM${i}'
   params: {
     acceleratedNetworking: acceleratedNetworking
     location: locationClient
     subnet_ID: virtualNetwork_Client.outputs.general_SubnetID
     virtualMachine_AdminPassword: virtualMachine_adminPassword
     virtualMachine_AdminUsername: virtualMachine_adminUsername
-    virtualMachine_Name: 'clientVM-Linux'
+    virtualMachine_Name: 'ClientVM${i}'
     virtualMachine_Size: virtualMachine_Size
     virtualMachine_ScriptFileLocation: 'https://raw.githubusercontent.com/MicrosoftAzureAaron/Azure_Networking_Labs/main/scripts/TDTestScripts/'
     virtualMachine_ScriptFileName: 'client.sh'
     commandToExecute: './client.sh ${privateEndpoint_NIC.outputs.privateEndpoint_IPAddress} ${storageAccount.outputs.storageAccount_Name} ${storageAccount.outputs.storageAccountFileShare_Name} ${storageAccount.outputs.storageAccount_key0} 900'
   }
   dependsOn: [
-    // filesharePrivateEndpoints
-    // blobPrivateEndpoints
     storageAccount
   ]
-}
+} ]
 
 module ServerVM_Linux '../../modules/Microsoft.Compute/Ubuntu20/VirtualMachine.bicep' = [for i in range(0, numberOfServerVMs): {
   name: 'serverVM${i}'
@@ -101,8 +102,7 @@ module ServerVM_Linux '../../modules/Microsoft.Compute/Ubuntu20/VirtualMachine.b
     commandToExecute: './server.sh ${storageAccount.outputs.storageAccount_Name} ${storageAccount.outputs.storageAccountFileShare_Name} ${storageAccount.outputs.storageAccount_key0} ${virtualNetwork_Client.outputs.virtualNetwork_AddressPrefix}'
   }
   dependsOn: [
-    // filesharePrivateEndpoints
-    // blobPrivateEndpoints
+
     storageAccount
   ]
 }]
