@@ -41,7 +41,7 @@ Storage account name restrictions:
 @maxLength(24)
 param storageAccount_Name string
 
-module virtualNetwork_Client '../../modules/Microsoft.Network/VirtualNetworkHub.bicep' = {
+module virtualNetwork_Client '../../modules/Microsoft.Network/VirtualNetworkBasic.bicep' = {
   name: 'clientVNet'
   params: {
     firstTwoOctetsOfVirtualNetworkPrefix: '10.100'
@@ -50,7 +50,7 @@ module virtualNetwork_Client '../../modules/Microsoft.Network/VirtualNetworkHub.
   }
 }
 
-module virtualNetwork_Server '../../modules/Microsoft.Network/VirtualNetworkSpoke.bicep' = {
+module virtualNetwork_Server '../../modules/Microsoft.Network/VirtualNetworkBasic.bicep' = {
   name: 'serverVNet'
   params: {
     firstTwoOctetsOfVirtualNetworkPrefix: '10.101'
