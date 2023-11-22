@@ -45,6 +45,7 @@ mkdir /mnt/$saDirectory/$hname
 chmod 600 /mnt/$saDirectory/$hname
 
 #install scapy
+sudo apt-get update
 sudo apt-get install -y scapy
 
 #import
