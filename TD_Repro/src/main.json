@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.23.1.45101",
-      "templateHash": "3407684993697947858"
+      "templateHash": "10583805730745159242"
     }
   },
   "parameters": {
@@ -20,7 +20,7 @@
       "type": "string",
       "defaultValue": "https://raw.githubusercontent.com/MicrosoftAzureAaron/Azure_Networking_Labs/main/scripts/TDTestScripts/",
       "metadata": {
-        "description": "ULR location for custom scripts"
+        "description": "URL location for custom scripts"
       }
     },
     "locationServer": {
@@ -32,6 +32,7 @@
     },
     "virtualMachine_adminUsername": {
       "type": "string",
+      "defaultValue": "bob",
       "metadata": {
         "description": "Username for the admin account of the Virtual Machines"
       }
@@ -58,12 +59,14 @@
     },
     "numberOfClientVMs": {
       "type": "int",
+      "defaultValue": 1,
       "metadata": {
         "description": "Number of Client Virtual Machines to be used as the source of the traffic"
       }
     },
     "numberOfServerVMs": {
       "type": "int",
+      "defaultValue": 1,
       "metadata": {
         "description": "Number of Server Virtual Machines to be used as the destination of the traffic"
       }
@@ -75,7 +78,17 @@
       "metadata": {
         "description": "Storage account name restrictions:\r\n- Storage account names must be between 3 and 24 characters in length and may contain numbers and lowercase letters only.\r\n- Your storage account name must be unique within Azure. No two storage accounts can have the same name.\r\n"
       }
+    },
+    "dur": {
+      "type": "int",
+      "defaultValue": 300,
+      "metadata": {
+        "description": "Duration to run test script for, in seconds"
+      }
     }
+  },
+  "variables": {
+    "storageAccountUnicornName": "[format('{0}{1}', parameters('storageAccount_Name'), uniqueString(resourceGroup().id, 'storage'))]"
   },
   "resources": [
     {
@@ -428,7 +441,7 @@
             "value": "client.sh"
           },
           "commandToExecute": {
-            "value": "[format('./client.sh {0} {1} {2} {3} 900', reference(resourceId('Microsoft.Resources/deployments', 'pe_NIC'), '2022-09-01').outputs.privateEndpoint_IPAddress.value, reference(resourceId('Microsoft.Resources/deployments', 'storageAccount'), '2022-09-01').outputs.storageAccount_Name.value, reference(resourceId('Microsoft.Resources/deployments', 'storageAccount'), '2022-09-01').outputs.storageAccountFileShare_Name.value, reference(resourceId('Microsoft.Resources/deployments', 'storageAccount'), '2022-09-01').outputs.storageAccount_key0.value)]"
+            "value": "[format('./client.sh {0} {1} {2} {3} {4}', reference(resourceId('Microsoft.Resources/deployments', 'pe_NIC'), '2022-09-01').outputs.privateEndpoint_IPAddress.value, reference(resourceId('Microsoft.Resources/deployments', 'storageAccount'), '2022-09-01').outputs.storageAccount_Name.value, reference(resourceId('Microsoft.Resources/deployments', 'storageAccount'), '2022-09-01').outputs.storageAccountFileShare_Name.value, reference(resourceId('Microsoft.Resources/deployments', 'storageAccount'), '2022-09-01').outputs.storageAccount_key0.value, parameters('dur'))]"
           }
         },
         "template": {
@@ -794,7 +807,7 @@
             "value": "server.sh"
           },
           "commandToExecute": {
-            "value": "[format('./server.sh {0} {1} {2} {3}', reference(resourceId('Microsoft.Resources/deployments', 'storageAccount'), '2022-09-01').outputs.storageAccount_Name.value, reference(resourceId('Microsoft.Resources/deployments', 'storageAccount'), '2022-09-01').outputs.storageAccountFileShare_Name.value, reference(resourceId('Microsoft.Resources/deployments', 'storageAccount'), '2022-09-01').outputs.storageAccount_key0.value, reference(resourceId('Microsoft.Resources/deployments', 'clientVNet'), '2022-09-01').outputs.virtualNetwork_AddressPrefix.value)]"
+            "value": "[format('./server.sh {0} {1} {2} {3} {4}', reference(resourceId('Microsoft.Resources/deployments', 'clientVNet'), '2022-09-01').outputs.virtualNetwork_AddressPrefix.value, reference(resourceId('Microsoft.Resources/deployments', 'storageAccount'), '2022-09-01').outputs.storageAccount_Name.value, reference(resourceId('Microsoft.Resources/deployments', 'storageAccount'), '2022-09-01').outputs.storageAccountFileShare_Name.value, reference(resourceId('Microsoft.Resources/deployments', 'storageAccount'), '2022-09-01').outputs.storageAccount_key0.value, parameters('dur'))]"
           }
         },
         "template": {
@@ -1168,7 +1181,7 @@
             "value": true
           },
           "storageAccount_Name": {
-            "value": "[parameters('storageAccount_Name')]"
+            "value": "[variables('storageAccountUnicornName')]"
           }
         },
         "template": {
