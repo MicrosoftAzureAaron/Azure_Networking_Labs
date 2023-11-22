@@ -1,9 +1,10 @@
 #!/bin/bash
 
-saName=$1 ### ${storageAccount.outputs.storageAccount_Name} 
-saDirectory=$2 ### ${storageAccount.outputs.storageAccountFileShare_Name} 
-saKey=$3 ### ${storageAccount.outputs.storageAccount_key0}'
-sourceIPPrefix=$4 ### ${virtualNetwork_Client.outputs.virtualNetwork_AddressPrefix}
+sourceIPPrefix=$1 ### ${virtualNetwork_Client.outputs.virtualNetwork_AddressPrefix}
+saName=$2 ### ${storageAccount.outputs.storageAccount_Name} 
+saDirectory=$3 ### ${storageAccount.outputs.storageAccountFileShare_Name} 
+saKey=$4 ### ${storageAccount.outputs.storageAccount_key0}'
+dur=$5 ### $dur in seconds 900 is 15 minutes
 
 #get hostname for pcapfile
 hname=$(hostname)
@@ -45,11 +46,14 @@ sudo apt-get update
 sudo apt-get install -y scapy
 
 curl -O -L https://raw.githubusercontent.com/MicrosoftAzureAaron/Azure_Networking_Labs/main/scripts/TDTestScripts/serverSCAPY.py
+chmod +x serverSCAPY.py
 
-#run TCPdump in background with no hang up, for duration + 30 seconds
+#run TCPdump in background with no hang up, for duration + 5 minutes
 nohup tcpdump -timeout $(($dur + 300)) -w /mnt/$saDirectory/$hname/$hname-trace-%m-%d-%H-%M-%S.pcap net $sourceIPPrefix -G 3800 -C 500M -s 120 -K -n &
 
+#run listener script on server VM
 python3 serverSCAPY.py $sourceIPPrefix $dur
 
+#wait 5 minutes
 pause 300
 
