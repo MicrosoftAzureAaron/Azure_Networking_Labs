@@ -97,7 +97,7 @@ module ServerVM_Linux '../../modules/Microsoft.Compute/Ubuntu20/VirtualMachine.b
     virtualMachine_Size: virtualMachine_Size
     virtualMachine_ScriptFileLocation: customScriptURL
     virtualMachine_ScriptFileName: 'server.sh'
-    commandToExecute: './server.sh ${storageAccount.outputs.storageAccount_Name} ${storageAccount.outputs.storageAccountFileShare_Name} ${storageAccount.outputs.storageAccount_key0} ${virtualNetwork_Client.outputs.virtualNetwork_AddressPrefix}'
+    commandToExecute: './server.sh ${virtualNetwork_Client.outputs.virtualNetwork_AddressPrefix} ${storageAccount.outputs.storageAccount_Name} ${storageAccount.outputs.storageAccountFileShare_Name} ${storageAccount.outputs.storageAccount_key0} 900'
   }
   dependsOn: [
     storageAccount
