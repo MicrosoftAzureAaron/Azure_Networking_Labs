@@ -49,7 +49,6 @@ param subnet_AppServiceSubnet_Name string = 'AppServiceSubnet'
 @description('Address Prefix of the AppService Subnet')
 param subnet_AppServiceSubnet_AddressPrefix string = '${firstTwoOctetsOfVirtualNetworkPrefix}.4.0/24'
 
-
 resource virtualNetwork 'Microsoft.Network/virtualNetworks@2022-09-01' = {
   name: virtualNetwork_Name
   location: location
@@ -114,7 +113,7 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2022-09-01' = {
           }
           delegations: []
           privateEndpointNetworkPolicies: 'Disabled'
-          privateLinkServiceNetworkPolicies: 'Enabled' 
+          privateLinkServiceNetworkPolicies: 'Enabled'
         }
       }
       {
@@ -153,8 +152,7 @@ resource routeTable 'Microsoft.Network/routeTables@2023-02-01' = {
 resource networkSecurityGroup 'Microsoft.Network/networkSecurityGroups@2022-09-01' = {
   name: networkSecurityGroup_Default_Name
   location: location
-  properties: {
-  }
+  properties: {}
 }
 
 resource networkSecurityGroup_ApplicationGateway 'Microsoft.Network/networkSecurityGroups@2022-11-01' = {
@@ -208,13 +206,15 @@ resource networkSecurityGroup_ApplicationGateway_AppGWSpecificRule 'Microsoft.Ne
 output general_SubnetID string = virtualNetwork.properties.subnets[0].id
 output privateEndpoint_SubnetID string = virtualNetwork.properties.subnets[1].id
 output privateLinkService_SubnetID string = virtualNetwork.properties.subnets[2].id
-output applicationGateway_SubnetID string = virtualNetwork.properties.subnets[3].id 
+output applicationGateway_SubnetID string = virtualNetwork.properties.subnets[3].id
 output appService_SubnetID string = virtualNetwork.properties.subnets[4].id
 
 // Should be one of the last IPs in the subnet range.  This is for the appgw frontend private ip.
-output applicationGateway_PrivateIP string = '${firstTwoOctetsOfVirtualNetworkPrefix}.3.254' 
+output applicationGateway_PrivateIP string = '${firstTwoOctetsOfVirtualNetworkPrefix}.3.254'
 
 output virtualNetwork_Name string = virtualNetwork.name
 output virtualNetwork_ID string = virtualNetwork.id
 
 output routeTable_Name string = routeTable.name
+
+output virtualNetwork_AddressPrefix string = virtualNetwork.properties.addressSpace.addressPrefixes[0]
