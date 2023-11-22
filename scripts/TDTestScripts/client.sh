@@ -48,43 +48,10 @@ chmod 600 /mnt/$saDirectory/$hname
 sudo apt-get update
 sudo apt-get install -y scapy
 
-#import
-from scapy.all import IP, TCP, send
-from datetime import datetime
-import sys
-
-# Get the start time
-start_time=$(date +%s)
-
-src_port=12250
-dst_port=5221
-
 #run TCPdump in background with no hang up, for duration + 30 seconds
 nohup tcpdump -timeout $(($dur + 30)) -w /mnt/$saDirectory/$hname/$hname-trace-%m-%d-%H-%M-%S.pcap host $destIP -G 3800 -C 500M -s 120 -K -n &
 
-#start sending out of order TCP packets
-while [ $(( $(date +%s) - start_time )) -lt $dur ]; do
-    # Create a TCP SYN packet
-    syn_packet = IP(dst=$destIP) / TCP(sport=src_port, dport=dst_port, flags='S')
+python3 clientSCAPY.py $destIP 900
 
-    # Send the TCP SYN packet
-    send(syn_packet, verbose=0)
-    #print("SENT TCP SYN ", dst_ip, ":", dst_port," and ",src_port)
-
-    # Create a TCP ACK packet
-    ack_packet = IP(dst=$destIP) / TCP(sport=src_port, dport=dst_port, flags='A')#, seq=syn_ack_response[TCP].ack, ack=syn_ack_response[TCP].seq + 1)
-
-    # Send the ACK packet
-    send(ack_packet, verbose=0)
-    #print("SENT TCP ACK ", dst_ip, ":", dst_port," and ",src_port)
-
-    # Sleep for 5.5 to wait for TCP RSTs from VFP half open state
-    sleep 5.5
-    # replace sleep with new source port and retry as fast as possible till first port has been unused for 6 seconds
-done
-
-### add client sniffer with filter for TCP RSTs from dst IP
-## currently tcp dump captures all packets
-sleep 30
-echo "Python script loop completed."
+pause 31
 

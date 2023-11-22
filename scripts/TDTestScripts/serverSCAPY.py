@@ -1,5 +1,8 @@
+import sys
 #import scapy func
 from scapy.all import IP, TCP, send, sniff
+
+sourceIPPrefix = sys.argv[1]
 
 # Function to handle incoming SYN packets and send SYN-ACK responses
 def syn_packet_handler(packet):
@@ -15,5 +18,5 @@ def syn_packet_handler(packet):
         print("TCP RST from Dest")
         
 # Start sniffing for incoming SYN packets, ignore my ssh connection
-sniff(filter="tcp and net $sourceIPPrefix", prn=syn_packet_handler, store=0)
+sniff(filter="tcp and net ${sourceIPPrefix}", prn=syn_packet_handler, store=0)
 

@@ -44,26 +44,12 @@ chmod 600 /mnt/$saDirectory/$hname
 sudo apt-get update
 sudo apt-get install -y scapy
 
-#import scapy func
-from scapy.all import IP, TCP, send, sniff
-
-# Function to handle incoming SYN packets and send SYN-ACK responses
-def syn_packet_handler(packet):
-    #packet.show()
-    if packet[TCP].flags == 2: # is packet TCP and from IP Prefix (filter) and is SYN Flag set?
-        # Build the TCP SYN-ACK response
-        syn_ack_response = IP(src=packet[IP].dst, dst=packet[IP].src) / TCP(sport=packet[TCP].dport, dport=packet[TCP].sport, flags='SA')
-
-        # Send the SYN-ACK response
-        send(syn_ack_response, verbose=0)
-
-    if packet[TCP].flags == 4:
-        print("TCP RST from Dest")
-        #write tcp stream to PCAP? how to capture? tcpdump saves to storage
+curl -O -L https://raw.githubusercontent.com/MicrosoftAzureAaron/Azure_Networking_Labs/main/scripts/TDTestScripts/serverSCAPY.py
 
 #run TCPdump in background with no hang up, for duration + 30 seconds
-nohup tcpdump -timeout $(($dur + 30)) -w /mnt/$saDirectory/$hname/$hname-trace-%m-%d-%H-%M-%S.pcap net $sourceIPPrefix -G 3800 -C 500M -s 120 -K -n &
+nohup tcpdump -timeout $(($dur + 300)) -w /mnt/$saDirectory/$hname/$hname-trace-%m-%d-%H-%M-%S.pcap net $sourceIPPrefix -G 3800 -C 500M -s 120 -K -n &
 
-# Start sniffing for incoming SYN packets, ignore my ssh connection
-sniff(filter="tcp and net $sourceIPPrefix", prn=syn_packet_handler, store=0)
+python3 serverSCAPY.py $sourceIPPrefix
+
+pause 300
 
