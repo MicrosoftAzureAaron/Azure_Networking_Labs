@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.23.1.45101",
-      "templateHash": "14116356305094742526"
+      "templateHash": "6595634101984568738"
     }
   },
   "parameters": {
@@ -14,6 +14,13 @@
       "defaultValue": "westeurope",
       "metadata": {
         "description": "Azure Datacenter location for the Hub and Server A resources"
+      }
+    },
+    "customScriptURL": {
+      "type": "string",
+      "defaultValue": "https://raw.githubusercontent.com/MicrosoftAzureAaron/Azure_Networking_Labs/main/scripts/TDTestScripts/",
+      "metadata": {
+        "description": "ULR location for custom scripts"
       }
     },
     "locationServer": {
@@ -953,7 +960,7 @@
             "value": "[parameters('virtualMachine_Size')]"
           },
           "virtualMachine_ScriptFileLocation": {
-            "value": "https://raw.githubusercontent.com/MicrosoftAzureAaron/Azure_Networking_Labs/main/scripts/TDTestScripts/"
+            "value": "[parameters('customScriptURL')]"
           },
           "virtualMachine_ScriptFileName": {
             "value": "client.sh"
@@ -1319,7 +1326,7 @@
             "value": "[parameters('virtualMachine_Size')]"
           },
           "virtualMachine_ScriptFileLocation": {
-            "value": "https://raw.githubusercontent.com/MicrosoftAzureAaron/Azure_Networking_Labs/main/scripts/TDTestScripts/server.sh"
+            "value": "[parameters('customScriptURL')]"
           },
           "virtualMachine_ScriptFileName": {
             "value": "server.sh"
