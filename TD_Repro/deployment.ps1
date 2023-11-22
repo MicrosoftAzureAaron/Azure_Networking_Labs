@@ -38,9 +38,9 @@ New-AzResourceGroupDeployment -ResourceGroupName $rgName -TemplateFile $mainBice
     -locationClient $locationClient -locationServer $locationServer `
     -virtualMachine_Size $virtualMachine_Size `
     -storageAccount_Name "plconntestsa${randomFiveLetterString}" `
-    -scenario_Name $scenario_Name `
-    -numberOfClientVMs 1
--numberOfServerVMs 1
+    ##-scenario_Name $scenario_Name `
+    -numberOfClientVMs 1 `
+    -numberOfServerVMs 1
 # -usingAzureFirewall $false
 # -storageAccount_ID $storageAccount_ID `
 

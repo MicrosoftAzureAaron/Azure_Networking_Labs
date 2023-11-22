@@ -23,16 +23,11 @@ I'd recommend Standard_D2s_v3 for a cheap VM that supports Accel Net.
 ''')
 param acceleratedNetworking bool = true
 
-param scenario_Name string
-
 @description('Number of Client Virtual Machines to be used as the source of the traffic')
 param numberOfClientVMs int
 
 @description('Number of Server Virtual Machines to be used as the destination of the traffic')
 param numberOfServerVMs int
-
-
-// param usingAzureFirewall bool = true
 
 @description('''
 Storage account name restrictions:
@@ -68,7 +63,7 @@ module clientToServerPeering '../../modules/Microsoft.Network/VirtualNetworkPeer
   }
 }
 
-module clientVM_Linux '../../modules/Microsoft.Compute/Ubuntu20/VirtualMachine.bicep' = [ for i in range(0, numberOfClientVMs):  {
+module clientVM_Linux '../../modules/Microsoft.Compute/Ubuntu20/VirtualMachine.bicep' = [for i in range(0, numberOfClientVMs): {
   name: 'clientVM${i}'
   params: {
     acceleratedNetworking: acceleratedNetworking
@@ -85,7 +80,7 @@ module clientVM_Linux '../../modules/Microsoft.Compute/Ubuntu20/VirtualMachine.b
   dependsOn: [
     storageAccount
   ]
-} ]
+}]
 
 module ServerVM_Linux '../../modules/Microsoft.Compute/Ubuntu20/VirtualMachine.bicep' = [for i in range(0, numberOfServerVMs): {
   name: 'serverVM${i}'
