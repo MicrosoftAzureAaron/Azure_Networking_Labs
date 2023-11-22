@@ -2,15 +2,16 @@
 
 $mainBicepFile = ".\TD_Repro\src\main.bicep"
 $mainJSONFile = ".\TD_Repro\src\main.json"
-$mainParameterFile = ".\virtualMachines.parameters.json"
+#$mainParameterFile = ".\virtualMachines.parameters.json"
 
 $start = get-date -UFormat "%s"
-
+ 
 $currentTime = Get-Date -Format "HH:mm K"
 Write-Host "Starting Bicep Deployment.  Process began at: ${currentTime}"
 
 Write-Host "`nBuilding main.json from main.bicep.."
 bicep build $mainBicepFile --outfile $mainJSONFile
+
 
 # Specifies the account and subscription where the deployment will take place.
 if (!$subID) {

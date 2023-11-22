@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.18.4.5664",
-      "templateHash": "1062174384464806016"
+      "version": "0.23.1.45101",
+      "templateHash": "14116356305094742526"
     }
   },
   "parameters": {
@@ -49,9 +49,6 @@
         "description": "True enables Accelerated Networking and False disabled it.  \r\nNot all VM sizes support Accel Net (i.e. Standard_B2ms).  \r\nI'd recommend Standard_D2s_v3 for a cheap VM that supports Accel Net.\r\n"
       }
     },
-    "scenario_Name": {
-      "type": "string"
-    },
     "numberOfClientVMs": {
       "type": "int",
       "metadata": {
@@ -66,8 +63,8 @@
     },
     "storageAccount_Name": {
       "type": "string",
-      "maxLength": 24,
       "minLength": 3,
+      "maxLength": 24,
       "metadata": {
         "description": "Storage account name restrictions:\r\n- Storage account names must be between 3 and 24 characters in length and may contain numbers and lowercase letters only.\r\n- Your storage account name must be unique within Azure. No two storage accounts can have the same name.\r\n"
       }
@@ -100,8 +97,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "2269513320626881563"
+              "version": "0.23.1.45101",
+              "templateHash": "1640325965037456320"
             }
           },
           "parameters": {
@@ -507,6 +504,10 @@
             "routeTable_Name": {
               "type": "string",
               "value": "[parameters('routeTable_Name')]"
+            },
+            "virtualNetwork_AddressPrefix": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork_Name')), '2022-09-01').addressSpace.addressPrefixes[0]]"
             }
           }
         }
@@ -538,8 +539,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "10392861313206181093"
+              "version": "0.23.1.45101",
+              "templateHash": "15011560828751862171"
             }
           },
           "parameters": {
@@ -837,6 +838,10 @@
             "routeTable_Name": {
               "type": "string",
               "value": "[parameters('routeTable_Name')]"
+            },
+            "virtualNetwork_AddressPrefix": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork_Name')), '2022-09-01').addressSpace.addressPrefixes[0]]"
             }
           }
         }
@@ -865,8 +870,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "3947245623130731918"
+              "version": "0.23.1.45101",
+              "templateHash": "16464218347743419772"
             }
           },
           "parameters": {
@@ -948,13 +953,13 @@
             "value": "[parameters('virtualMachine_Size')]"
           },
           "virtualMachine_ScriptFileLocation": {
-            "value": "https://raw.githubusercontent.com/jimgodden/Azure_Networking_Labs/main/scripts/"
+            "value": "https://raw.githubusercontent.com/MicrosoftAzureAaron/Azure_Networking_Labs/main/scripts/TDTestScripts/"
           },
           "virtualMachine_ScriptFileName": {
-            "value": "conntestClient.sh"
+            "value": "client.sh"
           },
           "commandToExecute": {
-            "value": "[format('./conntestClient.sh {0} {1} {2} {3} {4}', reference(resourceId('Microsoft.Resources/deployments', 'pe_NIC'), '2022-09-01').outputs.privateEndpoint_IPAddress.value, parameters('scenario_Name'), reference(resourceId('Microsoft.Resources/deployments', 'storageAccount'), '2022-09-01').outputs.storageAccount_Name.value, reference(resourceId('Microsoft.Resources/deployments', 'storageAccount'), '2022-09-01').outputs.storageAccountFileShare_Name.value, reference(resourceId('Microsoft.Resources/deployments', 'storageAccount'), '2022-09-01').outputs.storageAccount_key0.value)]"
+            "value": "[format('./client.sh {0} {1} {2} {3} 900', reference(resourceId('Microsoft.Resources/deployments', 'pe_NIC'), '2022-09-01').outputs.privateEndpoint_IPAddress.value, reference(resourceId('Microsoft.Resources/deployments', 'storageAccount'), '2022-09-01').outputs.storageAccount_Name.value, reference(resourceId('Microsoft.Resources/deployments', 'storageAccount'), '2022-09-01').outputs.storageAccountFileShare_Name.value, reference(resourceId('Microsoft.Resources/deployments', 'storageAccount'), '2022-09-01').outputs.storageAccount_key0.value)]"
           }
         },
         "template": {
@@ -963,8 +968,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "14788204033910922760"
+              "version": "0.23.1.45101",
+              "templateHash": "9297101315383250707"
             }
           },
           "parameters": {
@@ -973,10 +978,10 @@
             },
             "virtualMachine_Name": {
               "type": "string",
+              "maxLength": 15,
               "metadata": {
                 "description": "Name of the Virtual Machine"
-              },
-              "maxLength": 15
+              }
             },
             "virtualMachine_Size": {
               "type": "string",
@@ -1168,8 +1173,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.18.4.5664",
-                      "templateHash": "10775271075142205483"
+                      "version": "0.23.1.45101",
+                      "templateHash": "16646750190955539652"
                     }
                   },
                   "parameters": {
@@ -1314,13 +1319,13 @@
             "value": "[parameters('virtualMachine_Size')]"
           },
           "virtualMachine_ScriptFileLocation": {
-            "value": "https://raw.githubusercontent.com/jimgodden/Azure_Networking_Labs/main/scripts/"
+            "value": "https://raw.githubusercontent.com/MicrosoftAzureAaron/Azure_Networking_Labs/main/scripts/TDTestScripts/server.sh"
           },
           "virtualMachine_ScriptFileName": {
-            "value": "conntestServer.sh"
+            "value": "server.sh"
           },
           "commandToExecute": {
-            "value": "[format('./conntestServer.sh {0} {1} {2} {3}', parameters('scenario_Name'), reference(resourceId('Microsoft.Resources/deployments', 'storageAccount'), '2022-09-01').outputs.storageAccount_Name.value, reference(resourceId('Microsoft.Resources/deployments', 'storageAccount'), '2022-09-01').outputs.storageAccountFileShare_Name.value, reference(resourceId('Microsoft.Resources/deployments', 'storageAccount'), '2022-09-01').outputs.storageAccount_key0.value)]"
+            "value": "[format('./server.sh {0} {1} {2} {3}', reference(resourceId('Microsoft.Resources/deployments', 'storageAccount'), '2022-09-01').outputs.storageAccount_Name.value, reference(resourceId('Microsoft.Resources/deployments', 'storageAccount'), '2022-09-01').outputs.storageAccountFileShare_Name.value, reference(resourceId('Microsoft.Resources/deployments', 'storageAccount'), '2022-09-01').outputs.storageAccount_key0.value, reference(resourceId('Microsoft.Resources/deployments', 'clientVNet'), '2022-09-01').outputs.virtualNetwork_AddressPrefix.value)]"
           }
         },
         "template": {
@@ -1329,8 +1334,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "14788204033910922760"
+              "version": "0.23.1.45101",
+              "templateHash": "9297101315383250707"
             }
           },
           "parameters": {
@@ -1339,10 +1344,10 @@
             },
             "virtualMachine_Name": {
               "type": "string",
+              "maxLength": 15,
               "metadata": {
                 "description": "Name of the Virtual Machine"
-              },
-              "maxLength": 15
+              }
             },
             "virtualMachine_Size": {
               "type": "string",
@@ -1534,8 +1539,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.18.4.5664",
-                      "templateHash": "10775271075142205483"
+                      "version": "0.23.1.45101",
+                      "templateHash": "16646750190955539652"
                     }
                   },
                   "parameters": {
@@ -1640,130 +1645,8 @@
       },
       "dependsOn": [
         "[resourceId('Microsoft.Resources/deployments', 'storageAccount')]",
+        "[resourceId('Microsoft.Resources/deployments', 'clientVNet')]",
         "[resourceId('Microsoft.Resources/deployments', 'serverVNet')]"
-      ]
-    },
-    {
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2022-09-01",
-      "name": "clientBastion",
-      "properties": {
-        "expressionEvaluationOptions": {
-          "scope": "inner"
-        },
-        "mode": "Incremental",
-        "parameters": {
-          "bastion_SubnetID": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'clientVNet'), '2022-09-01').outputs.bastion_SubnetID.value]"
-          },
-          "location": {
-            "value": "[parameters('locationClient')]"
-          }
-        },
-        "template": {
-          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-          "contentVersion": "1.0.0.0",
-          "metadata": {
-            "_generator": {
-              "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "16807152716578717234"
-            }
-          },
-          "parameters": {
-            "location": {
-              "type": "string",
-              "metadata": {
-                "description": "Azure Datacenter location that the main resouces will be deployed to."
-              }
-            },
-            "bastion_name": {
-              "type": "string",
-              "defaultValue": "bastion",
-              "metadata": {
-                "description": "Name of the Azure Bastion"
-              }
-            },
-            "bastion_vip_name": {
-              "type": "string",
-              "defaultValue": "bastion_vip",
-              "metadata": {
-                "description": "Name of the Public IP Address attached to the Azure Bastion"
-              }
-            },
-            "bastion_SubnetID": {
-              "type": "string",
-              "metadata": {
-                "description": "Resource ID of the subnet the Azure Bastion will be placed in.  The name of the subnet must be \"AzureBastionSubnet\""
-              }
-            },
-            "bastion_SKU": {
-              "type": "string",
-              "defaultValue": "Basic",
-              "allowedValues": [
-                "Basic",
-                "Standard"
-              ],
-              "metadata": {
-                "description": "SKU of the Azure Bastion"
-              }
-            }
-          },
-          "resources": [
-            {
-              "type": "Microsoft.Network/bastionHosts",
-              "apiVersion": "2022-09-01",
-              "name": "[parameters('bastion_name')]",
-              "location": "[parameters('location')]",
-              "sku": {
-                "name": "[parameters('bastion_SKU')]"
-              },
-              "properties": {
-                "scaleUnits": 2,
-                "enableTunneling": false,
-                "enableIpConnect": false,
-                "disableCopyPaste": false,
-                "enableShareableLink": false,
-                "ipConfigurations": [
-                  {
-                    "name": "IpConf",
-                    "properties": {
-                      "privateIPAllocationMethod": "Dynamic",
-                      "publicIPAddress": {
-                        "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('bastion_vip_name'))]"
-                      },
-                      "subnet": {
-                        "id": "[parameters('bastion_SubnetID')]"
-                      }
-                    }
-                  }
-                ]
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('bastion_vip_name'))]"
-              ]
-            },
-            {
-              "type": "Microsoft.Network/publicIPAddresses",
-              "apiVersion": "2022-09-01",
-              "name": "[parameters('bastion_vip_name')]",
-              "location": "[parameters('location')]",
-              "sku": {
-                "name": "Standard",
-                "tier": "Regional"
-              },
-              "properties": {
-                "publicIPAddressVersion": "IPv4",
-                "publicIPAllocationMethod": "Static",
-                "idleTimeoutInMinutes": 4,
-                "ipTags": []
-              }
-            }
-          ]
-        }
-      },
-      "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'clientVNet')]"
       ]
     },
     {
@@ -1825,8 +1708,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "5651012902893304007"
+              "version": "0.23.1.45101",
+              "templateHash": "8513481372193404892"
             }
           },
           "parameters": {
@@ -1853,8 +1736,8 @@
             },
             "storageAccount_Name": {
               "type": "string",
-              "maxLength": 24,
               "minLength": 3,
+              "maxLength": 24,
               "metadata": {
                 "description": "Storage account name restrictions:\r\n- Storage account names must be between 3 and 24 characters in length and may contain numbers and lowercase letters only.\r\n- Your storage account name must be unique within Azure. No two storage accounts can have the same name.\r\n"
               }
@@ -2228,8 +2111,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "4206720600241436975"
+              "version": "0.23.1.45101",
+              "templateHash": "4106892316679403389"
             }
           },
           "parameters": {
@@ -2507,8 +2390,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "12692582832155899301"
+              "version": "0.23.1.45101",
+              "templateHash": "8817695832489557778"
             }
           },
           "parameters": {
