@@ -52,7 +52,7 @@ chmod +x serverSCAPY.py
 nohup tcpdump -timeout $(($dur + 300)) -w /mnt/$saDirectory/$hname/$hname-trace-%m-%d-%H-%M-%S.pcap net $sourceIPPrefix -G 3800 -C 500M -s 120 -K -n &
 
 #run listener script on server VM
-python3 serverSCAPY.py $sourceIPPrefix $dur
+nohup python3 serverSCAPY.py $sourceIPPrefix $dur &
 
 #wait 5 minutes
 pause 300
