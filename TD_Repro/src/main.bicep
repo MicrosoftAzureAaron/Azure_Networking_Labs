@@ -1,6 +1,9 @@
 @description('Azure Datacenter location for the Hub and Server A resources')
 param locationClient string = 'westeurope'
 
+@description('ULR location for custom scripts')
+param customScriptURL string = 'https://raw.githubusercontent.com/MicrosoftAzureAaron/Azure_Networking_Labs/main/scripts/TDTestScripts/'
+
 @description('''
 Azure Datacenter location for the Server B resources.  
 Use the same region as locationClient if you do not want to test multi-region
@@ -73,7 +76,7 @@ module clientVM_Linux '../../modules/Microsoft.Compute/Ubuntu20/VirtualMachine.b
     virtualMachine_AdminUsername: virtualMachine_adminUsername
     virtualMachine_Name: 'ClientVM${i}'
     virtualMachine_Size: virtualMachine_Size
-    virtualMachine_ScriptFileLocation: 'https://raw.githubusercontent.com/MicrosoftAzureAaron/Azure_Networking_Labs/main/scripts/TDTestScripts/'
+    virtualMachine_ScriptFileLocation: customScriptURL
     virtualMachine_ScriptFileName: 'client.sh'
     commandToExecute: './client.sh ${privateEndpoint_NIC.outputs.privateEndpoint_IPAddress} ${storageAccount.outputs.storageAccount_Name} ${storageAccount.outputs.storageAccountFileShare_Name} ${storageAccount.outputs.storageAccount_key0} 900'
   }
@@ -92,7 +95,7 @@ module ServerVM_Linux '../../modules/Microsoft.Compute/Ubuntu20/VirtualMachine.b
     virtualMachine_AdminUsername: virtualMachine_adminUsername
     virtualMachine_Name: 'ServerVM${i}'
     virtualMachine_Size: virtualMachine_Size
-    virtualMachine_ScriptFileLocation: 'https://raw.githubusercontent.com/MicrosoftAzureAaron/Azure_Networking_Labs/main/scripts/TDTestScripts/server.sh'
+    virtualMachine_ScriptFileLocation: customScriptURL
     virtualMachine_ScriptFileName: 'server.sh'
     commandToExecute: './server.sh ${storageAccount.outputs.storageAccount_Name} ${storageAccount.outputs.storageAccountFileShare_Name} ${storageAccount.outputs.storageAccount_key0} ${virtualNetwork_Client.outputs.virtualNetwork_AddressPrefix}'
   }
