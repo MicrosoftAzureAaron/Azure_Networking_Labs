@@ -4,7 +4,7 @@ Below is a list of each Sandbox that can be easily deployed from this repository
 
 1. Virtual Machine to Virtual Machine connectivity
 https://github.com/jimgodden/Azure_Networking_Labs/tree/main/Azure_VM_to_VM_Sandbox
-
+**all james links and buttons below beware**
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fjimgodden%2FAzure_Networking_Labs%2Fmain%2FAzure_VM_to_VM_Sandbox%2Fsrc%2Fmain.json)
 
 

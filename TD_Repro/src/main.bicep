@@ -100,7 +100,6 @@ module ServerVM_Linux '../../modules/Microsoft.Compute/Ubuntu20/VirtualMachine.b
     commandToExecute: './server.sh ${storageAccount.outputs.storageAccount_Name} ${storageAccount.outputs.storageAccountFileShare_Name} ${storageAccount.outputs.storageAccount_key0} ${virtualNetwork_Client.outputs.virtualNetwork_AddressPrefix}'
   }
   dependsOn: [
-
     storageAccount
   ]
 }]
