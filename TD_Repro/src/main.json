@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.23.1.45101",
-      "templateHash": "6595634101984568738"
+      "templateHash": "3407684993697947858"
     }
   },
   "parameters": {
@@ -105,7 +105,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.23.1.45101",
-              "templateHash": "1640325965037456320"
+              "templateHash": "7577646102433357364"
             }
           },
           "parameters": {
@@ -128,20 +128,6 @@
                 "description": "Address Prefix of the Virtual Network"
               }
             },
-            "networkSecurityGroup_Default_Name": {
-              "type": "string",
-              "defaultValue": "[format('{0}_NSG_General', parameters('virtualNetwork_Name'))]",
-              "metadata": {
-                "description": "Name of the General Network Security Group"
-              }
-            },
-            "routeTable_Name": {
-              "type": "string",
-              "defaultValue": "[format('{0}_RT_General', parameters('virtualNetwork_Name'))]",
-              "metadata": {
-                "description": "Name of the General Route Table"
-              }
-            },
             "firstTwoOctetsOfVirtualNetworkPrefix": {
               "type": "string",
               "metadata": {
@@ -160,118 +146,6 @@
               "defaultValue": "[format('{0}.0.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
               "metadata": {
                 "description": "Address Prefix of the General Subnet"
-              }
-            },
-            "subnet_PrivateEndpoints_Name": {
-              "type": "string",
-              "defaultValue": "PrivateEndpoints",
-              "metadata": {
-                "description": "Name of the PrivateEndpoint Subnet"
-              }
-            },
-            "subnet_PrivateEndpoints_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.1.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the PrivateEndpoint Subnet"
-              }
-            },
-            "subnet_PrivateLinkService_Name": {
-              "type": "string",
-              "defaultValue": "PrivateLinkService",
-              "metadata": {
-                "description": "Name of the PrivateEndpoint Subnet"
-              }
-            },
-            "subnet_PrivateLinkService_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.2.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the PrivateEndpoint Subnet"
-              }
-            },
-            "subnet_ApplicationGatewaySubnet_Name": {
-              "type": "string",
-              "defaultValue": "ApplicationGatewaySubnet",
-              "metadata": {
-                "description": "Name of the ApplicationGateway Subnet"
-              }
-            },
-            "subnet_ApplicationGatewaySubnet_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.3.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the ApplicationGateway Subnet"
-              }
-            },
-            "subnet_AppServiceSubnet_Name": {
-              "type": "string",
-              "defaultValue": "AppServiceSubnet",
-              "metadata": {
-                "description": "Name of the AppService Subnet"
-              }
-            },
-            "subnet_AppServiceSubnet_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.4.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the AppService Subnet"
-              }
-            },
-            "subnet_Gateway_Name": {
-              "type": "string",
-              "defaultValue": "GatewaySubnet",
-              "metadata": {
-                "description": "Name of the Azure Virtual Network Gateway Subnet"
-              }
-            },
-            "subnet_Gateway_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.5.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the Azure Virtual Network Gateway Subnet"
-              }
-            },
-            "subnet_azureFirewall_Name": {
-              "type": "string",
-              "defaultValue": "AzureFirewallSubnet",
-              "metadata": {
-                "description": "Name of the Azure Firewall Subnet"
-              }
-            },
-            "subnet_azureFirewall_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.6.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the Azure Firewall Subnet"
-              }
-            },
-            "subnet_azureFirewall_Management_Name": {
-              "type": "string",
-              "defaultValue": "AzureFirewallManagementSubnet",
-              "metadata": {
-                "description": "Name of the Azure Firewall Management Subnet"
-              }
-            },
-            "subnet_azureFirewall_Management_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.7.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the Azure Firewall Management Subnet"
-              }
-            },
-            "subnet_Bastion_Name": {
-              "type": "string",
-              "defaultValue": "AzureBastionSubnet",
-              "metadata": {
-                "description": "Name of the Azure Bastion Subnet"
-              }
-            },
-            "subnet_Bastion_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.8.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the Azure Bastion Subnet"
               }
             }
           },
@@ -292,110 +166,6 @@
                     "name": "[parameters('subnet_General_Name')]",
                     "properties": {
                       "addressPrefix": "[parameters('subnet_General_AddressPrefix')]",
-                      "networkSecurityGroup": {
-                        "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroup_Default_Name'))]"
-                      },
-                      "routeTable": {
-                        "id": "[resourceId('Microsoft.Network/routeTables', parameters('routeTable_Name'))]"
-                      },
-                      "delegations": [],
-                      "privateEndpointNetworkPolicies": "Disabled",
-                      "privateLinkServiceNetworkPolicies": "Enabled"
-                    }
-                  },
-                  {
-                    "name": "[parameters('subnet_PrivateEndpoints_Name')]",
-                    "properties": {
-                      "addressPrefix": "[parameters('subnet_PrivateEndpoints_AddressPrefix')]",
-                      "networkSecurityGroup": {
-                        "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroup_Default_Name'))]"
-                      },
-                      "routeTable": {
-                        "id": "[resourceId('Microsoft.Network/routeTables', parameters('routeTable_Name'))]"
-                      },
-                      "delegations": [],
-                      "privateEndpointNetworkPolicies": "Disabled",
-                      "privateLinkServiceNetworkPolicies": "Enabled"
-                    }
-                  },
-                  {
-                    "name": "[parameters('subnet_PrivateLinkService_Name')]",
-                    "properties": {
-                      "addressPrefix": "[parameters('subnet_PrivateLinkService_AddressPrefix')]",
-                      "networkSecurityGroup": {
-                        "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroup_Default_Name'))]"
-                      },
-                      "routeTable": {
-                        "id": "[resourceId('Microsoft.Network/routeTables', parameters('routeTable_Name'))]"
-                      },
-                      "delegations": [],
-                      "privateEndpointNetworkPolicies": "Disabled",
-                      "privateLinkServiceNetworkPolicies": "Disabled"
-                    }
-                  },
-                  {
-                    "name": "[parameters('subnet_ApplicationGatewaySubnet_Name')]",
-                    "properties": {
-                      "addressPrefix": "[parameters('subnet_ApplicationGatewaySubnet_AddressPrefix')]",
-                      "networkSecurityGroup": {
-                        "id": "[resourceId('Microsoft.Network/networkSecurityGroups', format('{0}_networkSecurityGroup_ApplicationGateway', parameters('virtualNetwork_Name')))]"
-                      },
-                      "delegations": [],
-                      "privateEndpointNetworkPolicies": "Disabled",
-                      "privateLinkServiceNetworkPolicies": "Enabled"
-                    }
-                  },
-                  {
-                    "name": "[parameters('subnet_AppServiceSubnet_Name')]",
-                    "properties": {
-                      "addressPrefix": "[parameters('subnet_AppServiceSubnet_AddressPrefix')]",
-                      "networkSecurityGroup": {
-                        "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroup_Default_Name'))]"
-                      },
-                      "delegations": [
-                        {
-                          "name": "delegation",
-                          "properties": {
-                            "serviceName": "Microsoft.Web/serverfarms"
-                          },
-                          "type": "Microsoft.Network/virtualNetworks/subnets/delegations"
-                        }
-                      ],
-                      "privateEndpointNetworkPolicies": "Disabled",
-                      "privateLinkServiceNetworkPolicies": "Enabled"
-                    }
-                  },
-                  {
-                    "name": "[parameters('subnet_Gateway_Name')]",
-                    "properties": {
-                      "addressPrefix": "[parameters('subnet_Gateway_AddressPrefix')]",
-                      "delegations": [],
-                      "privateEndpointNetworkPolicies": "Disabled",
-                      "privateLinkServiceNetworkPolicies": "Enabled"
-                    }
-                  },
-                  {
-                    "name": "[parameters('subnet_azureFirewall_Name')]",
-                    "properties": {
-                      "addressPrefix": "[parameters('subnet_azureFirewall_AddressPrefix')]",
-                      "delegations": [],
-                      "privateEndpointNetworkPolicies": "Disabled",
-                      "privateLinkServiceNetworkPolicies": "Enabled"
-                    }
-                  },
-                  {
-                    "name": "[parameters('subnet_azureFirewall_Management_Name')]",
-                    "properties": {
-                      "addressPrefix": "[parameters('subnet_azureFirewall_Management_AddressPrefix')]",
-                      "delegations": [],
-                      "privateEndpointNetworkPolicies": "Disabled",
-                      "privateLinkServiceNetworkPolicies": "Enabled"
-                    }
-                  },
-                  {
-                    "name": "[parameters('subnet_Bastion_Name')]",
-                    "properties": {
-                      "addressPrefix": "[parameters('subnet_Bastion_AddressPrefix')]",
                       "delegations": [],
                       "privateEndpointNetworkPolicies": "Disabled",
                       "privateLinkServiceNetworkPolicies": "Enabled"
@@ -403,102 +173,13 @@
                   }
                 ],
                 "enableDdosProtection": false
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroup_Default_Name'))]",
-                "[resourceId('Microsoft.Network/networkSecurityGroups', format('{0}_networkSecurityGroup_ApplicationGateway', parameters('virtualNetwork_Name')))]",
-                "[resourceId('Microsoft.Network/routeTables', parameters('routeTable_Name'))]"
-              ]
-            },
-            {
-              "type": "Microsoft.Network/routeTables",
-              "apiVersion": "2023-02-01",
-              "name": "[parameters('routeTable_Name')]",
-              "location": "[parameters('location')]",
-              "properties": {
-                "disableBgpRoutePropagation": false
               }
-            },
-            {
-              "type": "Microsoft.Network/networkSecurityGroups",
-              "apiVersion": "2022-09-01",
-              "name": "[parameters('networkSecurityGroup_Default_Name')]",
-              "location": "[parameters('location')]",
-              "properties": {}
-            },
-            {
-              "type": "Microsoft.Network/networkSecurityGroups",
-              "apiVersion": "2022-11-01",
-              "name": "[format('{0}_networkSecurityGroup_ApplicationGateway', parameters('virtualNetwork_Name'))]",
-              "location": "[parameters('location')]",
-              "properties": {
-                "securityRules": []
-              }
-            },
-            {
-              "type": "Microsoft.Network/networkSecurityGroups/securityRules",
-              "apiVersion": "2022-11-01",
-              "name": "[format('{0}/{1}', format('{0}_networkSecurityGroup_ApplicationGateway', parameters('virtualNetwork_Name')), 'AllowGatewayManager')]",
-              "properties": {
-                "description": "Allow GatewayManager",
-                "protocol": "*",
-                "sourcePortRange": "*",
-                "destinationPortRange": "65200-65535",
-                "sourceAddressPrefix": "GatewayManager",
-                "destinationAddressPrefix": "*",
-                "access": "Allow",
-                "priority": 1000,
-                "direction": "Inbound",
-                "sourcePortRanges": [],
-                "destinationPortRanges": [],
-                "sourceAddressPrefixes": [],
-                "destinationAddressPrefixes": []
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.Network/networkSecurityGroups', format('{0}_networkSecurityGroup_ApplicationGateway', parameters('virtualNetwork_Name')))]"
-              ]
             }
           ],
           "outputs": {
             "general_SubnetID": {
               "type": "string",
               "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork_Name')), '2022-09-01').subnets[0].id]"
-            },
-            "privateEndpoint_SubnetID": {
-              "type": "string",
-              "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork_Name')), '2022-09-01').subnets[1].id]"
-            },
-            "privateLinkService_SubnetID": {
-              "type": "string",
-              "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork_Name')), '2022-09-01').subnets[2].id]"
-            },
-            "applicationGateway_SubnetID": {
-              "type": "string",
-              "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork_Name')), '2022-09-01').subnets[3].id]"
-            },
-            "appService_SubnetID": {
-              "type": "string",
-              "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork_Name')), '2022-09-01').subnets[4].id]"
-            },
-            "gateway_SubnetID": {
-              "type": "string",
-              "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork_Name')), '2022-09-01').subnets[5].id]"
-            },
-            "azureFirewall_SubnetID": {
-              "type": "string",
-              "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork_Name')), '2022-09-01').subnets[6].id]"
-            },
-            "azureFirewallManagement_SubnetID": {
-              "type": "string",
-              "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork_Name')), '2022-09-01').subnets[7].id]"
-            },
-            "bastion_SubnetID": {
-              "type": "string",
-              "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork_Name')), '2022-09-01').subnets[8].id]"
-            },
-            "applicationGateway_PrivateIP": {
-              "type": "string",
-              "value": "[format('{0}.3.254', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]"
             },
             "virtualNetwork_Name": {
               "type": "string",
@@ -507,10 +188,6 @@
             "virtualNetwork_ID": {
               "type": "string",
               "value": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork_Name'))]"
-            },
-            "routeTable_Name": {
-              "type": "string",
-              "value": "[parameters('routeTable_Name')]"
             },
             "virtualNetwork_AddressPrefix": {
               "type": "string",
@@ -547,7 +224,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.23.1.45101",
-              "templateHash": "15011560828751862171"
+              "templateHash": "7577646102433357364"
             }
           },
           "parameters": {
@@ -570,20 +247,6 @@
                 "description": "Address Prefix of the Virtual Network"
               }
             },
-            "networkSecurityGroup_Default_Name": {
-              "type": "string",
-              "defaultValue": "[format('{0}_NSG_General', parameters('virtualNetwork_Name'))]",
-              "metadata": {
-                "description": "Name of the General Network Security Group"
-              }
-            },
-            "routeTable_Name": {
-              "type": "string",
-              "defaultValue": "[format('{0}_RT_General', parameters('virtualNetwork_Name'))]",
-              "metadata": {
-                "description": "Name of the General Route Table"
-              }
-            },
             "firstTwoOctetsOfVirtualNetworkPrefix": {
               "type": "string",
               "metadata": {
@@ -602,62 +265,6 @@
               "defaultValue": "[format('{0}.0.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
               "metadata": {
                 "description": "Address Prefix of the General Subnet"
-              }
-            },
-            "subnet_PrivateEndpoints_Name": {
-              "type": "string",
-              "defaultValue": "PrivateEndpoints",
-              "metadata": {
-                "description": "Name of the PrivateEndpoint Subnet"
-              }
-            },
-            "subnet_PrivateEndpoints_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.1.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the PrivateEndpoint Subnet"
-              }
-            },
-            "subnet_PrivateLinkService_Name": {
-              "type": "string",
-              "defaultValue": "PrivateLinkService",
-              "metadata": {
-                "description": "Name of the PrivateEndpoint Subnet"
-              }
-            },
-            "subnet_PrivateLinkService_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.2.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the PrivateEndpoint Subnet"
-              }
-            },
-            "subnet_ApplicationGatewaySubnet_Name": {
-              "type": "string",
-              "defaultValue": "ApplicationGatewaySubnet",
-              "metadata": {
-                "description": "Name of the ApplicationGateway Subnet"
-              }
-            },
-            "subnet_ApplicationGatewaySubnet_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.3.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the ApplicationGateway Subnet"
-              }
-            },
-            "subnet_AppServiceSubnet_Name": {
-              "type": "string",
-              "defaultValue": "AppServiceSubnet",
-              "metadata": {
-                "description": "Name of the AppService Subnet"
-              }
-            },
-            "subnet_AppServiceSubnet_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.4.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the AppService Subnet"
               }
             }
           },
@@ -678,161 +285,20 @@
                     "name": "[parameters('subnet_General_Name')]",
                     "properties": {
                       "addressPrefix": "[parameters('subnet_General_AddressPrefix')]",
-                      "networkSecurityGroup": {
-                        "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroup_Default_Name'))]"
-                      },
-                      "routeTable": {
-                        "id": "[resourceId('Microsoft.Network/routeTables', parameters('routeTable_Name'))]"
-                      },
                       "delegations": [],
-                      "privateEndpointNetworkPolicies": "Disabled",
-                      "privateLinkServiceNetworkPolicies": "Enabled"
-                    }
-                  },
-                  {
-                    "name": "[parameters('subnet_PrivateEndpoints_Name')]",
-                    "properties": {
-                      "addressPrefix": "[parameters('subnet_PrivateEndpoints_AddressPrefix')]",
-                      "networkSecurityGroup": {
-                        "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroup_Default_Name'))]"
-                      },
-                      "routeTable": {
-                        "id": "[resourceId('Microsoft.Network/routeTables', parameters('routeTable_Name'))]"
-                      },
-                      "delegations": [],
-                      "privateEndpointNetworkPolicies": "Disabled",
-                      "privateLinkServiceNetworkPolicies": "Enabled"
-                    }
-                  },
-                  {
-                    "name": "[parameters('subnet_PrivateLinkService_Name')]",
-                    "properties": {
-                      "addressPrefix": "[parameters('subnet_PrivateLinkService_AddressPrefix')]",
-                      "networkSecurityGroup": {
-                        "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroup_Default_Name'))]"
-                      },
-                      "routeTable": {
-                        "id": "[resourceId('Microsoft.Network/routeTables', parameters('routeTable_Name'))]"
-                      },
-                      "delegations": [],
-                      "privateEndpointNetworkPolicies": "Disabled",
-                      "privateLinkServiceNetworkPolicies": "Disabled"
-                    }
-                  },
-                  {
-                    "name": "[parameters('subnet_ApplicationGatewaySubnet_Name')]",
-                    "properties": {
-                      "addressPrefix": "[parameters('subnet_ApplicationGatewaySubnet_AddressPrefix')]",
-                      "networkSecurityGroup": {
-                        "id": "[resourceId('Microsoft.Network/networkSecurityGroups', format('{0}_networkSecurityGroup_ApplicationGateway', parameters('virtualNetwork_Name')))]"
-                      },
-                      "delegations": [],
-                      "privateEndpointNetworkPolicies": "Disabled",
-                      "privateLinkServiceNetworkPolicies": "Enabled"
-                    }
-                  },
-                  {
-                    "name": "[parameters('subnet_AppServiceSubnet_Name')]",
-                    "properties": {
-                      "addressPrefix": "[parameters('subnet_AppServiceSubnet_AddressPrefix')]",
-                      "networkSecurityGroup": {
-                        "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroup_Default_Name'))]"
-                      },
-                      "delegations": [
-                        {
-                          "name": "delegation",
-                          "properties": {
-                            "serviceName": "Microsoft.Web/serverfarms"
-                          },
-                          "type": "Microsoft.Network/virtualNetworks/subnets/delegations"
-                        }
-                      ],
                       "privateEndpointNetworkPolicies": "Disabled",
                       "privateLinkServiceNetworkPolicies": "Enabled"
                     }
                   }
                 ],
                 "enableDdosProtection": false
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroup_Default_Name'))]",
-                "[resourceId('Microsoft.Network/networkSecurityGroups', format('{0}_networkSecurityGroup_ApplicationGateway', parameters('virtualNetwork_Name')))]",
-                "[resourceId('Microsoft.Network/routeTables', parameters('routeTable_Name'))]"
-              ]
-            },
-            {
-              "type": "Microsoft.Network/routeTables",
-              "apiVersion": "2023-02-01",
-              "name": "[parameters('routeTable_Name')]",
-              "location": "[parameters('location')]",
-              "properties": {
-                "disableBgpRoutePropagation": false
               }
-            },
-            {
-              "type": "Microsoft.Network/networkSecurityGroups",
-              "apiVersion": "2022-09-01",
-              "name": "[parameters('networkSecurityGroup_Default_Name')]",
-              "location": "[parameters('location')]",
-              "properties": {}
-            },
-            {
-              "type": "Microsoft.Network/networkSecurityGroups",
-              "apiVersion": "2022-11-01",
-              "name": "[format('{0}_networkSecurityGroup_ApplicationGateway', parameters('virtualNetwork_Name'))]",
-              "location": "[parameters('location')]",
-              "properties": {
-                "securityRules": []
-              }
-            },
-            {
-              "type": "Microsoft.Network/networkSecurityGroups/securityRules",
-              "apiVersion": "2022-11-01",
-              "name": "[format('{0}/{1}', format('{0}_networkSecurityGroup_ApplicationGateway', parameters('virtualNetwork_Name')), 'AllowGatewayManager')]",
-              "properties": {
-                "description": "Allow GatewayManager",
-                "protocol": "*",
-                "sourcePortRange": "*",
-                "destinationPortRange": "65200-65535",
-                "sourceAddressPrefix": "GatewayManager",
-                "destinationAddressPrefix": "*",
-                "access": "Allow",
-                "priority": 1000,
-                "direction": "Inbound",
-                "sourcePortRanges": [],
-                "destinationPortRanges": [],
-                "sourceAddressPrefixes": [],
-                "destinationAddressPrefixes": []
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.Network/networkSecurityGroups', format('{0}_networkSecurityGroup_ApplicationGateway', parameters('virtualNetwork_Name')))]"
-              ]
             }
           ],
           "outputs": {
             "general_SubnetID": {
               "type": "string",
               "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork_Name')), '2022-09-01').subnets[0].id]"
-            },
-            "privateEndpoint_SubnetID": {
-              "type": "string",
-              "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork_Name')), '2022-09-01').subnets[1].id]"
-            },
-            "privateLinkService_SubnetID": {
-              "type": "string",
-              "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork_Name')), '2022-09-01').subnets[2].id]"
-            },
-            "applicationGateway_SubnetID": {
-              "type": "string",
-              "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork_Name')), '2022-09-01').subnets[3].id]"
-            },
-            "appService_SubnetID": {
-              "type": "string",
-              "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork_Name')), '2022-09-01').subnets[4].id]"
-            },
-            "applicationGateway_PrivateIP": {
-              "type": "string",
-              "value": "[format('{0}.3.254', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]"
             },
             "virtualNetwork_Name": {
               "type": "string",
@@ -841,10 +307,6 @@
             "virtualNetwork_ID": {
               "type": "string",
               "value": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork_Name'))]"
-            },
-            "routeTable_Name": {
-              "type": "string",
-              "value": "[parameters('routeTable_Name')]"
             },
             "virtualNetwork_AddressPrefix": {
               "type": "string",
@@ -1683,8 +1145,8 @@
           },
           "privateEndpoint_SubnetID": {
             "value": [
-              "[reference(resourceId('Microsoft.Resources/deployments', 'clientVNet'), '2022-09-01').outputs.privateEndpoint_SubnetID.value]",
-              "[reference(resourceId('Microsoft.Resources/deployments', 'serverVNet'), '2022-09-01').outputs.privateEndpoint_SubnetID.value]"
+              "[reference(resourceId('Microsoft.Resources/deployments', 'clientVNet'), '2022-09-01').outputs.general_SubnetID.value]",
+              "[reference(resourceId('Microsoft.Resources/deployments', 'serverVNet'), '2022-09-01').outputs.general_SubnetID.value]"
             ]
           },
           "privateEndpoint_VirtualNetwork_Name": {
@@ -2103,10 +1565,10 @@
             "value": "[reference(resourceId('Microsoft.Resources/deployments', 'serverVNet'), '2022-09-01').outputs.general_SubnetID.value]"
           },
           "privateEndpoint_SubnetID": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'clientVNet'), '2022-09-01').outputs.privateEndpoint_SubnetID.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'clientVNet'), '2022-09-01').outputs.general_SubnetID.value]"
           },
           "privateLink_SubnetID": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'serverVNet'), '2022-09-01').outputs.privateLinkService_SubnetID.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'serverVNet'), '2022-09-01').outputs.general_SubnetID.value]"
           },
           "tcpPort": {
             "value": 5001

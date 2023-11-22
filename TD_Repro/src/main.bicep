@@ -111,7 +111,7 @@ module storageAccount '../../modules/Microsoft.Storage/StorageAccount.bicep' = {
     location: locationClient
     privateDNSZoneLinkedVnetIDList: [ virtualNetwork_Client.outputs.virtualNetwork_ID, virtualNetwork_Server.outputs.virtualNetwork_ID ]
     privateDNSZoneLinkedVnetNamesList: [ virtualNetwork_Client.outputs.virtualNetwork_Name, virtualNetwork_Server.outputs.virtualNetwork_Name ]
-    privateEndpoint_SubnetID: [ virtualNetwork_Client.outputs.privateEndpoint_SubnetID, virtualNetwork_Server.outputs.privateEndpoint_SubnetID ]
+    privateEndpoint_SubnetID: [ virtualNetwork_Client.outputs.general_SubnetID, virtualNetwork_Server.outputs.general_SubnetID ]
     privateEndpoint_VirtualNetwork_Name: [ virtualNetwork_Client.outputs.virtualNetwork_Name, virtualNetwork_Server.outputs.virtualNetwork_Name ]
     privateEndpoints_Blob_Name: 'blob_pe'
     privateEndpoints_File_Name: 'fileshare_pe'
@@ -130,8 +130,8 @@ module privateLink '../../modules/Microsoft.Network/PrivateLink.bicep' = {
     networkInterface_IPConfig_Names: [for i in range(0, numberOfServerVMs): ServerVM_Linux[i].outputs.networkInterface_IPConfig0_Name]
     networkInterface_Names: [for i in range(0, numberOfServerVMs): ServerVM_Linux[i].outputs.networkInterface_Name]
     networkInterface_SubnetID: virtualNetwork_Server.outputs.general_SubnetID
-    privateEndpoint_SubnetID: virtualNetwork_Client.outputs.privateEndpoint_SubnetID
-    privateLink_SubnetID: virtualNetwork_Server.outputs.privateLinkService_SubnetID
+    privateEndpoint_SubnetID: virtualNetwork_Client.outputs.general_SubnetID
+    privateLink_SubnetID: virtualNetwork_Server.outputs.general_SubnetID
     tcpPort: 5001
   }
 }
