@@ -54,7 +54,5 @@ sudo chmod +x clientSCAPY.py
 #run TCPdump in background with no hang up, for duration + 30 seconds
 nohup tcpdump -timeout $(($dur + 30)) -w /mnt/$saDirectory/$hname/$hname-trace-%m-%d-%H-%M-%S.pcap host $destIP -G 3800 -C 500M -s 120 -K -n &
 
+#run the client test script
 nohup python3 clientSCAPY.py $destIP $dur &
-
-pause 31
-

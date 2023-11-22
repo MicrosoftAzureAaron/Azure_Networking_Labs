@@ -54,6 +54,3 @@ nohup tcpdump -timeout $(($dur + 300)) -w /mnt/$saDirectory/$hname/$hname-trace-
 #run listener script on server VM
 nohup python3 serverSCAPY.py $sourceIPPrefix $dur &
 
-#wait 5 minutes
-pause 300
-
