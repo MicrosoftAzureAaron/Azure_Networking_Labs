@@ -73,10 +73,6 @@ param subnet_Bastion_Name string = 'AzureBastionSubnet'
 @description('Address Prefix of the Azure Bastion Subnet')
 param subnet_Bastion_AddressPrefix string = '${firstTwoOctetsOfVirtualNetworkPrefix}.8.0/24'
 
-
-
-
-
 resource virtualNetwork 'Microsoft.Network/virtualNetworks@2022-09-01' = {
   name: virtualNetwork_Name
   location: location
@@ -141,7 +137,7 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2022-09-01' = {
           }
           delegations: []
           privateEndpointNetworkPolicies: 'Disabled'
-          privateLinkServiceNetworkPolicies: 'Enabled' 
+          privateLinkServiceNetworkPolicies: 'Enabled'
         }
       }
       {
@@ -216,8 +212,7 @@ resource routeTable 'Microsoft.Network/routeTables@2023-02-01' = {
 resource networkSecurityGroup 'Microsoft.Network/networkSecurityGroups@2022-09-01' = {
   name: networkSecurityGroup_Default_Name
   location: location
-  properties: {
-  }
+  properties: {}
 }
 
 resource networkSecurityGroup_ApplicationGateway 'Microsoft.Network/networkSecurityGroups@2022-11-01' = {
@@ -271,7 +266,7 @@ resource networkSecurityGroup_ApplicationGateway_AppGWSpecificRule 'Microsoft.Ne
 output general_SubnetID string = virtualNetwork.properties.subnets[0].id
 output privateEndpoint_SubnetID string = virtualNetwork.properties.subnets[1].id
 output privateLinkService_SubnetID string = virtualNetwork.properties.subnets[2].id
-output applicationGateway_SubnetID string = virtualNetwork.properties.subnets[3].id 
+output applicationGateway_SubnetID string = virtualNetwork.properties.subnets[3].id
 output appService_SubnetID string = virtualNetwork.properties.subnets[4].id
 output gateway_SubnetID string = virtualNetwork.properties.subnets[5].id
 output azureFirewall_SubnetID string = virtualNetwork.properties.subnets[6].id
@@ -279,9 +274,11 @@ output azureFirewallManagement_SubnetID string = virtualNetwork.properties.subne
 output bastion_SubnetID string = virtualNetwork.properties.subnets[8].id
 
 // Should be one of the last IPs in the subnet range.  This is for the appgw frontend private ip.
-output applicationGateway_PrivateIP string = '${firstTwoOctetsOfVirtualNetworkPrefix}.3.254' 
+output applicationGateway_PrivateIP string = '${firstTwoOctetsOfVirtualNetworkPrefix}.3.254'
 
 output virtualNetwork_Name string = virtualNetwork.name
 output virtualNetwork_ID string = virtualNetwork.id
 
 output routeTable_Name string = routeTable.name
+
+output virtualNetwork_AddressPrefix string = virtualNetwork.properties.addressSpace.addressPrefixes[0]
