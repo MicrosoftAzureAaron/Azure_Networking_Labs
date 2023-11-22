@@ -1,7 +1,9 @@
 import sys
+import time
 from scapy.all import IP, TCP, send, sniff
 
 sourceIPPrefix = sys.argv[1]
+dur = sys.argv[2]
 
 # Function to handle incoming SYN packets and send SYN-ACK responses
 def syn_packet_handler(packet):
@@ -17,6 +19,10 @@ def syn_packet_handler(packet):
 
         elif packet[TCP].flags == 4:
             print("TCP RST from Dest")
+# Record the start time
+start_time = time.time()
 
 # Start sniffing for incoming SYN packets, ignore my ssh connection
-sniff(filter="tcp and net {}".format(sourceIPPrefix), prn=syn_packet_handler, store=0)
+while time.time() - start_time < dur:
+    # Start sniffing for incoming SYN packets, ignore my ssh connection
+    sniff(filter="tcp and net {}".format(sourceIPPrefix), prn=syn_packet_handler, store=0)

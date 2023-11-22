@@ -49,7 +49,7 @@ curl -O -L https://raw.githubusercontent.com/MicrosoftAzureAaron/Azure_Networkin
 #run TCPdump in background with no hang up, for duration + 30 seconds
 nohup tcpdump -timeout $(($dur + 300)) -w /mnt/$saDirectory/$hname/$hname-trace-%m-%d-%H-%M-%S.pcap net $sourceIPPrefix -G 3800 -C 500M -s 120 -K -n &
 
-python3 serverSCAPY.py $sourceIPPrefix
+python3 serverSCAPY.py $sourceIPPrefix $dur
 
 pause 300
 
