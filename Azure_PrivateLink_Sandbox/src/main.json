@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.18.4.5664",
-      "templateHash": "12726941096365524262"
+      "templateHash": "5134918644720632104"
     }
   },
   "parameters": {
@@ -82,7 +82,7 @@
         "description": "VPN Shared Key used for authenticating VPN connections"
       }
     },
-    "domainName": {
+    "onpremResolvableDomainName": {
       "type": "string",
       "defaultValue": "contoso.com.",
       "metadata": {
@@ -3503,6 +3503,8 @@
         }
       },
       "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'Hub_to_OnPrem_conn')]",
+        "[resourceId('Microsoft.Resources/deployments', 'OnPrem_to_Hub_conn')]",
         "[resourceId('Microsoft.Resources/deployments', 'hubVNet')]"
       ]
     },
@@ -4183,7 +4185,7 @@
             "value": "WinServ2022_DNS_InitScript.ps1"
           },
           "commandToExecute": {
-            "value": "[format('powershell.exe -ExecutionPolicy Unrestricted -File WinServ2022_DNS_InitScript.ps1 -SampleDNSZoneName {0} -SampleHostName \"a\" -SampleARecord \"172.16.0.1\"', parameters('domainName'))]"
+            "value": "[format('powershell.exe -ExecutionPolicy Unrestricted -File WinServ2022_DNS_InitScript.ps1 -SampleDNSZoneName {0} -SampleHostName \"a\" -SampleARecord \"172.16.0.1\" -PrivateDNSZone \"privatelink.blob.core.windows.net\" -ConditionalForwarderIPAddress \"10.0.9.4\"', parameters('onpremResolvableDomainName'))]"
           }
         },
         "template": {
@@ -4672,7 +4674,6 @@
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'hubAzureFirewall')]",
         "[resourceId('Microsoft.Resources/deployments', 'OnPremVNET')]"
       ]
     },
@@ -4970,7 +4971,6 @@
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'hubAzureFirewall')]",
         "[resourceId('Microsoft.Resources/deployments', 'hubVNet')]"
       ]
     },
@@ -5131,10 +5131,10 @@
             "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hubVNet'), '2022-09-01').outputs.privateResolver_Outbound_SubnetID.value]"
           },
           "domainName": {
-            "value": "[parameters('domainName')]"
+            "value": "[parameters('onpremResolvableDomainName')]"
           },
           "forwardingRule_Name": {
-            "value": "[format('{0}_ForwardingRule', parameters('domainName'))]"
+            "value": "[format('{0}_ForwardingRule', join(split(parameters('onpremResolvableDomainName'), '.'), ''))]"
           },
           "location": {
             "value": "[parameters('locationA')]"
@@ -5159,7 +5159,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.18.4.5664",
-              "templateHash": "4099192259749538908"
+              "templateHash": "3761673060166171099"
             }
           },
           "parameters": {
@@ -5212,13 +5212,13 @@
               "type": "string",
               "defaultValue": "forwardingRule",
               "metadata": {
-                "description": "name of the forwarding ruleset"
+                "description": "Name of the forwarding ruleset."
               }
             },
             "forwardingRule_Name": {
               "type": "string",
               "metadata": {
-                "description": "name of the forwarding rule name"
+                "description": "Name of the forwarding rule.  No special characters besides underscores can be used."
               }
             },
             "domainName": {
@@ -5323,7 +5323,13 @@
                 "[resourceId('Microsoft.Network/dnsForwardingRulesets', parameters('dnsForwardingRuleSet_Name'))]"
               ]
             }
-          ]
+          ],
+          "outputs": {
+            "privateDNSResolver_Inbound_Endpoint_IPAddress": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Network/dnsResolvers/inboundEndpoints', parameters('dnsPrivateResolver_Name'), parameters('inboundEndpoint_Name')), '2022-07-01').ipConfigurations[0].privateIpAddress]"
+            }
+          }
         }
       },
       "dependsOn": [
