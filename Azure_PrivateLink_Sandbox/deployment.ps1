@@ -2,7 +2,7 @@
 
 $mainBicepFile = ".\Azure_PrivateLink_Sandbox\src\main.bicep"
 $mainJSONFile = ".\Azure_PrivateLink_Sandbox\src\main.json"
-$mainParameterFile = ".\virtualMachines.parameters.json"
+$mainParameterFile = ".\Azure_PrivateLink_Sandbox\full.parameters.bicepparam"
 
 $start = get-date -UFormat "%s"
 
@@ -18,7 +18,8 @@ if (!$subID) {
 }
 Set-AzContext -Subscription $subID
 
-$rgName = "Bicep_PrivateLink_Sandbox"
+$iteration = "2"
+$rgName = "Bicep_PrivateLink${iteration}_Sandbox"
 $locationA = "eastus2"
 # $locationB = "eastus2"
 $randomFiveLetterString = .\scripts\deployment_Scripts\Get-LetterGUID.ps1

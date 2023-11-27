@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.18.4.5664",
-      "templateHash": "5168074342062003417"
+      "templateHash": "15964627267733801809"
     }
   },
   "parameters": {
@@ -4449,7 +4449,7 @@
             "value": "OnPremVNG"
           },
           "virtualNetworkGateway_Subnet_ResourceID": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'OnPremVNET'), '2022-09-01').outputs.virtualNetwork_ID.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'OnPremVNET'), '2022-09-01').outputs.gateway_SubnetID.value]"
           }
         },
         "template": {
@@ -4746,7 +4746,7 @@
             "value": "HubVNG"
           },
           "virtualNetworkGateway_Subnet_ResourceID": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hubVNet'), '2022-09-01').outputs.virtualNetwork_ID.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hubVNet'), '2022-09-01').outputs.gateway_SubnetID.value]"
           }
         },
         "template": {
