@@ -28,8 +28,8 @@ New-AzResourceGroup -Name $rgName -Location $locationA
 
 Write-Host "`nStarting Bicep Deployment.."
 New-AzResourceGroupDeployment -ResourceGroupName $rgName -TemplateFile $mainBicepFile -TemplateParameterFile $mainParameterFile `
-    -storageAccount_Name "jamesgsa${randomFiveLetterString}" `
     -locationA $locationA # -locationB $locationB
+    # -storageAccount_Name "jamesgsa${randomFiveLetterString}" `
 
 $end = get-date -UFormat "%s"
 $timeTotalSeconds = $end - $start

@@ -37,6 +37,12 @@ param virtualMachine_ScriptFileName string = 'InitScript.ps1'
 @description('Joins the file path and the file name together')
 var virtualMachine_ScriptFileUri = '${virtualMachine_ScriptFileLocation}${virtualMachine_ScriptFileName}'
 
+@description(''''Command to execute while the Virtual Machine is being created.
+Example:
+'powershell -ExecutionPolicy Unrestricted -File ${virtualMachine_ScriptFileName}'
+''')
+param commandToExecute string = 'powershell -ExecutionPolicy Unrestricted -File ${virtualMachine_ScriptFileName}'
+
 
 module networkInterface '../../Microsoft.Network/NetworkInterface.bicep' = {
   name: networkInterface_Name
@@ -169,7 +175,7 @@ resource virtualMachine_CustomScriptExtension 'Microsoft.Compute/virtualMachines
       ]
     }
     protectedSettings: {
-      commandToExecute: 'powershell -ExecutionPolicy Unrestricted -File ${virtualMachine_ScriptFileName}'
+      commandToExecute: commandToExecute
     }
   }
 }

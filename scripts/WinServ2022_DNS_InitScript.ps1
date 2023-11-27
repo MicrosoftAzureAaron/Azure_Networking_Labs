@@ -1,3 +1,9 @@
+param (
+    [string]$SampleDNSZoneName,
+    [string]$SampleHostName,
+    [string]$SampleARecord
+)
+
 # Chocolatey installation
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 
@@ -32,3 +38,10 @@ Invoke-WebRequest -Uri "https://mainjamesgstorage.blob.core.windows.net/scripts/
 Install-WindowsFeature -Name DNS -IncludeManagementTools
 
 Set-DnsServerForwarder -IPAddress "168.63.129.16"
+
+Import-Module DnsServer
+
+Add-DnsServerPrimaryZone -Name $SampleDNSZoneName -ZoneFile "${SampleDNSZoneName}.dns" -PassThru
+
+Add-DnsServerResourceRecordA -ZoneName $SampleDNSZoneName -Name $SampleHostName -IPv4Address $SampleARecord -CreatePtr
+
