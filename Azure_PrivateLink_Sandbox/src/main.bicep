@@ -134,10 +134,11 @@ module spokeBVM_Windows '../../modules/Microsoft.Compute/WindowsServer2022/Virtu
 module privateLink '../../modules/Microsoft.Network/PrivateLink.bicep' = {
   name: 'privateLink'
   params: {
+    acceleratedNetworking: acceleratedNetworking
     internalLoadBalancer_SubnetID: virtualNetwork_Spoke_B.outputs.general_SubnetID
     location: locationB
-    networkInterface_IPConfig_Name: spokeBVM_Windows.outputs.networkInterface_IPConfig0_Name
-    networkInterface_Name: spokeBVM_Windows.outputs.networkInterface_Name
+    networkInterface_IPConfig_Names: [spokeBVM_Windows.outputs.networkInterface_IPConfig0_Name]
+    networkInterface_Names: [spokeBVM_Windows.outputs.networkInterface_Name]
     networkInterface_SubnetID: virtualNetwork_Spoke_B.outputs.general_SubnetID
     privateEndpoint_SubnetID: virtualNetwork_Spoke_B.outputs.privateEndpoint_SubnetID
     privateLink_SubnetID: virtualNetwork_Spoke_B.outputs.privateLinkService_SubnetID
@@ -148,12 +149,13 @@ module storageAccount '../../modules/Microsoft.Storage/StorageAccount.bicep' = {
   name: 'storageAccount'
   params: {
     location: locationB
+    privateEndpoints_File_Name: '${storageAccount_Name}_file_pe'
     privateEndpoints_Blob_Name: '${storageAccount_Name}_blob_pe'
     storageAccount_Name: storageAccount_Name
-    privateEndpoint_SubnetID: virtualNetwork_Spoke_A.outputs.privateEndpoint_SubnetID
+    privateEndpoint_SubnetID: [virtualNetwork_Spoke_A.outputs.privateEndpoint_SubnetID]
     privateDNSZoneLinkedVnetIDList: [virtualNetwork_Hub.outputs.virtualNetwork_ID, virtualNetwork_Spoke_A.outputs.virtualNetwork_ID, virtualNetwork_Spoke_B.outputs.virtualNetwork_ID]
     privateDNSZoneLinkedVnetNamesList: [virtualNetwork_Hub.outputs.virtualNetwork_Name, virtualNetwork_Spoke_A.outputs.virtualNetwork_Name, virtualNetwork_Spoke_B.outputs.virtualNetwork_Name]
-    privateEndpoint_VirtualNetwork_Name: virtualNetwork_Spoke_A.outputs.virtualNetwork_Name
+    privateEndpoint_VirtualNetwork_Name: [virtualNetwork_Spoke_A.outputs.virtualNetwork_Name]
   }
   // Added this dependancy so that the VMs can reach out to my other Storage Account to download a file
   // Since my other Storage Account has a private endpoint, the connectivity fails because I don't have an

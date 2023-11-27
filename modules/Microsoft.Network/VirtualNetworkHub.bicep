@@ -73,6 +73,18 @@ param subnet_Bastion_Name string = 'AzureBastionSubnet'
 @description('Address Prefix of the Azure Bastion Subnet')
 param subnet_Bastion_AddressPrefix string = '${firstTwoOctetsOfVirtualNetworkPrefix}.8.0/24'
 
+@description('Name of the Azure Bastion Subnet')
+param subnet_PrivateResolver_Inbound_Name string = 'PrivateResolver_Inbound'
+
+@description('Address Prefix of the Azure Bastion Subnet')
+param subnet_PrivateResolver_Inbound_AddressPrefix string = '${firstTwoOctetsOfVirtualNetworkPrefix}.9.0/24'
+
+@description('Name of the Azure Bastion Subnet')
+param subnet_PrivateResolver_Outbound_Name string = 'PrivateResolver_Outbound'
+
+@description('Address Prefix of the Azure Bastion Subnet')
+param subnet_PrivateResolver_Outbound_AddressPrefix string = '${firstTwoOctetsOfVirtualNetworkPrefix}.10.0/24'
+
 
 
 
@@ -200,6 +212,34 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2022-09-01' = {
           privateLinkServiceNetworkPolicies: 'Enabled'
         }
       }
+      {
+        name: subnet_PrivateResolver_Inbound_Name
+        properties: {
+          addressPrefix: subnet_PrivateResolver_Inbound_AddressPrefix
+          delegations: [
+            {
+              name: 'Microsoft.Network.dnsResolvers'
+              properties: {
+                serviceName: 'Microsoft.Network/dnsResolvers'
+              }
+            }
+          ]
+        }
+      }
+      {
+        name: subnet_PrivateResolver_Outbound_Name
+        properties: {
+          addressPrefix: subnet_PrivateResolver_Outbound_AddressPrefix
+          delegations: [
+            {
+              name: 'Microsoft.Network.dnsResolvers'
+              properties: {
+                serviceName: 'Microsoft.Network/dnsResolvers'
+              }
+            }
+          ]
+        }
+      }
     ]
     enableDdosProtection: false
   }
@@ -277,6 +317,8 @@ output gateway_SubnetID string = virtualNetwork.properties.subnets[5].id
 output azureFirewall_SubnetID string = virtualNetwork.properties.subnets[6].id
 output azureFirewallManagement_SubnetID string = virtualNetwork.properties.subnets[7].id
 output bastion_SubnetID string = virtualNetwork.properties.subnets[8].id
+output privateResolver_Inbound_SubnetID string = virtualNetwork.properties.subnets[9].id
+output privateResolver_Outbound_SubnetID string = virtualNetwork.properties.subnets[10].id
 
 // Should be one of the last IPs in the subnet range.  This is for the appgw frontend private ip.
 output applicationGateway_PrivateIP string = '${firstTwoOctetsOfVirtualNetworkPrefix}.3.254' 
