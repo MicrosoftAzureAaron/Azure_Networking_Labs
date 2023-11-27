@@ -7,6 +7,12 @@ param virtualNetwork_Name string
 @description('Address Prefix of the Virtual Network')
 param virtualNetwork_AddressPrefix string = '${firstTwoOctetsOfVirtualNetworkPrefix}.0.0/16'
 
+@description('''An Array of Custom DNS Server IP Addresses.  Azure Wireserver will be used if left as an empty array [].
+Example:
+[10.0.0.4, 10.0.0.5]
+''')
+param dnsServers array = []
+
 @description('Name of the General Network Security Group')
 param networkSecurityGroup_Default_Name string = '${virtualNetwork_Name}_NSG_General'
 
@@ -54,6 +60,9 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2022-09-01' = {
   name: virtualNetwork_Name
   location: location
   properties: {
+    dhcpOptions: {
+      dnsServers: dnsServers
+    }
     addressSpace: {
       addressPrefixes: [
         virtualNetwork_AddressPrefix

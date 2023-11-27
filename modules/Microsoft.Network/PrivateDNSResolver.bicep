@@ -52,14 +52,15 @@ param inboundEndpoint_Name string = 'endpoint-inbound'
 @description('name that will be used for the private resolver outbound endpoint')
 param outboundEndpoint_Name string = 'endpoint-outbound'
 
-@description('name of the forwarding ruleset')
+@description('Name of the forwarding ruleset.')
 param dnsForwardingRuleSet_Name string = 'forwardingRule'
 
-@description('name of the forwarding rule name')
+@description('Name of the forwarding rule.  No special characters besides underscores can be used.')
 param forwardingRule_Name string
 
 @description('the target domain name for the forwarding ruleset')
 param domainName string
+
 
 @description('''the list of target DNS servers ip address and the port number for conditional forwarding
 Format to be used:
@@ -84,7 +85,7 @@ resource dnsPrivateResolver 'Microsoft.Network/dnsResolvers@2022-07-01' = {
   }
 }
 
-resource inEndpoint 'Microsoft.Network/dnsResolvers/inboundEndpoints@2022-07-01' = {
+resource inboundEndpoint 'Microsoft.Network/dnsResolvers/inboundEndpoints@2022-07-01' = {
   parent: dnsPrivateResolver
   name: inboundEndpoint_Name
   location: location
@@ -100,7 +101,7 @@ resource inEndpoint 'Microsoft.Network/dnsResolvers/inboundEndpoints@2022-07-01'
   }
 }
 
-resource outEndpoint 'Microsoft.Network/dnsResolvers/outboundEndpoints@2022-07-01' = {
+resource outboundEndpoint 'Microsoft.Network/dnsResolvers/outboundEndpoints@2022-07-01' = {
   parent: dnsPrivateResolver
   name: outboundEndpoint_Name
   location: location
@@ -117,7 +118,7 @@ resource dnsForwardingRuleSet 'Microsoft.Network/dnsForwardingRulesets@2022-07-0
   properties: {
     dnsResolverOutboundEndpoints: [
       {
-        id: outEndpoint.id
+        id: outboundEndpoint.id
       }
     ]
   }
@@ -141,3 +142,6 @@ resource fwRules 'Microsoft.Network/dnsForwardingRulesets/forwardingRules@2022-0
     targetDnsServers: targetDNSServers
   }
 }
+
+
+output privateDNSResolver_Inbound_Endpoint_IPAddress string = inboundEndpoint.properties.ipConfigurations[0].privateIpAddress

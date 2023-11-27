@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.18.4.5664",
-      "templateHash": "15964627267733801809"
+      "templateHash": "12726941096365524262"
     }
   },
   "parameters": {
@@ -51,7 +51,7 @@
     },
     "virtualMachine_ScriptFileLocation": {
       "type": "string",
-      "defaultValue": "https://raw.githubusercontent.com/jimgodden/Azure_Networking_Labs/Main/scripts/"
+      "defaultValue": "https://raw.githubusercontent.com/jimgodden/Azure_Networking_Labs/PrivateLinkDNSTesting/scripts/"
     },
     "acceleratedNetworking": {
       "type": "bool",
@@ -81,6 +81,13 @@
       "metadata": {
         "description": "VPN Shared Key used for authenticating VPN connections"
       }
+    },
+    "domainName": {
+      "type": "string",
+      "defaultValue": "contoso.com.",
+      "metadata": {
+        "description": "DNS Zone to be hosted On Prem and with a forwarding rule on the DNS Private Resolver.\r\nMust end with a period (.)\r\nExample:\r\ncontoso.com."
+      }
     }
   },
   "resources": [
@@ -97,6 +104,15 @@
           "firstTwoOctetsOfVirtualNetworkPrefix": {
             "value": "10.0"
           },
+          "dnsServers": {
+            "copy": [
+              {
+                "name": "value",
+                "count": "[length(range(0, 2))]",
+                "input": "[reference(resourceId('Microsoft.Resources/deployments', format('OnPremWinDNS{0}', range(0, 2)[range(0, 2)[copyIndex('value')]])), '2022-09-01').outputs.networkInterface_PrivateIPAddress.value]"
+              }
+            ]
+          },
           "location": {
             "value": "[parameters('locationA')]"
           },
@@ -111,7 +127,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.18.4.5664",
-              "templateHash": "488554783946033402"
+              "templateHash": "3260314232436169619"
             }
           },
           "parameters": {
@@ -132,6 +148,13 @@
               "defaultValue": "[format('{0}.0.0/16', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
               "metadata": {
                 "description": "Address Prefix of the Virtual Network"
+              }
+            },
+            "dnsServers": {
+              "type": "array",
+              "defaultValue": [],
+              "metadata": {
+                "description": "An Array of Custom DNS Server IP Addresses.  Azure Wireserver will be used if left as an empty array [].\r\nExample:\r\n[10.0.0.4, 10.0.0.5]\r\n"
               }
             },
             "networkSecurityGroup_Default_Name": {
@@ -316,6 +339,9 @@
               "name": "[parameters('virtualNetwork_Name')]",
               "location": "[parameters('location')]",
               "properties": {
+                "dhcpOptions": {
+                  "dnsServers": "[parameters('dnsServers')]"
+                },
                 "addressSpace": {
                   "addressPrefixes": [
                     "[parameters('virtualNetwork_AddressPrefix')]"
@@ -584,7 +610,10 @@
             }
           }
         }
-      }
+      },
+      "dependsOn": [
+        "OnPremVM_WinDNS"
+      ]
     },
     {
       "type": "Microsoft.Resources/deployments",
@@ -598,6 +627,15 @@
         "parameters": {
           "firstTwoOctetsOfVirtualNetworkPrefix": {
             "value": "10.1"
+          },
+          "dnsServers": {
+            "copy": [
+              {
+                "name": "value",
+                "count": "[length(range(0, 2))]",
+                "input": "[reference(resourceId('Microsoft.Resources/deployments', format('OnPremWinDNS{0}', range(0, 2)[range(0, 2)[copyIndex('value')]])), '2022-09-01').outputs.networkInterface_PrivateIPAddress.value]"
+              }
+            ]
           },
           "location": {
             "value": "[parameters('locationA')]"
@@ -613,7 +651,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.18.4.5664",
-              "templateHash": "10392861313206181093"
+              "templateHash": "13445374038190341657"
             }
           },
           "parameters": {
@@ -634,6 +672,13 @@
               "defaultValue": "[format('{0}.0.0/16', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
               "metadata": {
                 "description": "Address Prefix of the Virtual Network"
+              }
+            },
+            "dnsServers": {
+              "type": "array",
+              "defaultValue": [],
+              "metadata": {
+                "description": "An Array of Custom DNS Server IP Addresses.  Azure Wireserver will be used if left as an empty array [].\r\nExample:\r\n[10.0.0.4, 10.0.0.5]\r\n"
               }
             },
             "networkSecurityGroup_Default_Name": {
@@ -734,6 +779,9 @@
               "name": "[parameters('virtualNetwork_Name')]",
               "location": "[parameters('location')]",
               "properties": {
+                "dhcpOptions": {
+                  "dnsServers": "[parameters('dnsServers')]"
+                },
                 "addressSpace": {
                   "addressPrefixes": [
                     "[parameters('virtualNetwork_AddressPrefix')]"
@@ -914,7 +962,10 @@
             }
           }
         }
-      }
+      },
+      "dependsOn": [
+        "OnPremVM_WinDNS"
+      ]
     },
     {
       "type": "Microsoft.Resources/deployments",
@@ -999,6 +1050,15 @@
           "firstTwoOctetsOfVirtualNetworkPrefix": {
             "value": "10.2"
           },
+          "dnsServers": {
+            "copy": [
+              {
+                "name": "value",
+                "count": "[length(range(0, 2))]",
+                "input": "[reference(resourceId('Microsoft.Resources/deployments', format('OnPremWinDNS{0}', range(0, 2)[range(0, 2)[copyIndex('value')]])), '2022-09-01').outputs.networkInterface_PrivateIPAddress.value]"
+              }
+            ]
+          },
           "location": {
             "value": "[parameters('locationB')]"
           },
@@ -1013,7 +1073,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.18.4.5664",
-              "templateHash": "10392861313206181093"
+              "templateHash": "13445374038190341657"
             }
           },
           "parameters": {
@@ -1034,6 +1094,13 @@
               "defaultValue": "[format('{0}.0.0/16', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
               "metadata": {
                 "description": "Address Prefix of the Virtual Network"
+              }
+            },
+            "dnsServers": {
+              "type": "array",
+              "defaultValue": [],
+              "metadata": {
+                "description": "An Array of Custom DNS Server IP Addresses.  Azure Wireserver will be used if left as an empty array [].\r\nExample:\r\n[10.0.0.4, 10.0.0.5]\r\n"
               }
             },
             "networkSecurityGroup_Default_Name": {
@@ -1134,6 +1201,9 @@
               "name": "[parameters('virtualNetwork_Name')]",
               "location": "[parameters('location')]",
               "properties": {
+                "dhcpOptions": {
+                  "dnsServers": "[parameters('dnsServers')]"
+                },
                 "addressSpace": {
                   "addressPrefixes": [
                     "[parameters('virtualNetwork_AddressPrefix')]"
@@ -1314,7 +1384,10 @@
             }
           }
         }
-      }
+      },
+      "dependsOn": [
+        "OnPremVM_WinDNS"
+      ]
     },
     {
       "type": "Microsoft.Resources/deployments",
@@ -1421,7 +1494,7 @@
             "value": "[parameters('virtualMachine_ScriptFileLocation')]"
           },
           "virtualMachine_ScriptFileName": {
-            "value": "WinServ2022_General_InitScript"
+            "value": "WinServ2022_General_InitScript.ps1"
           }
         },
         "template": {
@@ -1753,6 +1826,8 @@
         }
       },
       "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'Hub_to_OnPrem_conn')]",
+        "[resourceId('Microsoft.Resources/deployments', 'OnPrem_to_Hub_conn')]",
         "[resourceId('Microsoft.Resources/deployments', 'hubVNet')]"
       ]
     },
@@ -2123,6 +2198,8 @@
         }
       },
       "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'Hub_to_OnPrem_conn')]",
+        "[resourceId('Microsoft.Resources/deployments', 'OnPrem_to_Hub_conn')]",
         "[resourceId('Microsoft.Resources/deployments', 'spokeAVNet')]"
       ]
     },
@@ -2493,6 +2570,8 @@
         }
       },
       "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'Hub_to_OnPrem_conn')]",
+        "[resourceId('Microsoft.Resources/deployments', 'OnPrem_to_Hub_conn')]",
         "[resourceId('Microsoft.Resources/deployments', 'spokeBVNet')]"
       ]
     },
@@ -3577,7 +3656,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.18.4.5664",
-              "templateHash": "488554783946033402"
+              "templateHash": "3260314232436169619"
             }
           },
           "parameters": {
@@ -3598,6 +3677,13 @@
               "defaultValue": "[format('{0}.0.0/16', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
               "metadata": {
                 "description": "Address Prefix of the Virtual Network"
+              }
+            },
+            "dnsServers": {
+              "type": "array",
+              "defaultValue": [],
+              "metadata": {
+                "description": "An Array of Custom DNS Server IP Addresses.  Azure Wireserver will be used if left as an empty array [].\r\nExample:\r\n[10.0.0.4, 10.0.0.5]\r\n"
               }
             },
             "networkSecurityGroup_Default_Name": {
@@ -3782,6 +3868,9 @@
               "name": "[parameters('virtualNetwork_Name')]",
               "location": "[parameters('location')]",
               "properties": {
+                "dhcpOptions": {
+                  "dnsServers": "[parameters('dnsServers')]"
+                },
                 "addressSpace": {
                   "addressPrefixes": [
                     "[parameters('virtualNetwork_AddressPrefix')]"
@@ -4055,11 +4144,11 @@
     {
       "copy": {
         "name": "OnPremVM_WinDNS",
-        "count": "[length(range(1, 2))]"
+        "count": "[length(range(0, 2))]"
       },
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2022-09-01",
-      "name": "[format('OnPremWinDNS{0}', range(1, 2)[copyIndex()])]",
+      "name": "[format('OnPremWinDNS{0}', range(0, 2)[copyIndex()])]",
       "properties": {
         "expressionEvaluationOptions": {
           "scope": "inner"
@@ -4082,7 +4171,7 @@
             "value": "[parameters('virtualMachine_AdminUsername')]"
           },
           "virtualMachine_Name": {
-            "value": "[format('OnPremWinDNS{0}', range(1, 2)[copyIndex()])]"
+            "value": "[format('OnPremWinDNS{0}', range(0, 2)[copyIndex()])]"
           },
           "virtualMachine_Size": {
             "value": "[parameters('virtualMachine_Size')]"
@@ -4094,7 +4183,7 @@
             "value": "WinServ2022_DNS_InitScript.ps1"
           },
           "commandToExecute": {
-            "value": "powershell -ExecutionPolicy Unrestricted -File WinServ2022_DNS_InitScript.ps1 -SampleDNSZoneName \"test.com\" -SampleHostName \"a\" -SampleARecord \"172.16.0.1\""
+            "value": "[format('powershell.exe -ExecutionPolicy Unrestricted -File WinServ2022_DNS_InitScript.ps1 -SampleDNSZoneName {0} -SampleHostName \"a\" -SampleARecord \"172.16.0.1\"', parameters('domainName'))]"
           }
         },
         "template": {
@@ -4583,6 +4672,7 @@
         }
       },
       "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'hubAzureFirewall')]",
         "[resourceId('Microsoft.Resources/deployments', 'OnPremVNET')]"
       ]
     },
@@ -4880,6 +4970,7 @@
         }
       },
       "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'hubAzureFirewall')]",
         "[resourceId('Microsoft.Resources/deployments', 'hubVNet')]"
       ]
     },
@@ -5021,6 +5112,223 @@
       "dependsOn": [
         "[resourceId('Microsoft.Resources/deployments', 'HubVirtualNetworkGateway')]",
         "[resourceId('Microsoft.Resources/deployments', 'OnPremVirtualNetworkGateway')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "dnsPrivateResolver",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "dnsPrivateResolver_Inbound_SubnetID": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hubVNet'), '2022-09-01').outputs.privateResolver_Inbound_SubnetID.value]"
+          },
+          "dnsPrivateResolver_Outbound_SubnetID": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hubVNet'), '2022-09-01').outputs.privateResolver_Outbound_SubnetID.value]"
+          },
+          "domainName": {
+            "value": "[parameters('domainName')]"
+          },
+          "forwardingRule_Name": {
+            "value": "[format('{0}_ForwardingRule', parameters('domainName'))]"
+          },
+          "location": {
+            "value": "[parameters('locationA')]"
+          },
+          "targetDNSServers": {
+            "copy": [
+              {
+                "name": "value",
+                "count": "[length(range(0, 2))]",
+                "input": "[createObject('port', 53, 'ipaddress', reference(resourceId('Microsoft.Resources/deployments', format('OnPremWinDNS{0}', range(0, 2)[range(0, 2)[copyIndex('value')]])), '2022-09-01').outputs.networkInterface_PrivateIPAddress.value)]"
+              }
+            ]
+          },
+          "virtualNetwork_ID": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hubVNet'), '2022-09-01').outputs.virtualNetwork_ID.value]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.18.4.5664",
+              "templateHash": "4099192259749538908"
+            }
+          },
+          "parameters": {
+            "location": {
+              "type": "string",
+              "metadata": {
+                "description": "the location for resolver VNET and dns private resolver - Azure DNS Private Resolver available in specific region, refer the documenation to select the supported region for this deployment. For more information https://docs.microsoft.com/azure/dns/dns-private-resolver-overview#regional-availability"
+              }
+            },
+            "virtualNetwork_ID": {
+              "type": "string",
+              "metadata": {
+                "description": "Resource ID of the Virtual Network to which the DNS Private resolver will be added."
+              }
+            },
+            "dnsPrivateResolver_Inbound_SubnetID": {
+              "type": "string",
+              "metadata": {
+                "description": "Resource ID of the Subnet to which the DNS Private resolver Inbound Endpoint will be added."
+              }
+            },
+            "dnsPrivateResolver_Outbound_SubnetID": {
+              "type": "string",
+              "metadata": {
+                "description": "Resource ID of the Subnet to which the DNS Private resolver Outbound Endpoint will be added."
+              }
+            },
+            "dnsPrivateResolver_Name": {
+              "type": "string",
+              "defaultValue": "dnsResolver",
+              "metadata": {
+                "description": "name of the dns private resolver"
+              }
+            },
+            "inboundEndpoint_Name": {
+              "type": "string",
+              "defaultValue": "endpoint-inbound",
+              "metadata": {
+                "description": "name that will be used for the private resolver inbound endpoint"
+              }
+            },
+            "outboundEndpoint_Name": {
+              "type": "string",
+              "defaultValue": "endpoint-outbound",
+              "metadata": {
+                "description": "name that will be used for the private resolver outbound endpoint"
+              }
+            },
+            "dnsForwardingRuleSet_Name": {
+              "type": "string",
+              "defaultValue": "forwardingRule",
+              "metadata": {
+                "description": "name of the forwarding ruleset"
+              }
+            },
+            "forwardingRule_Name": {
+              "type": "string",
+              "metadata": {
+                "description": "name of the forwarding rule name"
+              }
+            },
+            "domainName": {
+              "type": "string",
+              "metadata": {
+                "description": "the target domain name for the forwarding ruleset"
+              }
+            },
+            "targetDNSServers": {
+              "type": "array",
+              "metadata": {
+                "description": "the list of target DNS servers ip address and the port number for conditional forwarding\r\nFormat to be used:\r\n{\r\n  ipaddress: '10.0.0.1'\r\n  port: 53\r\n}\r\n{\r\n  ipaddress: '10.0.0.2'\r\n  port: 53\r\n}\r\n"
+              }
+            }
+          },
+          "variables": {
+            "virtualNetwork_Name": "[last(split(parameters('virtualNetwork_ID'), '/'))]"
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Network/dnsResolvers",
+              "apiVersion": "2022-07-01",
+              "name": "[parameters('dnsPrivateResolver_Name')]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "virtualNetwork": {
+                  "id": "[parameters('virtualNetwork_ID')]"
+                }
+              }
+            },
+            {
+              "type": "Microsoft.Network/dnsResolvers/inboundEndpoints",
+              "apiVersion": "2022-07-01",
+              "name": "[format('{0}/{1}', parameters('dnsPrivateResolver_Name'), parameters('inboundEndpoint_Name'))]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "ipConfigurations": [
+                  {
+                    "privateIpAllocationMethod": "Dynamic",
+                    "subnet": {
+                      "id": "[parameters('dnsPrivateResolver_Inbound_SubnetID')]"
+                    }
+                  }
+                ]
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/dnsResolvers', parameters('dnsPrivateResolver_Name'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.Network/dnsResolvers/outboundEndpoints",
+              "apiVersion": "2022-07-01",
+              "name": "[format('{0}/{1}', parameters('dnsPrivateResolver_Name'), parameters('outboundEndpoint_Name'))]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "subnet": {
+                  "id": "[parameters('dnsPrivateResolver_Outbound_SubnetID')]"
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/dnsResolvers', parameters('dnsPrivateResolver_Name'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.Network/dnsForwardingRulesets",
+              "apiVersion": "2022-07-01",
+              "name": "[parameters('dnsForwardingRuleSet_Name')]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "dnsResolverOutboundEndpoints": [
+                  {
+                    "id": "[resourceId('Microsoft.Network/dnsResolvers/outboundEndpoints', parameters('dnsPrivateResolver_Name'), parameters('outboundEndpoint_Name'))]"
+                  }
+                ]
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/dnsResolvers/outboundEndpoints', parameters('dnsPrivateResolver_Name'), parameters('outboundEndpoint_Name'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.Network/dnsForwardingRulesets/virtualNetworkLinks",
+              "apiVersion": "2022-07-01",
+              "name": "[format('{0}/{1}', parameters('dnsForwardingRuleSet_Name'), format('{0}_link', variables('virtualNetwork_Name')))]",
+              "properties": {
+                "virtualNetwork": {
+                  "id": "[parameters('virtualNetwork_ID')]"
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/dnsForwardingRulesets', parameters('dnsForwardingRuleSet_Name'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.Network/dnsForwardingRulesets/forwardingRules",
+              "apiVersion": "2022-07-01",
+              "name": "[format('{0}/{1}', parameters('dnsForwardingRuleSet_Name'), parameters('forwardingRule_Name'))]",
+              "properties": {
+                "domainName": "[parameters('domainName')]",
+                "targetDnsServers": "[parameters('targetDNSServers')]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/dnsForwardingRulesets', parameters('dnsForwardingRuleSet_Name'))]"
+              ]
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "OnPremVM_WinDNS",
+        "[resourceId('Microsoft.Resources/deployments', 'hubVNet')]"
       ]
     }
   ]

@@ -44,11 +44,18 @@ param usingAzureFirewall bool = true
 @secure()
 param vpn_SharedKey string
 
+@description('''DNS Zone to be hosted On Prem and with a forwarding rule on the DNS Private Resolver.
+Must end with a period (.)
+Example:
+contoso.com.''')
+param onpremResolvableDomainName string = 'contoso.com.'
+
 
 module virtualNetwork_Hub '../../modules/Microsoft.Network/VirtualNetworkHub.bicep' = {
   name: 'hubVNet'
   params: {
-    firstTwoOctetsOfVirtualNetworkPrefix: '10.0'
+    firstTwoOctetsOfVirtualNetworkPrefix: '10.0' // changing this can break commandToExecute on OnPremVM_WinDNS
+    dnsServers: [for i in range(0, 2): OnPremVM_WinDNS[i].outputs.networkInterface_PrivateIPAddress]
     location: locationA
     virtualNetwork_Name: 'vnet_hub'
   }
@@ -58,6 +65,7 @@ module virtualNetwork_Spoke_A '../../modules/Microsoft.Network/VirtualNetworkSpo
   name: 'spokeAVNet'
   params: {
     firstTwoOctetsOfVirtualNetworkPrefix: '10.1'
+    dnsServers: [for i in range(0, 2): OnPremVM_WinDNS[i].outputs.networkInterface_PrivateIPAddress]
     location: locationA
     virtualNetwork_Name: 'vnet_SpokeA'
   }
@@ -75,6 +83,7 @@ module virtualNetwork_Spoke_B '../../modules/Microsoft.Network/VirtualNetworkSpo
   name: 'spokeBVNet'
   params: {
     firstTwoOctetsOfVirtualNetworkPrefix: '10.2'
+    dnsServers: [for i in range(0, 2): OnPremVM_WinDNS[i].outputs.networkInterface_PrivateIPAddress]
     location: locationB
     virtualNetwork_Name: 'VNet_SpokeB'
   }
@@ -100,6 +109,10 @@ module hubVM_Windows '../../modules/Microsoft.Compute/WindowsServer2022/VirtualM
     virtualMachine_ScriptFileLocation: virtualMachine_ScriptFileLocation
     virtualMachine_ScriptFileName: 'WinServ2022_General_InitScript.ps1'
   }
+  dependsOn: [
+    Hub_to_OnPrem_conn
+    OnPrem_to_Hub_conn
+  ]
 }
 
 module spokeAVM_Windows '../../modules/Microsoft.Compute/WindowsServer2022/VirtualMachine.bicep' = {
@@ -115,6 +128,10 @@ module spokeAVM_Windows '../../modules/Microsoft.Compute/WindowsServer2022/Virtu
     virtualMachine_ScriptFileLocation: virtualMachine_ScriptFileLocation
     virtualMachine_ScriptFileName: 'WinServ2022_General_InitScript.ps1'
   }
+  dependsOn: [
+    Hub_to_OnPrem_conn
+    OnPrem_to_Hub_conn
+  ]
 }
 
 module spokeBVM_Windows '../../modules/Microsoft.Compute/WindowsServer2022/VirtualMachine.bicep' = {
@@ -130,6 +147,10 @@ module spokeBVM_Windows '../../modules/Microsoft.Compute/WindowsServer2022/Virtu
     virtualMachine_ScriptFileLocation: virtualMachine_ScriptFileLocation
     virtualMachine_ScriptFileName: 'WinServ2022_WebServer_InitScript.ps1'
   }
+  dependsOn: [
+    Hub_to_OnPrem_conn
+    OnPrem_to_Hub_conn
+  ]
 }
 
 module privateLink '../../modules/Microsoft.Network/PrivateLink.bicep' = {
@@ -178,6 +199,10 @@ module azureFirewall '../../modules/Microsoft.Network/AzureFirewall.bicep' = if 
     azureFirewallPolicy_Name: 'hubAzFW_Policy'
     location: locationA
   }
+  dependsOn: [
+    Hub_to_OnPrem_conn
+    OnPrem_to_Hub_conn
+  ]
 }
 
 module hubBastion '../../modules/Microsoft.Network/Bastion.bicep' = {
@@ -188,14 +213,6 @@ module hubBastion '../../modules/Microsoft.Network/Bastion.bicep' = {
   }
 }
 
-
-
-
-
-
-
-
-
 module virtualNetwork_OnPremHub '../../modules/Microsoft.Network/VirtualNetworkHub.bicep' = {
   name: 'OnPremVNET'
   params: {
@@ -205,7 +222,7 @@ module virtualNetwork_OnPremHub '../../modules/Microsoft.Network/VirtualNetworkH
   }
 }
 
-module OnPremVM_WinDNS '../../modules/Microsoft.Compute/WindowsServer2022/VirtualMachine.bicep' = [for i in range(1, 2) : {
+module OnPremVM_WinDNS '../../modules/Microsoft.Compute/WindowsServer2022/VirtualMachine.bicep' = [for i in range(0, 2) : {
   name: 'OnPremWinDNS${i}'
   params: {
     acceleratedNetworking: acceleratedNetworking
@@ -217,7 +234,8 @@ module OnPremVM_WinDNS '../../modules/Microsoft.Compute/WindowsServer2022/Virtua
     virtualMachine_Size: virtualMachine_Size
     virtualMachine_ScriptFileLocation: virtualMachine_ScriptFileLocation
     virtualMachine_ScriptFileName: 'WinServ2022_DNS_InitScript.ps1'
-    commandToExecute: 'powershell -ExecutionPolicy Unrestricted -File WinServ2022_DNS_InitScript.ps1 -SampleDNSZoneName "test.com" -SampleHostName "a" -SampleARecord "172.16.0.1"'
+    // The command below has two parameters that are unavoidably hardcoded.  The Private DNS Zone is for blob storage and the IP Address is for the inbound endpoint of the private dns resolver.
+    commandToExecute: 'powershell.exe -ExecutionPolicy Unrestricted -File WinServ2022_DNS_InitScript.ps1 -SampleDNSZoneName ${onpremResolvableDomainName} -SampleHostName "a" -SampleARecord "172.16.0.1" -PrivateDNSZone "privatelink.blob.core.windows.net" -ConditionalForwarderIPAddress "10.0.9.4"'
   }
 } ]
 
@@ -264,5 +282,21 @@ module Hub_to_OnPrem_conn '../../modules/Microsoft.Network/Connection_and_LocalN
     vpn_Destination_Name: virtualNetworkGateway_OnPrem.outputs.virtualNetworkGateway_Name
     vpn_Destination_PublicIPAddress: virtualNetworkGateway_OnPrem.outputs.virtualNetworkGateway_PublicIPAddress
     vpn_SharedKey: vpn_SharedKey
+  }
+}
+
+module dnsPrivateResolver '../../modules/Microsoft.Network/PrivateDNSResolver.bicep' = {
+  name: 'dnsPrivateResolver'
+  params: {
+    dnsPrivateResolver_Inbound_SubnetID: virtualNetwork_Hub.outputs.privateResolver_Inbound_SubnetID
+    dnsPrivateResolver_Outbound_SubnetID: virtualNetwork_Hub.outputs.privateResolver_Outbound_SubnetID
+    domainName: onpremResolvableDomainName
+    forwardingRule_Name: '${join(split(onpremResolvableDomainName, '.'), '')}_ForwardingRule' // Removes the periods from the domain name.
+    location: locationA
+    targetDNSServers: [for i in range(0, 2): {
+      port: 53
+      ipaddress: OnPremVM_WinDNS[i].outputs.networkInterface_PrivateIPAddress
+    }]
+    virtualNetwork_ID: virtualNetwork_Hub.outputs.virtualNetwork_ID
   }
 }

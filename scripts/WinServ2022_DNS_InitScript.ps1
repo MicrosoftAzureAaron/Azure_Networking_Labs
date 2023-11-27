@@ -1,7 +1,9 @@
 param (
     [string]$SampleDNSZoneName,
     [string]$SampleHostName,
-    [string]$SampleARecord
+    [string]$SampleARecord,
+    [string]$PrivateDNSZone,
+    [string]$ConditionalForwarderIPAddress
 )
 
 # Chocolatey installation
@@ -36,12 +38,12 @@ New-Item -ItemType Directory -Name Tools -Path "c:\"
 Invoke-WebRequest -Uri "https://mainjamesgstorage.blob.core.windows.net/scripts/installTools.ps1" -OutFile "c:\installTools.ps1"
 
 Install-WindowsFeature -Name DNS -IncludeManagementTools
-
 Set-DnsServerForwarder -IPAddress "168.63.129.16"
 
 Import-Module DnsServer
-
-Add-DnsServerPrimaryZone -Name $SampleDNSZoneName -ZoneFile "${SampleDNSZoneName}.dns" -PassThru
-
+Add-DnsServerPrimaryZone -Name $SampleDNSZoneName -ZoneFile "${SampleDNSZoneName}dns" -PassThru
 Add-DnsServerResourceRecordA -ZoneName $SampleDNSZoneName -Name $SampleHostName -IPv4Address $SampleARecord -CreatePtr
+
+
+Add-DnsServerConditionalForwarderZone -Name $PrivateDNSZone -MasterServers $ConditionalForwarderIPAddress
 
