@@ -98,7 +98,7 @@ module hubVM_Windows '../../modules/Microsoft.Compute/WindowsServer2022/VirtualM
     virtualMachine_Name: 'hubVM-Windows'
     virtualMachine_Size: virtualMachine_Size
     virtualMachine_ScriptFileLocation: virtualMachine_ScriptFileLocation
-    virtualMachine_ScriptFileName: 'WinServ2022_General_InitScript'
+    virtualMachine_ScriptFileName: 'WinServ2022_General_InitScript.ps1'
   }
 }
 
