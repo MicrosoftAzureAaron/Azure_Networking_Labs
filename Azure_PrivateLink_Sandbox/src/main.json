@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.18.4.5664",
-      "templateHash": "7727517795189858100"
+      "templateHash": "13918672386745211182"
     }
   },
   "parameters": {
@@ -958,86 +958,6 @@
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2022-09-01",
-      "name": "hubToSpokeAPeering",
-      "properties": {
-        "expressionEvaluationOptions": {
-          "scope": "inner"
-        },
-        "mode": "Incremental",
-        "parameters": {
-          "virtualNetwork_Hub_Name": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hub_vnet'), '2022-09-01').outputs.virtualNetwork_Name.value]"
-          },
-          "virtualNetwork_Spoke_Name": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'spokeA_vnet'), '2022-09-01').outputs.virtualNetwork_Name.value]"
-          }
-        },
-        "template": {
-          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-          "contentVersion": "1.0.0.0",
-          "metadata": {
-            "_generator": {
-              "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "14501128757819657787"
-            }
-          },
-          "parameters": {
-            "virtualNetwork_Hub_Name": {
-              "type": "string",
-              "metadata": {
-                "description": "Name of the Hub Virtual Network"
-              }
-            },
-            "virtualNetwork_Spoke_Name": {
-              "type": "string",
-              "metadata": {
-                "description": "Name of the Spoke Virtual Network"
-              }
-            }
-          },
-          "resources": [
-            {
-              "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
-              "apiVersion": "2022-09-01",
-              "name": "[format('{0}/{1}', parameters('virtualNetwork_Hub_Name'), format('{0}to{1}', parameters('virtualNetwork_Hub_Name'), parameters('virtualNetwork_Spoke_Name')))]",
-              "properties": {
-                "allowGatewayTransit": true,
-                "allowForwardedTraffic": true,
-                "useRemoteGateways": false,
-                "allowVirtualNetworkAccess": true,
-                "remoteVirtualNetwork": {
-                  "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork_Spoke_Name'))]"
-                }
-              }
-            },
-            {
-              "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
-              "apiVersion": "2022-09-01",
-              "name": "[format('{0}/{1}', parameters('virtualNetwork_Spoke_Name'), format('{0}to{1}', parameters('virtualNetwork_Spoke_Name'), parameters('virtualNetwork_Hub_Name')))]",
-              "properties": {
-                "useRemoteGateways": true,
-                "allowGatewayTransit": true,
-                "allowForwardedTraffic": true,
-                "allowVirtualNetworkAccess": true,
-                "remoteVirtualNetwork": {
-                  "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork_Hub_Name'))]"
-                }
-              }
-            }
-          ]
-        }
-      },
-      "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'Hub_to_OnPrem_conn')]",
-        "[resourceId('Microsoft.Resources/deployments', 'OnPrem_to_Hub_conn')]",
-        "[resourceId('Microsoft.Resources/deployments', 'hub_vnet')]",
-        "[resourceId('Microsoft.Resources/deployments', 'spokeA_vnet')]"
-      ]
-    },
-    {
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2022-09-01",
       "name": "spokeB_vnet",
       "properties": {
         "expressionEvaluationOptions": {
@@ -1385,6 +1305,86 @@
       },
       "dependsOn": [
         "hubWinVMs"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "hubToSpokeAPeering",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "virtualNetwork_Hub_Name": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hub_vnet'), '2022-09-01').outputs.virtualNetwork_Name.value]"
+          },
+          "virtualNetwork_Spoke_Name": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'spokeA_vnet'), '2022-09-01').outputs.virtualNetwork_Name.value]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.18.4.5664",
+              "templateHash": "14501128757819657787"
+            }
+          },
+          "parameters": {
+            "virtualNetwork_Hub_Name": {
+              "type": "string",
+              "metadata": {
+                "description": "Name of the Hub Virtual Network"
+              }
+            },
+            "virtualNetwork_Spoke_Name": {
+              "type": "string",
+              "metadata": {
+                "description": "Name of the Spoke Virtual Network"
+              }
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+              "apiVersion": "2022-09-01",
+              "name": "[format('{0}/{1}', parameters('virtualNetwork_Hub_Name'), format('{0}to{1}', parameters('virtualNetwork_Hub_Name'), parameters('virtualNetwork_Spoke_Name')))]",
+              "properties": {
+                "allowGatewayTransit": true,
+                "allowForwardedTraffic": true,
+                "useRemoteGateways": false,
+                "allowVirtualNetworkAccess": true,
+                "remoteVirtualNetwork": {
+                  "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork_Spoke_Name'))]"
+                }
+              }
+            },
+            {
+              "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+              "apiVersion": "2022-09-01",
+              "name": "[format('{0}/{1}', parameters('virtualNetwork_Spoke_Name'), format('{0}to{1}', parameters('virtualNetwork_Spoke_Name'), parameters('virtualNetwork_Hub_Name')))]",
+              "properties": {
+                "useRemoteGateways": true,
+                "allowGatewayTransit": true,
+                "allowForwardedTraffic": true,
+                "allowVirtualNetworkAccess": true,
+                "remoteVirtualNetwork": {
+                  "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork_Hub_Name'))]"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'Hub_to_OnPrem_conn')]",
+        "[resourceId('Microsoft.Resources/deployments', 'OnPrem_to_Hub_conn')]",
+        "[resourceId('Microsoft.Resources/deployments', 'hub_vnet')]",
+        "[resourceId('Microsoft.Resources/deployments', 'spokeA_vnet')]"
       ]
     },
     {
@@ -2208,6 +2208,7 @@
         }
       },
       "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'hubToSpokeAPeering')]",
         "[resourceId('Microsoft.Resources/deployments', 'spokeA_vnet')]"
       ]
     },
@@ -2578,6 +2579,7 @@
         }
       },
       "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'hubToSpokeBPeering')]",
         "[resourceId('Microsoft.Resources/deployments', 'spokeB_vnet')]"
       ]
     },
@@ -4965,146 +4967,6 @@
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2022-09-01",
-      "name": "OnPrem_to_Hub_conn",
-      "properties": {
-        "expressionEvaluationOptions": {
-          "scope": "inner"
-        },
-        "mode": "Incremental",
-        "parameters": {
-          "location": {
-            "value": "[parameters('locationOnPrem')]"
-          },
-          "virtualNetworkGateway_ID": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'OnPremVirtualNetworkGateway'), '2022-09-01').outputs.virtualNetworkGateway_ResourceID.value]"
-          },
-          "vpn_Destination_ASN": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'HubVirtualNetworkGateway'), '2022-09-01').outputs.virtualNetworkGateway_ASN.value]"
-          },
-          "vpn_Destination_BGPIPAddress": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'HubVirtualNetworkGateway'), '2022-09-01').outputs.virtualNetworkGateway_BGPAddress.value]"
-          },
-          "vpn_Destination_Name": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'HubVirtualNetworkGateway'), '2022-09-01').outputs.virtualNetworkGateway_Name.value]"
-          },
-          "vpn_Destination_PublicIPAddress": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'HubVirtualNetworkGateway'), '2022-09-01').outputs.virtualNetworkGateway_PublicIPAddress.value]"
-          },
-          "vpn_SharedKey": {
-            "value": "[parameters('vpn_SharedKey')]"
-          }
-        },
-        "template": {
-          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-          "contentVersion": "1.0.0.0",
-          "metadata": {
-            "_generator": {
-              "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "4104203714567954468"
-            }
-          },
-          "parameters": {
-            "location": {
-              "type": "string",
-              "metadata": {
-                "description": "Azure Datacenter to which the resources will be deployed"
-              }
-            },
-            "vpn_Destination_Name": {
-              "type": "string",
-              "metadata": {
-                "description": "Friendly name for the destination VPN device"
-              }
-            },
-            "vpn_Destination_PublicIPAddress": {
-              "type": "string",
-              "metadata": {
-                "description": "Public IP Address of the Destination VPN"
-              }
-            },
-            "vpn_Destination_BGPIPAddress": {
-              "type": "string",
-              "metadata": {
-                "description": "BGP Peering Address of the Destination VPN"
-              }
-            },
-            "vpn_Destination_ASN": {
-              "type": "int",
-              "metadata": {
-                "description": "ASN of the Destination VPN"
-              }
-            },
-            "vpn_SharedKey": {
-              "type": "securestring",
-              "metadata": {
-                "description": "VPN Shared Key used for authenticating VPN connections"
-              }
-            },
-            "virtualNetworkGateway_ID": {
-              "type": "string",
-              "metadata": {
-                "description": "Existing Virtual Network Gateway ID"
-              }
-            }
-          },
-          "variables": {
-            "virtualNetworkGateway_ID_Split": "[split(parameters('virtualNetworkGateway_ID'), '/')]",
-            "virtualNetworkGateway_Name": "[variables('virtualNetworkGateway_ID_Split')[8]]"
-          },
-          "resources": [
-            {
-              "type": "Microsoft.Network/connections",
-              "apiVersion": "2022-11-01",
-              "name": "[format('Connection_for_{0}_to_{1}', variables('virtualNetworkGateway_Name'), parameters('vpn_Destination_Name'))]",
-              "location": "[parameters('location')]",
-              "properties": {
-                "virtualNetworkGateway1": {
-                  "id": "[parameters('virtualNetworkGateway_ID')]",
-                  "properties": {}
-                },
-                "localNetworkGateway2": {
-                  "id": "[resourceId('Microsoft.Network/localNetworkGateways', format('localNetworkGateway_for_{0}', parameters('vpn_Destination_Name')))]",
-                  "properties": {}
-                },
-                "connectionType": "IPsec",
-                "connectionProtocol": "IKEv2",
-                "routingWeight": 0,
-                "sharedKey": "[parameters('vpn_SharedKey')]",
-                "enableBgp": true,
-                "useLocalAzureIpAddress": false,
-                "usePolicyBasedTrafficSelectors": false,
-                "dpdTimeoutSeconds": 45,
-                "connectionMode": "Default"
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.Network/localNetworkGateways', format('localNetworkGateway_for_{0}', parameters('vpn_Destination_Name')))]"
-              ]
-            },
-            {
-              "type": "Microsoft.Network/localNetworkGateways",
-              "apiVersion": "2022-11-01",
-              "name": "[format('localNetworkGateway_for_{0}', parameters('vpn_Destination_Name'))]",
-              "location": "[parameters('location')]",
-              "properties": {
-                "gatewayIpAddress": "[parameters('vpn_Destination_PublicIPAddress')]",
-                "bgpSettings": {
-                  "asn": "[parameters('vpn_Destination_ASN')]",
-                  "bgpPeeringAddress": "[parameters('vpn_Destination_BGPIPAddress')]"
-                }
-              }
-            }
-          ]
-        }
-      },
-      "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'HubVirtualNetworkGateway')]",
-        "[resourceId('Microsoft.Resources/deployments', 'OnPremVirtualNetworkGateway')]"
-      ]
-    },
-    {
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2022-09-01",
       "name": "HubVirtualNetworkGateway",
       "properties": {
         "expressionEvaluationOptions": {
@@ -5257,6 +5119,146 @@
       },
       "dependsOn": [
         "[resourceId('Microsoft.Resources/deployments', 'hub_vnet')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "OnPrem_to_Hub_conn",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "location": {
+            "value": "[parameters('locationOnPrem')]"
+          },
+          "virtualNetworkGateway_ID": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'OnPremVirtualNetworkGateway'), '2022-09-01').outputs.virtualNetworkGateway_ResourceID.value]"
+          },
+          "vpn_Destination_ASN": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'HubVirtualNetworkGateway'), '2022-09-01').outputs.virtualNetworkGateway_ASN.value]"
+          },
+          "vpn_Destination_BGPIPAddress": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'HubVirtualNetworkGateway'), '2022-09-01').outputs.virtualNetworkGateway_BGPAddress.value]"
+          },
+          "vpn_Destination_Name": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'HubVirtualNetworkGateway'), '2022-09-01').outputs.virtualNetworkGateway_Name.value]"
+          },
+          "vpn_Destination_PublicIPAddress": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'HubVirtualNetworkGateway'), '2022-09-01').outputs.virtualNetworkGateway_PublicIPAddress.value]"
+          },
+          "vpn_SharedKey": {
+            "value": "[parameters('vpn_SharedKey')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.18.4.5664",
+              "templateHash": "4104203714567954468"
+            }
+          },
+          "parameters": {
+            "location": {
+              "type": "string",
+              "metadata": {
+                "description": "Azure Datacenter to which the resources will be deployed"
+              }
+            },
+            "vpn_Destination_Name": {
+              "type": "string",
+              "metadata": {
+                "description": "Friendly name for the destination VPN device"
+              }
+            },
+            "vpn_Destination_PublicIPAddress": {
+              "type": "string",
+              "metadata": {
+                "description": "Public IP Address of the Destination VPN"
+              }
+            },
+            "vpn_Destination_BGPIPAddress": {
+              "type": "string",
+              "metadata": {
+                "description": "BGP Peering Address of the Destination VPN"
+              }
+            },
+            "vpn_Destination_ASN": {
+              "type": "int",
+              "metadata": {
+                "description": "ASN of the Destination VPN"
+              }
+            },
+            "vpn_SharedKey": {
+              "type": "securestring",
+              "metadata": {
+                "description": "VPN Shared Key used for authenticating VPN connections"
+              }
+            },
+            "virtualNetworkGateway_ID": {
+              "type": "string",
+              "metadata": {
+                "description": "Existing Virtual Network Gateway ID"
+              }
+            }
+          },
+          "variables": {
+            "virtualNetworkGateway_ID_Split": "[split(parameters('virtualNetworkGateway_ID'), '/')]",
+            "virtualNetworkGateway_Name": "[variables('virtualNetworkGateway_ID_Split')[8]]"
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Network/connections",
+              "apiVersion": "2022-11-01",
+              "name": "[format('Connection_for_{0}_to_{1}', variables('virtualNetworkGateway_Name'), parameters('vpn_Destination_Name'))]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "virtualNetworkGateway1": {
+                  "id": "[parameters('virtualNetworkGateway_ID')]",
+                  "properties": {}
+                },
+                "localNetworkGateway2": {
+                  "id": "[resourceId('Microsoft.Network/localNetworkGateways', format('localNetworkGateway_for_{0}', parameters('vpn_Destination_Name')))]",
+                  "properties": {}
+                },
+                "connectionType": "IPsec",
+                "connectionProtocol": "IKEv2",
+                "routingWeight": 0,
+                "sharedKey": "[parameters('vpn_SharedKey')]",
+                "enableBgp": true,
+                "useLocalAzureIpAddress": false,
+                "usePolicyBasedTrafficSelectors": false,
+                "dpdTimeoutSeconds": 45,
+                "connectionMode": "Default"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/localNetworkGateways', format('localNetworkGateway_for_{0}', parameters('vpn_Destination_Name')))]"
+              ]
+            },
+            {
+              "type": "Microsoft.Network/localNetworkGateways",
+              "apiVersion": "2022-11-01",
+              "name": "[format('localNetworkGateway_for_{0}', parameters('vpn_Destination_Name'))]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "gatewayIpAddress": "[parameters('vpn_Destination_PublicIPAddress')]",
+                "bgpSettings": {
+                  "asn": "[parameters('vpn_Destination_ASN')]",
+                  "bgpPeeringAddress": "[parameters('vpn_Destination_BGPIPAddress')]"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'HubVirtualNetworkGateway')]",
+        "[resourceId('Microsoft.Resources/deployments', 'OnPremVirtualNetworkGateway')]"
       ]
     },
     {
