@@ -71,11 +71,11 @@ module virtualNetwork_Spoke_A '../../modules/Microsoft.Network/VirtualNetworkSpo
   }
 }
 
-module hubToSpokeAPeering '../../modules/Microsoft.Network/VirtualNetworkPeering.bicep' = {
+module hubToSpokeAPeering '../../modules/Microsoft.Network/VirtualNetworkPeeringHub2Spoke.bicep' = {
   name: 'hubToSpokeAPeering'
   params: {
-    virtualNetwork_Source_Name: virtualNetwork_Hub.outputs.virtualNetwork_Name
-    virtualNetwork_Destination_Name: virtualNetwork_Spoke_A.outputs.virtualNetwork_Name
+    virtualNetwork_Hub_Name: virtualNetwork_Hub.outputs.virtualNetwork_Name
+    virtualNetwork_Spoke_Name: virtualNetwork_Spoke_A.outputs.virtualNetwork_Name
   }
 }
 
@@ -88,11 +88,11 @@ module virtualNetwork_Spoke_B '../../modules/Microsoft.Network/VirtualNetworkSpo
     virtualNetwork_Name: 'VNet_SpokeB'
   }
 }
-module hubToSpokeBPeering '../../modules/Microsoft.Network/VirtualNetworkPeering.bicep' = {
+module hubToSpokeBPeering '../../modules/Microsoft.Network/VirtualNetworkPeeringHub2Spoke.bicep' = {
   name: 'hubToSpokeBPeering'
   params: {
-    virtualNetwork_Source_Name: virtualNetwork_Hub.outputs.virtualNetwork_Name
-    virtualNetwork_Destination_Name: virtualNetwork_Spoke_B.outputs.virtualNetwork_Name
+    virtualNetwork_Hub_Name: virtualNetwork_Hub.outputs.virtualNetwork_Name
+    virtualNetwork_Spoke_Name: virtualNetwork_Spoke_B.outputs.virtualNetwork_Name
   }
 }
 
@@ -110,8 +110,7 @@ module hubVM_Windows '../../modules/Microsoft.Compute/WindowsServer2022/VirtualM
     virtualMachine_ScriptFileName: 'WinServ2022_General_InitScript.ps1'
   }
   dependsOn: [
-    Hub_to_OnPrem_conn
-    OnPrem_to_Hub_conn
+    azureFirewall
   ]
 }
 
@@ -129,8 +128,7 @@ module spokeAVM_Windows '../../modules/Microsoft.Compute/WindowsServer2022/Virtu
     virtualMachine_ScriptFileName: 'WinServ2022_General_InitScript.ps1'
   }
   dependsOn: [
-    Hub_to_OnPrem_conn
-    OnPrem_to_Hub_conn
+    azureFirewall
   ]
 }
 
@@ -148,8 +146,7 @@ module spokeBVM_Windows '../../modules/Microsoft.Compute/WindowsServer2022/Virtu
     virtualMachine_ScriptFileName: 'WinServ2022_WebServer_InitScript.ps1'
   }
   dependsOn: [
-    Hub_to_OnPrem_conn
-    OnPrem_to_Hub_conn
+    azureFirewall
   ]
 }
 
