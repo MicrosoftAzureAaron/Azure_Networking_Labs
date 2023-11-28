@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.18.4.5664",
-      "templateHash": "12592855713511375152"
+      "templateHash": "15538165497627767487"
     }
   },
   "parameters": {
@@ -1041,6 +1041,8 @@
         }
       },
       "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'Hub_to_OnPrem_conn')]",
+        "[resourceId('Microsoft.Resources/deployments', 'OnPrem_to_Hub_conn')]",
         "[resourceId('Microsoft.Resources/deployments', 'hubVNet')]",
         "[resourceId('Microsoft.Resources/deployments', 'spokeAVNet')]"
       ]
@@ -1471,6 +1473,8 @@
         }
       },
       "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'Hub_to_OnPrem_conn')]",
+        "[resourceId('Microsoft.Resources/deployments', 'OnPrem_to_Hub_conn')]",
         "[resourceId('Microsoft.Resources/deployments', 'hubVNet')]",
         "[resourceId('Microsoft.Resources/deployments', 'spokeBVNet')]"
       ]

@@ -34,8 +34,8 @@ param location string
 @description('Resource ID of the Virtual Network to which the DNS Private resolver will be added.')
 param virtualNetwork_ID string
 
-@description('Extracts the name of the Virtual Network out of the Resource ID.')
-var virtualNetwork_Name = last(split(virtualNetwork_ID, '/'))
+// @description('Extracts the name of the Virtual Network out of the Resource ID.')
+// var virtualNetwork_Name = last(split(virtualNetwork_ID, '/'))
 
 @description('Resource ID of the Subnet to which the DNS Private resolver Inbound Endpoint will be added.')
 param dnsPrivateResolver_Inbound_SubnetID string
@@ -52,28 +52,28 @@ param inboundEndpoint_Name string = 'endpoint-inbound'
 @description('name that will be used for the private resolver outbound endpoint')
 param outboundEndpoint_Name string = 'endpoint-outbound'
 
-@description('Name of the forwarding ruleset.')
-param dnsForwardingRuleSet_Name string = 'forwardingRule'
+// @description('Name of the forwarding ruleset.')
+// param dnsForwardingRuleSet_Name string = 'forwardingRule'
 
-@description('Name of the forwarding rule.  No special characters besides underscores can be used.')
-param forwardingRule_Name string
+// @description('Name of the forwarding rule.  No special characters besides underscores can be used.')
+// param forwardingRule_Name string
 
-@description('the target domain name for the forwarding ruleset')
-param domainName string
+// @description('the target domain name for the forwarding ruleset')
+// param domainName string
 
 
-@description('''the list of target DNS servers ip address and the port number for conditional forwarding
-Format to be used:
-{
-  ipaddress: '10.0.0.1'
-  port: 53
-}
-{
-  ipaddress: '10.0.0.2'
-  port: 53
-}
-''')
-param targetDNSServers array
+// @description('''the list of target DNS servers ip address and the port number for conditional forwarding
+// Format to be used:
+// {
+//   ipaddress: '10.0.0.1'
+//   port: 53
+// }
+// {
+//   ipaddress: '10.0.0.2'
+//   port: 53
+// }
+// ''')
+// param targetDNSServers array
 
 resource dnsPrivateResolver 'Microsoft.Network/dnsResolvers@2022-07-01' = {
   name: dnsPrivateResolver_Name
@@ -112,36 +112,36 @@ resource outboundEndpoint 'Microsoft.Network/dnsResolvers/outboundEndpoints@2022
   }
 }
 
-resource dnsForwardingRuleSet 'Microsoft.Network/dnsForwardingRulesets@2022-07-01' = {
-  name: dnsForwardingRuleSet_Name
-  location: location
-  properties: {
-    dnsResolverOutboundEndpoints: [
-      {
-        id: outboundEndpoint.id
-      }
-    ]
-  }
-}
+// resource dnsForwardingRuleSet 'Microsoft.Network/dnsForwardingRulesets@2022-07-01' = {
+//   name: dnsForwardingRuleSet_Name
+//   location: location
+//   properties: {
+//     dnsResolverOutboundEndpoints: [
+//       {
+//         id: outboundEndpoint.id
+//       }
+//     ]
+//   }
+// }
 
-resource resolverLink 'Microsoft.Network/dnsForwardingRulesets/virtualNetworkLinks@2022-07-01' = {
-  parent: dnsForwardingRuleSet
-  name: '${virtualNetwork_Name}_link'
-  properties: {
-    virtualNetwork: {
-      id: virtualNetwork_ID
-    }
-  }
-}
+// resource resolverLink 'Microsoft.Network/dnsForwardingRulesets/virtualNetworkLinks@2022-07-01' = {
+//   parent: dnsForwardingRuleSet
+//   name: '${virtualNetwork_Name}_link'
+//   properties: {
+//     virtualNetwork: {
+//       id: virtualNetwork_ID
+//     }
+//   }
+// }
 
-resource fwRules 'Microsoft.Network/dnsForwardingRulesets/forwardingRules@2022-07-01' = {
-  parent: dnsForwardingRuleSet
-  name: forwardingRule_Name
-  properties: {
-    domainName: domainName
-    targetDnsServers: targetDNSServers
-  }
-}
+// resource fwRules 'Microsoft.Network/dnsForwardingRulesets/forwardingRules@2022-07-01' = {
+//   parent: dnsForwardingRuleSet
+//   name: forwardingRule_Name
+//   properties: {
+//     domainName: domainName
+//     targetDnsServers: targetDNSServers
+//   }
+// }
 
-
+output dnsPrivateResolver_Outbound_Endpoint_ID string = outboundEndpoint.id
 output privateDNSResolver_Inbound_Endpoint_IPAddress string = inboundEndpoint.properties.ipConfigurations[0].privateIpAddress
