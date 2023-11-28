@@ -18,7 +18,7 @@ if (!$subID) {
 }
 Set-AzContext -Subscription $subID
 
-$iteration = "10"
+$iteration = "11"
 $rgName = "Bicep_PrivateLink${iteration}_Sandbox"
 $locationA = "eastus2"
 # $locationB = "eastus2"

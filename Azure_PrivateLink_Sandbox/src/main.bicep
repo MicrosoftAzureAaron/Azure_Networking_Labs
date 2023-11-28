@@ -70,6 +70,16 @@ module virtualNetwork_Spoke_A '../../modules/Microsoft.Network/VirtualNetworkSpo
   }
 }
 
+module virtualNetwork_Spoke_B '../../modules/Microsoft.Network/VirtualNetworkSpoke.bicep' = {
+  name: 'spokeB_vnet'
+  params: {
+    firstTwoOctetsOfVirtualNetworkPrefix: '10.2'
+    dnsServers: [for i in range(0, 2) : hubWinVMs[i].outputs.networkInterface_PrivateIPAddress]
+    location: locationB
+    virtualNetwork_Name: 'spokeB_vnet'
+  }
+}
+
 module hubToSpokeAPeering '../../modules/Microsoft.Network/VirtualNetworkPeeringHub2Spoke.bicep' = {
   name: 'hubToSpokeAPeering'
   params: {
@@ -82,15 +92,6 @@ module hubToSpokeAPeering '../../modules/Microsoft.Network/VirtualNetworkPeering
   ]
 }
 
-module virtualNetwork_Spoke_B '../../modules/Microsoft.Network/VirtualNetworkSpoke.bicep' = {
-  name: 'spokeB_vnet'
-  params: {
-    firstTwoOctetsOfVirtualNetworkPrefix: '10.2'
-    dnsServers: [for i in range(0, 2) : hubWinVMs[i].outputs.networkInterface_PrivateIPAddress]
-    location: locationB
-    virtualNetwork_Name: 'spokeB_vnet'
-  }
-}
 module hubToSpokeBPeering '../../modules/Microsoft.Network/VirtualNetworkPeeringHub2Spoke.bicep' = {
   name: 'hubToSpokeBPeering'
   params: {
@@ -131,6 +132,9 @@ module spokeA_WinVM '../../modules/Microsoft.Compute/WindowsServer2022/VirtualMa
     virtualMachine_ScriptFileLocation: virtualMachine_ScriptFileLocation
     virtualMachine_ScriptFileName: 'WinServ2022_General_InitScript.ps1'
   }
+  dependsOn: [
+    hubToSpokeAPeering
+  ]
 }
 
 module spokeB_WinVM '../../modules/Microsoft.Compute/WindowsServer2022/VirtualMachine.bicep' = {
@@ -146,6 +150,9 @@ module spokeB_WinVM '../../modules/Microsoft.Compute/WindowsServer2022/VirtualMa
     virtualMachine_ScriptFileLocation: virtualMachine_ScriptFileLocation
     virtualMachine_ScriptFileName: 'WinServ2022_WebServer_InitScript.ps1'
   }
+  dependsOn: [
+    hubToSpokeBPeering
+  ]
 }
 
 module privateLink '../../modules/Microsoft.Network/PrivateLink.bicep' = {
@@ -263,6 +270,16 @@ module virtualNetworkGateway_OnPrem '../../modules/Microsoft.Network/VirtualNetw
   }
 }
 
+module virtualNetworkGateway_Hub '../../modules/Microsoft.Network/VirtualNetworkGateway.bicep' = {
+  name: 'HubVirtualNetworkGateway'
+  params: {
+    location: locationA
+    virtualNetworkGateway_ASN: 65001
+    virtualNetworkGateway_Name: 'HubVNG'
+    virtualNetworkGateway_Subnet_ResourceID: virtualNetwork_Hub.outputs.gateway_SubnetID
+  }
+}
+
 module OnPrem_to_Hub_conn '../../modules/Microsoft.Network/Connection_and_LocalNetworkGateway.bicep' = {
   name: 'OnPrem_to_Hub_conn'
   params: {
@@ -273,16 +290,6 @@ module OnPrem_to_Hub_conn '../../modules/Microsoft.Network/Connection_and_LocalN
     vpn_Destination_Name: virtualNetworkGateway_Hub.outputs.virtualNetworkGateway_Name
     vpn_Destination_PublicIPAddress: virtualNetworkGateway_Hub.outputs.virtualNetworkGateway_PublicIPAddress
     vpn_SharedKey: vpn_SharedKey
-  }
-}
-
-module virtualNetworkGateway_Hub '../../modules/Microsoft.Network/VirtualNetworkGateway.bicep' = {
-  name: 'HubVirtualNetworkGateway'
-  params: {
-    location: locationA
-    virtualNetworkGateway_ASN: 65001
-    virtualNetworkGateway_Name: 'HubVNG'
-    virtualNetworkGateway_Subnet_ResourceID: virtualNetwork_Hub.outputs.gateway_SubnetID
   }
 }
 

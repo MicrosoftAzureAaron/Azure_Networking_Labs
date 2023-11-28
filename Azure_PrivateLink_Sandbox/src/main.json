@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.18.4.5664",
-      "templateHash": "15538165497627767487"
+      "templateHash": "7727517795189858100"
     }
   },
   "parameters": {
@@ -94,7 +94,7 @@
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2022-09-01",
-      "name": "hubVNet",
+      "name": "hub_vnet",
       "properties": {
         "expressionEvaluationOptions": {
           "scope": "inner"
@@ -104,20 +104,11 @@
           "firstTwoOctetsOfVirtualNetworkPrefix": {
             "value": "10.0"
           },
-          "dnsServers": {
-            "copy": [
-              {
-                "name": "value",
-                "count": "[length(range(0, 2))]",
-                "input": "[reference(resourceId('Microsoft.Resources/deployments', format('OnPremWinDNS{0}', range(0, 2)[range(0, 2)[copyIndex('value')]])), '2022-09-01').outputs.networkInterface_PrivateIPAddress.value]"
-              }
-            ]
-          },
           "location": {
             "value": "[parameters('locationA')]"
           },
           "virtualNetwork_Name": {
-            "value": "vnet_hub"
+            "value": "hub_vnet"
           }
         },
         "template": {
@@ -610,15 +601,12 @@
             }
           }
         }
-      },
-      "dependsOn": [
-        "OnPremVM_WinDNS"
-      ]
+      }
     },
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2022-09-01",
-      "name": "spokeAVNet",
+      "name": "spokeA_vnet",
       "properties": {
         "expressionEvaluationOptions": {
           "scope": "inner"
@@ -633,7 +621,7 @@
               {
                 "name": "value",
                 "count": "[length(range(0, 2))]",
-                "input": "[reference(resourceId('Microsoft.Resources/deployments', format('OnPremWinDNS{0}', range(0, 2)[range(0, 2)[copyIndex('value')]])), '2022-09-01').outputs.networkInterface_PrivateIPAddress.value]"
+                "input": "[reference(resourceId('Microsoft.Resources/deployments', format('hub-WinVM{0}', range(0, 2)[range(0, 2)[copyIndex('value')]])), '2022-09-01').outputs.networkInterface_PrivateIPAddress.value]"
               }
             ]
           },
@@ -641,7 +629,7 @@
             "value": "[parameters('locationA')]"
           },
           "virtualNetwork_Name": {
-            "value": "vnet_SpokeA"
+            "value": "spokeA_vnet"
           }
         },
         "template": {
@@ -964,7 +952,7 @@
         }
       },
       "dependsOn": [
-        "OnPremVM_WinDNS"
+        "hubWinVMs"
       ]
     },
     {
@@ -978,10 +966,10 @@
         "mode": "Incremental",
         "parameters": {
           "virtualNetwork_Hub_Name": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hubVNet'), '2022-09-01').outputs.virtualNetwork_Name.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hub_vnet'), '2022-09-01').outputs.virtualNetwork_Name.value]"
           },
           "virtualNetwork_Spoke_Name": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'spokeAVNet'), '2022-09-01').outputs.virtualNetwork_Name.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'spokeA_vnet'), '2022-09-01').outputs.virtualNetwork_Name.value]"
           }
         },
         "template": {
@@ -1043,14 +1031,14 @@
       "dependsOn": [
         "[resourceId('Microsoft.Resources/deployments', 'Hub_to_OnPrem_conn')]",
         "[resourceId('Microsoft.Resources/deployments', 'OnPrem_to_Hub_conn')]",
-        "[resourceId('Microsoft.Resources/deployments', 'hubVNet')]",
-        "[resourceId('Microsoft.Resources/deployments', 'spokeAVNet')]"
+        "[resourceId('Microsoft.Resources/deployments', 'hub_vnet')]",
+        "[resourceId('Microsoft.Resources/deployments', 'spokeA_vnet')]"
       ]
     },
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2022-09-01",
-      "name": "spokeBVNet",
+      "name": "spokeB_vnet",
       "properties": {
         "expressionEvaluationOptions": {
           "scope": "inner"
@@ -1065,7 +1053,7 @@
               {
                 "name": "value",
                 "count": "[length(range(0, 2))]",
-                "input": "[reference(resourceId('Microsoft.Resources/deployments', format('OnPremWinDNS{0}', range(0, 2)[range(0, 2)[copyIndex('value')]])), '2022-09-01').outputs.networkInterface_PrivateIPAddress.value]"
+                "input": "[reference(resourceId('Microsoft.Resources/deployments', format('hub-WinVM{0}', range(0, 2)[range(0, 2)[copyIndex('value')]])), '2022-09-01').outputs.networkInterface_PrivateIPAddress.value]"
               }
             ]
           },
@@ -1073,7 +1061,7 @@
             "value": "[parameters('locationB')]"
           },
           "virtualNetwork_Name": {
-            "value": "VNet_SpokeB"
+            "value": "spokeB_vnet"
           }
         },
         "template": {
@@ -1396,7 +1384,7 @@
         }
       },
       "dependsOn": [
-        "OnPremVM_WinDNS"
+        "hubWinVMs"
       ]
     },
     {
@@ -1410,10 +1398,10 @@
         "mode": "Incremental",
         "parameters": {
           "virtualNetwork_Hub_Name": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hubVNet'), '2022-09-01').outputs.virtualNetwork_Name.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hub_vnet'), '2022-09-01').outputs.virtualNetwork_Name.value]"
           },
           "virtualNetwork_Spoke_Name": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'spokeBVNet'), '2022-09-01').outputs.virtualNetwork_Name.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'spokeB_vnet'), '2022-09-01').outputs.virtualNetwork_Name.value]"
           }
         },
         "template": {
@@ -1475,14 +1463,18 @@
       "dependsOn": [
         "[resourceId('Microsoft.Resources/deployments', 'Hub_to_OnPrem_conn')]",
         "[resourceId('Microsoft.Resources/deployments', 'OnPrem_to_Hub_conn')]",
-        "[resourceId('Microsoft.Resources/deployments', 'hubVNet')]",
-        "[resourceId('Microsoft.Resources/deployments', 'spokeBVNet')]"
+        "[resourceId('Microsoft.Resources/deployments', 'hub_vnet')]",
+        "[resourceId('Microsoft.Resources/deployments', 'spokeB_vnet')]"
       ]
     },
     {
+      "copy": {
+        "name": "hubWinVMs",
+        "count": "[length(range(0, 2))]"
+      },
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2022-09-01",
-      "name": "hubVM_Windows",
+      "name": "[format('hub-WinVM{0}', range(0, 2)[copyIndex()])]",
       "properties": {
         "expressionEvaluationOptions": {
           "scope": "inner"
@@ -1496,7 +1488,7 @@
             "value": "[parameters('locationA')]"
           },
           "subnet_ID": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hubVNet'), '2022-09-01').outputs.general_SubnetID.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hub_vnet'), '2022-09-01').outputs.general_SubnetID.value]"
           },
           "virtualMachine_AdminPassword": {
             "value": "[parameters('virtualMachine_AdminPassword')]"
@@ -1505,7 +1497,7 @@
             "value": "[parameters('virtualMachine_AdminUsername')]"
           },
           "virtualMachine_Name": {
-            "value": "hubVM-Windows"
+            "value": "[format('hub-WinVM{0}', range(0, 2)[copyIndex()])]"
           },
           "virtualMachine_Size": {
             "value": "[parameters('virtualMachine_Size')]"
@@ -1514,7 +1506,7 @@
             "value": "[parameters('virtualMachine_ScriptFileLocation')]"
           },
           "virtualMachine_ScriptFileName": {
-            "value": "WinServ2022_General_InitScript.ps1"
+            "value": "WinServ2022_DNS_InitScript.ps1"
           }
         },
         "template": {
@@ -1846,14 +1838,13 @@
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'hubAzureFirewall')]",
-        "[resourceId('Microsoft.Resources/deployments', 'hubVNet')]"
+        "[resourceId('Microsoft.Resources/deployments', 'hub_vnet')]"
       ]
     },
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2022-09-01",
-      "name": "spokeAVM_Windows",
+      "name": "spokeA-WinVM",
       "properties": {
         "expressionEvaluationOptions": {
           "scope": "inner"
@@ -1867,7 +1858,7 @@
             "value": "[parameters('locationA')]"
           },
           "subnet_ID": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'spokeAVNet'), '2022-09-01').outputs.general_SubnetID.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'spokeA_vnet'), '2022-09-01').outputs.general_SubnetID.value]"
           },
           "virtualMachine_AdminPassword": {
             "value": "[parameters('virtualMachine_AdminPassword')]"
@@ -2217,14 +2208,13 @@
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'hubAzureFirewall')]",
-        "[resourceId('Microsoft.Resources/deployments', 'spokeAVNet')]"
+        "[resourceId('Microsoft.Resources/deployments', 'spokeA_vnet')]"
       ]
     },
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2022-09-01",
-      "name": "spokeBVM_Windows",
+      "name": "spokeB-WinVM",
       "properties": {
         "expressionEvaluationOptions": {
           "scope": "inner"
@@ -2238,7 +2228,7 @@
             "value": "[parameters('locationB')]"
           },
           "subnet_ID": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'spokeBVNet'), '2022-09-01').outputs.general_SubnetID.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'spokeB_vnet'), '2022-09-01').outputs.general_SubnetID.value]"
           },
           "virtualMachine_AdminPassword": {
             "value": "[parameters('virtualMachine_AdminPassword')]"
@@ -2588,8 +2578,7 @@
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'hubAzureFirewall')]",
-        "[resourceId('Microsoft.Resources/deployments', 'spokeBVNet')]"
+        "[resourceId('Microsoft.Resources/deployments', 'spokeB_vnet')]"
       ]
     },
     {
@@ -2606,29 +2595,29 @@
             "value": "[parameters('acceleratedNetworking')]"
           },
           "internalLoadBalancer_SubnetID": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'spokeBVNet'), '2022-09-01').outputs.general_SubnetID.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'spokeB_vnet'), '2022-09-01').outputs.general_SubnetID.value]"
           },
           "location": {
             "value": "[parameters('locationB')]"
           },
           "networkInterface_IPConfig_Names": {
             "value": [
-              "[reference(resourceId('Microsoft.Resources/deployments', 'spokeBVM_Windows'), '2022-09-01').outputs.networkInterface_IPConfig0_Name.value]"
+              "[reference(resourceId('Microsoft.Resources/deployments', 'spokeB-WinVM'), '2022-09-01').outputs.networkInterface_IPConfig0_Name.value]"
             ]
           },
           "networkInterface_Names": {
             "value": [
-              "[reference(resourceId('Microsoft.Resources/deployments', 'spokeBVM_Windows'), '2022-09-01').outputs.networkInterface_Name.value]"
+              "[reference(resourceId('Microsoft.Resources/deployments', 'spokeB-WinVM'), '2022-09-01').outputs.networkInterface_Name.value]"
             ]
           },
           "networkInterface_SubnetID": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'spokeBVNet'), '2022-09-01').outputs.general_SubnetID.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'spokeB_vnet'), '2022-09-01').outputs.general_SubnetID.value]"
           },
           "privateEndpoint_SubnetID": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'spokeBVNet'), '2022-09-01').outputs.privateEndpoint_SubnetID.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'spokeB_vnet'), '2022-09-01').outputs.privateEndpoint_SubnetID.value]"
           },
           "privateLink_SubnetID": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'spokeBVNet'), '2022-09-01').outputs.privateLinkService_SubnetID.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'spokeB_vnet'), '2022-09-01').outputs.privateLinkService_SubnetID.value]"
           }
         },
         "template": {
@@ -2891,8 +2880,8 @@
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'spokeBVM_Windows')]",
-        "[resourceId('Microsoft.Resources/deployments', 'spokeBVNet')]"
+        "[resourceId('Microsoft.Resources/deployments', 'spokeB-WinVM')]",
+        "[resourceId('Microsoft.Resources/deployments', 'spokeB_vnet')]"
       ]
     },
     {
@@ -2919,26 +2908,26 @@
           },
           "privateEndpoint_SubnetID": {
             "value": [
-              "[reference(resourceId('Microsoft.Resources/deployments', 'spokeAVNet'), '2022-09-01').outputs.privateEndpoint_SubnetID.value]"
+              "[reference(resourceId('Microsoft.Resources/deployments', 'spokeA_vnet'), '2022-09-01').outputs.privateEndpoint_SubnetID.value]"
             ]
           },
           "privateDNSZoneLinkedVnetIDList": {
             "value": [
-              "[reference(resourceId('Microsoft.Resources/deployments', 'hubVNet'), '2022-09-01').outputs.virtualNetwork_ID.value]",
-              "[reference(resourceId('Microsoft.Resources/deployments', 'spokeAVNet'), '2022-09-01').outputs.virtualNetwork_ID.value]",
-              "[reference(resourceId('Microsoft.Resources/deployments', 'spokeBVNet'), '2022-09-01').outputs.virtualNetwork_ID.value]"
+              "[reference(resourceId('Microsoft.Resources/deployments', 'hub_vnet'), '2022-09-01').outputs.virtualNetwork_ID.value]",
+              "[reference(resourceId('Microsoft.Resources/deployments', 'spokeA_vnet'), '2022-09-01').outputs.virtualNetwork_ID.value]",
+              "[reference(resourceId('Microsoft.Resources/deployments', 'spokeB_vnet'), '2022-09-01').outputs.virtualNetwork_ID.value]"
             ]
           },
           "privateDNSZoneLinkedVnetNamesList": {
             "value": [
-              "[reference(resourceId('Microsoft.Resources/deployments', 'hubVNet'), '2022-09-01').outputs.virtualNetwork_Name.value]",
-              "[reference(resourceId('Microsoft.Resources/deployments', 'spokeAVNet'), '2022-09-01').outputs.virtualNetwork_Name.value]",
-              "[reference(resourceId('Microsoft.Resources/deployments', 'spokeBVNet'), '2022-09-01').outputs.virtualNetwork_Name.value]"
+              "[reference(resourceId('Microsoft.Resources/deployments', 'hub_vnet'), '2022-09-01').outputs.virtualNetwork_Name.value]",
+              "[reference(resourceId('Microsoft.Resources/deployments', 'spokeA_vnet'), '2022-09-01').outputs.virtualNetwork_Name.value]",
+              "[reference(resourceId('Microsoft.Resources/deployments', 'spokeB_vnet'), '2022-09-01').outputs.virtualNetwork_Name.value]"
             ]
           },
           "privateEndpoint_VirtualNetwork_Name": {
             "value": [
-              "[reference(resourceId('Microsoft.Resources/deployments', 'spokeAVNet'), '2022-09-01').outputs.virtualNetwork_Name.value]"
+              "[reference(resourceId('Microsoft.Resources/deployments', 'spokeA_vnet'), '2022-09-01').outputs.virtualNetwork_Name.value]"
             ]
           }
         },
@@ -3291,12 +3280,9 @@
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'hubVM_Windows')]",
-        "[resourceId('Microsoft.Resources/deployments', 'spokeAVM_Windows')]",
-        "[resourceId('Microsoft.Resources/deployments', 'spokeBVM_Windows')]",
-        "[resourceId('Microsoft.Resources/deployments', 'hubVNet')]",
-        "[resourceId('Microsoft.Resources/deployments', 'spokeAVNet')]",
-        "[resourceId('Microsoft.Resources/deployments', 'spokeBVNet')]"
+        "[resourceId('Microsoft.Resources/deployments', 'hub_vnet')]",
+        "[resourceId('Microsoft.Resources/deployments', 'spokeA_vnet')]",
+        "[resourceId('Microsoft.Resources/deployments', 'spokeB_vnet')]"
       ]
     },
     {
@@ -3311,7 +3297,7 @@
         "mode": "Incremental",
         "parameters": {
           "azureFirewall_ManagementSubnet_ID": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hubVNet'), '2022-09-01').outputs.azureFirewallManagement_SubnetID.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hub_vnet'), '2022-09-01').outputs.azureFirewallManagement_SubnetID.value]"
           },
           "azureFirewall_Name": {
             "value": "hubAzFW"
@@ -3320,7 +3306,7 @@
             "value": "Basic"
           },
           "azureFirewall_Subnet_ID": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hubVNet'), '2022-09-01').outputs.azureFirewall_SubnetID.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hub_vnet'), '2022-09-01').outputs.azureFirewall_SubnetID.value]"
           },
           "azureFirewallPolicy_Name": {
             "value": "hubAzFW_Policy"
@@ -3522,7 +3508,7 @@
       "dependsOn": [
         "[resourceId('Microsoft.Resources/deployments', 'Hub_to_OnPrem_conn')]",
         "[resourceId('Microsoft.Resources/deployments', 'OnPrem_to_Hub_conn')]",
-        "[resourceId('Microsoft.Resources/deployments', 'hubVNet')]"
+        "[resourceId('Microsoft.Resources/deployments', 'hub_vnet')]"
       ]
     },
     {
@@ -3536,7 +3522,7 @@
         "mode": "Incremental",
         "parameters": {
           "bastion_SubnetID": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hubVNet'), '2022-09-01').outputs.bastion_SubnetID.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hub_vnet'), '2022-09-01').outputs.bastion_SubnetID.value]"
           },
           "location": {
             "value": "[parameters('locationA')]"
@@ -3645,13 +3631,294 @@
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'hubVNet')]"
+        "[resourceId('Microsoft.Resources/deployments', 'hub_vnet')]"
       ]
     },
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2022-09-01",
-      "name": "OnPremVNET",
+      "name": "dnsPrivateResolver",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "dnsPrivateResolver_Inbound_SubnetID": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hub_vnet'), '2022-09-01').outputs.privateResolver_Inbound_SubnetID.value]"
+          },
+          "dnsPrivateResolver_Outbound_SubnetID": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hub_vnet'), '2022-09-01').outputs.privateResolver_Outbound_SubnetID.value]"
+          },
+          "location": {
+            "value": "[parameters('locationA')]"
+          },
+          "virtualNetwork_ID": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hub_vnet'), '2022-09-01').outputs.virtualNetwork_ID.value]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.18.4.5664",
+              "templateHash": "14232006482936628786"
+            }
+          },
+          "parameters": {
+            "location": {
+              "type": "string",
+              "metadata": {
+                "description": "the location for resolver VNET and dns private resolver - Azure DNS Private Resolver available in specific region, refer the documenation to select the supported region for this deployment. For more information https://docs.microsoft.com/azure/dns/dns-private-resolver-overview#regional-availability"
+              }
+            },
+            "virtualNetwork_ID": {
+              "type": "string",
+              "metadata": {
+                "description": "Resource ID of the Virtual Network to which the DNS Private resolver will be added."
+              }
+            },
+            "dnsPrivateResolver_Inbound_SubnetID": {
+              "type": "string",
+              "metadata": {
+                "description": "Resource ID of the Subnet to which the DNS Private resolver Inbound Endpoint will be added."
+              }
+            },
+            "dnsPrivateResolver_Outbound_SubnetID": {
+              "type": "string",
+              "metadata": {
+                "description": "Resource ID of the Subnet to which the DNS Private resolver Outbound Endpoint will be added."
+              }
+            },
+            "dnsPrivateResolver_Name": {
+              "type": "string",
+              "defaultValue": "dnsResolver",
+              "metadata": {
+                "description": "name of the dns private resolver"
+              }
+            },
+            "inboundEndpoint_Name": {
+              "type": "string",
+              "defaultValue": "endpoint-inbound",
+              "metadata": {
+                "description": "name that will be used for the private resolver inbound endpoint"
+              }
+            },
+            "outboundEndpoint_Name": {
+              "type": "string",
+              "defaultValue": "endpoint-outbound",
+              "metadata": {
+                "description": "name that will be used for the private resolver outbound endpoint"
+              }
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Network/dnsResolvers",
+              "apiVersion": "2022-07-01",
+              "name": "[parameters('dnsPrivateResolver_Name')]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "virtualNetwork": {
+                  "id": "[parameters('virtualNetwork_ID')]"
+                }
+              }
+            },
+            {
+              "type": "Microsoft.Network/dnsResolvers/inboundEndpoints",
+              "apiVersion": "2022-07-01",
+              "name": "[format('{0}/{1}', parameters('dnsPrivateResolver_Name'), parameters('inboundEndpoint_Name'))]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "ipConfigurations": [
+                  {
+                    "privateIpAllocationMethod": "Dynamic",
+                    "subnet": {
+                      "id": "[parameters('dnsPrivateResolver_Inbound_SubnetID')]"
+                    }
+                  }
+                ]
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/dnsResolvers', parameters('dnsPrivateResolver_Name'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.Network/dnsResolvers/outboundEndpoints",
+              "apiVersion": "2022-07-01",
+              "name": "[format('{0}/{1}', parameters('dnsPrivateResolver_Name'), parameters('outboundEndpoint_Name'))]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "subnet": {
+                  "id": "[parameters('dnsPrivateResolver_Outbound_SubnetID')]"
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/dnsResolvers', parameters('dnsPrivateResolver_Name'))]"
+              ]
+            }
+          ],
+          "outputs": {
+            "dnsPrivateResolver_Outbound_Endpoint_ID": {
+              "type": "string",
+              "value": "[resourceId('Microsoft.Network/dnsResolvers/outboundEndpoints', parameters('dnsPrivateResolver_Name'), parameters('outboundEndpoint_Name'))]"
+            },
+            "privateDNSResolver_Inbound_Endpoint_IPAddress": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Network/dnsResolvers/inboundEndpoints', parameters('dnsPrivateResolver_Name'), parameters('inboundEndpoint_Name')), '2022-07-01').ipConfigurations[0].privateIpAddress]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'hub_vnet')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "dnsPrivateResolverForwardingRuleSet",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "outboundEndpoint_ID": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'dnsPrivateResolver'), '2022-09-01').outputs.dnsPrivateResolver_Outbound_Endpoint_ID.value]"
+          },
+          "domainName": {
+            "value": "[parameters('onpremResolvableDomainName')]"
+          },
+          "location": {
+            "value": "[parameters('locationA')]"
+          },
+          "targetDNSServers": {
+            "copy": [
+              {
+                "name": "value",
+                "count": "[length(range(0, 2))]",
+                "input": "[createObject('port', 53, 'ipaddress', reference(resourceId('Microsoft.Resources/deployments', format('OnPremWinDNS{0}', range(0, 2)[range(0, 2)[copyIndex('value')]])), '2022-09-01').outputs.networkInterface_PrivateIPAddress.value)]"
+              }
+            ]
+          },
+          "virtualNetwork_IDs": {
+            "value": [
+              "[reference(resourceId('Microsoft.Resources/deployments', 'hub_vnet'), '2022-09-01').outputs.virtualNetwork_ID.value]",
+              "[reference(resourceId('Microsoft.Resources/deployments', 'spokeA_vnet'), '2022-09-01').outputs.virtualNetwork_ID.value]",
+              "[reference(resourceId('Microsoft.Resources/deployments', 'spokeB_vnet'), '2022-09-01').outputs.virtualNetwork_ID.value]"
+            ]
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.18.4.5664",
+              "templateHash": "5934516265450790172"
+            }
+          },
+          "parameters": {
+            "location": {
+              "type": "string",
+              "metadata": {
+                "description": "the location for resolver VNET and dns private resolver - Azure DNS Private Resolver available in specific region, refer the documenation to select the supported region for this deployment. For more information https://docs.microsoft.com/azure/dns/dns-private-resolver-overview#regional-availability"
+              }
+            },
+            "virtualNetwork_IDs": {
+              "type": "array",
+              "metadata": {
+                "description": "Resource ID of the Virtual Network to which the DNS Private resolver's ruleset will be linked."
+              }
+            },
+            "outboundEndpoint_ID": {
+              "type": "string",
+              "metadata": {
+                "description": "Resource ID of the Outbound Endpoint to be associated with the forwarding ruleset"
+              }
+            },
+            "dnsForwardingRuleSet_Name": {
+              "type": "string",
+              "defaultValue": "forwardingRule",
+              "metadata": {
+                "description": "Name of the forwarding ruleset."
+              }
+            },
+            "domainName": {
+              "type": "string",
+              "metadata": {
+                "description": "the target domain name for the forwarding ruleset"
+              }
+            },
+            "targetDNSServers": {
+              "type": "array",
+              "metadata": {
+                "description": "the list of target DNS servers ip address and the port number for conditional forwarding\r\nFormat to be used:\r\n{\r\n  ipaddress: '10.0.0.1'\r\n  port: 53\r\n}\r\n{\r\n  ipaddress: '10.0.0.2'\r\n  port: 53\r\n}\r\n"
+              }
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Network/dnsForwardingRulesets",
+              "apiVersion": "2022-07-01",
+              "name": "[parameters('dnsForwardingRuleSet_Name')]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "dnsResolverOutboundEndpoints": [
+                  {
+                    "id": "[parameters('outboundEndpoint_ID')]"
+                  }
+                ]
+              }
+            },
+            {
+              "copy": {
+                "name": "resolverLink",
+                "count": "[length(parameters('virtualNetwork_IDs'))]"
+              },
+              "type": "Microsoft.Network/dnsForwardingRulesets/virtualNetworkLinks",
+              "apiVersion": "2022-07-01",
+              "name": "[format('{0}/{1}', parameters('dnsForwardingRuleSet_Name'), format('{0}_link', last(split(parameters('virtualNetwork_IDs')[copyIndex()], '/'))))]",
+              "properties": {
+                "virtualNetwork": {
+                  "id": "[parameters('virtualNetwork_IDs')[copyIndex()]]"
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/dnsForwardingRulesets', parameters('dnsForwardingRuleSet_Name'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.Network/dnsForwardingRulesets/forwardingRules",
+              "apiVersion": "2022-07-01",
+              "name": "[format('{0}/{1}', parameters('dnsForwardingRuleSet_Name'), format('{0}_ForwardingRule', join(split(parameters('domainName'), '.'), '')))]",
+              "properties": {
+                "domainName": "[parameters('domainName')]",
+                "targetDnsServers": "[parameters('targetDNSServers')]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/dnsForwardingRulesets', parameters('dnsForwardingRuleSet_Name'))]"
+              ]
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'dnsPrivateResolver')]",
+        "OnPremVM_WinDNS",
+        "[resourceId('Microsoft.Resources/deployments', 'hub_vnet')]",
+        "[resourceId('Microsoft.Resources/deployments', 'spokeA_vnet')]",
+        "[resourceId('Microsoft.Resources/deployments', 'spokeB_vnet')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "onprem_vnet",
       "properties": {
         "expressionEvaluationOptions": {
           "scope": "inner"
@@ -3665,7 +3932,7 @@
             "value": "[parameters('locationOnPrem')]"
           },
           "virtualNetwork_Name": {
-            "value": "vnet_OnPrem"
+            "value": "onprem_vnet"
           }
         },
         "template": {
@@ -4181,7 +4448,7 @@
             "value": "[parameters('locationOnPrem')]"
           },
           "subnet_ID": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'OnPremVNET'), '2022-09-01').outputs.general_SubnetID.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'onprem_vnet'), '2022-09-01').outputs.general_SubnetID.value]"
           },
           "virtualMachine_AdminPassword": {
             "value": "[parameters('virtualMachine_AdminPassword')]"
@@ -4202,7 +4469,7 @@
             "value": "WinServ2022_DNS_InitScript.ps1"
           },
           "commandToExecute": {
-            "value": "[format('powershell.exe -ExecutionPolicy Unrestricted -File WinServ2022_DNS_InitScript.ps1 -SampleDNSZoneName {0} -SampleHostName \"a\" -SampleARecord \"172.16.0.1\" -PrivateDNSZone \"privatelink.blob.core.windows.net\" -ConditionalForwarderIPAddress \"10.0.9.4\"', parameters('onpremResolvableDomainName'))]"
+            "value": "[format('powershell.exe -ExecutionPolicy Unrestricted -File WinServ2022_DNS_InitScript.ps1 -SampleDNSZoneName {0} -SampleHostName \"a\" -SampleARecord \"172.16.0.1\" -PrivateDNSZone \"privatelink.blob.core.windows.net\" -ConditionalForwarderIPAddress {1}', parameters('onpremResolvableDomainName'), reference(resourceId('Microsoft.Resources/deployments', 'dnsPrivateResolver'), '2022-09-01').outputs.privateDNSResolver_Inbound_Endpoint_IPAddress.value)]"
           }
         },
         "template": {
@@ -4534,7 +4801,8 @@
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'OnPremVNET')]"
+        "[resourceId('Microsoft.Resources/deployments', 'dnsPrivateResolver')]",
+        "[resourceId('Microsoft.Resources/deployments', 'onprem_vnet')]"
       ]
     },
     {
@@ -4557,7 +4825,7 @@
             "value": "OnPremVNG"
           },
           "virtualNetworkGateway_Subnet_ResourceID": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'OnPremVNET'), '2022-09-01').outputs.gateway_SubnetID.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'onprem_vnet'), '2022-09-01').outputs.gateway_SubnetID.value]"
           }
         },
         "template": {
@@ -4691,7 +4959,7 @@
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'OnPremVNET')]"
+        "[resourceId('Microsoft.Resources/deployments', 'onprem_vnet')]"
       ]
     },
     {
@@ -4854,7 +5122,7 @@
             "value": "HubVNG"
           },
           "virtualNetworkGateway_Subnet_ResourceID": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hubVNet'), '2022-09-01').outputs.gateway_SubnetID.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hub_vnet'), '2022-09-01').outputs.gateway_SubnetID.value]"
           }
         },
         "template": {
@@ -4988,7 +5256,7 @@
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'hubVNet')]"
+        "[resourceId('Microsoft.Resources/deployments', 'hub_vnet')]"
       ]
     },
     {
@@ -5129,229 +5397,6 @@
       "dependsOn": [
         "[resourceId('Microsoft.Resources/deployments', 'HubVirtualNetworkGateway')]",
         "[resourceId('Microsoft.Resources/deployments', 'OnPremVirtualNetworkGateway')]"
-      ]
-    },
-    {
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2022-09-01",
-      "name": "dnsPrivateResolver",
-      "properties": {
-        "expressionEvaluationOptions": {
-          "scope": "inner"
-        },
-        "mode": "Incremental",
-        "parameters": {
-          "dnsPrivateResolver_Inbound_SubnetID": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hubVNet'), '2022-09-01').outputs.privateResolver_Inbound_SubnetID.value]"
-          },
-          "dnsPrivateResolver_Outbound_SubnetID": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hubVNet'), '2022-09-01').outputs.privateResolver_Outbound_SubnetID.value]"
-          },
-          "domainName": {
-            "value": "[parameters('onpremResolvableDomainName')]"
-          },
-          "forwardingRule_Name": {
-            "value": "[format('{0}_ForwardingRule', join(split(parameters('onpremResolvableDomainName'), '.'), ''))]"
-          },
-          "location": {
-            "value": "[parameters('locationA')]"
-          },
-          "targetDNSServers": {
-            "copy": [
-              {
-                "name": "value",
-                "count": "[length(range(0, 2))]",
-                "input": "[createObject('port', 53, 'ipaddress', reference(resourceId('Microsoft.Resources/deployments', format('OnPremWinDNS{0}', range(0, 2)[range(0, 2)[copyIndex('value')]])), '2022-09-01').outputs.networkInterface_PrivateIPAddress.value)]"
-              }
-            ]
-          },
-          "virtualNetwork_ID": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hubVNet'), '2022-09-01').outputs.virtualNetwork_ID.value]"
-          }
-        },
-        "template": {
-          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-          "contentVersion": "1.0.0.0",
-          "metadata": {
-            "_generator": {
-              "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "3761673060166171099"
-            }
-          },
-          "parameters": {
-            "location": {
-              "type": "string",
-              "metadata": {
-                "description": "the location for resolver VNET and dns private resolver - Azure DNS Private Resolver available in specific region, refer the documenation to select the supported region for this deployment. For more information https://docs.microsoft.com/azure/dns/dns-private-resolver-overview#regional-availability"
-              }
-            },
-            "virtualNetwork_ID": {
-              "type": "string",
-              "metadata": {
-                "description": "Resource ID of the Virtual Network to which the DNS Private resolver will be added."
-              }
-            },
-            "dnsPrivateResolver_Inbound_SubnetID": {
-              "type": "string",
-              "metadata": {
-                "description": "Resource ID of the Subnet to which the DNS Private resolver Inbound Endpoint will be added."
-              }
-            },
-            "dnsPrivateResolver_Outbound_SubnetID": {
-              "type": "string",
-              "metadata": {
-                "description": "Resource ID of the Subnet to which the DNS Private resolver Outbound Endpoint will be added."
-              }
-            },
-            "dnsPrivateResolver_Name": {
-              "type": "string",
-              "defaultValue": "dnsResolver",
-              "metadata": {
-                "description": "name of the dns private resolver"
-              }
-            },
-            "inboundEndpoint_Name": {
-              "type": "string",
-              "defaultValue": "endpoint-inbound",
-              "metadata": {
-                "description": "name that will be used for the private resolver inbound endpoint"
-              }
-            },
-            "outboundEndpoint_Name": {
-              "type": "string",
-              "defaultValue": "endpoint-outbound",
-              "metadata": {
-                "description": "name that will be used for the private resolver outbound endpoint"
-              }
-            },
-            "dnsForwardingRuleSet_Name": {
-              "type": "string",
-              "defaultValue": "forwardingRule",
-              "metadata": {
-                "description": "Name of the forwarding ruleset."
-              }
-            },
-            "forwardingRule_Name": {
-              "type": "string",
-              "metadata": {
-                "description": "Name of the forwarding rule.  No special characters besides underscores can be used."
-              }
-            },
-            "domainName": {
-              "type": "string",
-              "metadata": {
-                "description": "the target domain name for the forwarding ruleset"
-              }
-            },
-            "targetDNSServers": {
-              "type": "array",
-              "metadata": {
-                "description": "the list of target DNS servers ip address and the port number for conditional forwarding\r\nFormat to be used:\r\n{\r\n  ipaddress: '10.0.0.1'\r\n  port: 53\r\n}\r\n{\r\n  ipaddress: '10.0.0.2'\r\n  port: 53\r\n}\r\n"
-              }
-            }
-          },
-          "variables": {
-            "virtualNetwork_Name": "[last(split(parameters('virtualNetwork_ID'), '/'))]"
-          },
-          "resources": [
-            {
-              "type": "Microsoft.Network/dnsResolvers",
-              "apiVersion": "2022-07-01",
-              "name": "[parameters('dnsPrivateResolver_Name')]",
-              "location": "[parameters('location')]",
-              "properties": {
-                "virtualNetwork": {
-                  "id": "[parameters('virtualNetwork_ID')]"
-                }
-              }
-            },
-            {
-              "type": "Microsoft.Network/dnsResolvers/inboundEndpoints",
-              "apiVersion": "2022-07-01",
-              "name": "[format('{0}/{1}', parameters('dnsPrivateResolver_Name'), parameters('inboundEndpoint_Name'))]",
-              "location": "[parameters('location')]",
-              "properties": {
-                "ipConfigurations": [
-                  {
-                    "privateIpAllocationMethod": "Dynamic",
-                    "subnet": {
-                      "id": "[parameters('dnsPrivateResolver_Inbound_SubnetID')]"
-                    }
-                  }
-                ]
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.Network/dnsResolvers', parameters('dnsPrivateResolver_Name'))]"
-              ]
-            },
-            {
-              "type": "Microsoft.Network/dnsResolvers/outboundEndpoints",
-              "apiVersion": "2022-07-01",
-              "name": "[format('{0}/{1}', parameters('dnsPrivateResolver_Name'), parameters('outboundEndpoint_Name'))]",
-              "location": "[parameters('location')]",
-              "properties": {
-                "subnet": {
-                  "id": "[parameters('dnsPrivateResolver_Outbound_SubnetID')]"
-                }
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.Network/dnsResolvers', parameters('dnsPrivateResolver_Name'))]"
-              ]
-            },
-            {
-              "type": "Microsoft.Network/dnsForwardingRulesets",
-              "apiVersion": "2022-07-01",
-              "name": "[parameters('dnsForwardingRuleSet_Name')]",
-              "location": "[parameters('location')]",
-              "properties": {
-                "dnsResolverOutboundEndpoints": [
-                  {
-                    "id": "[resourceId('Microsoft.Network/dnsResolvers/outboundEndpoints', parameters('dnsPrivateResolver_Name'), parameters('outboundEndpoint_Name'))]"
-                  }
-                ]
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.Network/dnsResolvers/outboundEndpoints', parameters('dnsPrivateResolver_Name'), parameters('outboundEndpoint_Name'))]"
-              ]
-            },
-            {
-              "type": "Microsoft.Network/dnsForwardingRulesets/virtualNetworkLinks",
-              "apiVersion": "2022-07-01",
-              "name": "[format('{0}/{1}', parameters('dnsForwardingRuleSet_Name'), format('{0}_link', variables('virtualNetwork_Name')))]",
-              "properties": {
-                "virtualNetwork": {
-                  "id": "[parameters('virtualNetwork_ID')]"
-                }
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.Network/dnsForwardingRulesets', parameters('dnsForwardingRuleSet_Name'))]"
-              ]
-            },
-            {
-              "type": "Microsoft.Network/dnsForwardingRulesets/forwardingRules",
-              "apiVersion": "2022-07-01",
-              "name": "[format('{0}/{1}', parameters('dnsForwardingRuleSet_Name'), parameters('forwardingRule_Name'))]",
-              "properties": {
-                "domainName": "[parameters('domainName')]",
-                "targetDnsServers": "[parameters('targetDNSServers')]"
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.Network/dnsForwardingRulesets', parameters('dnsForwardingRuleSet_Name'))]"
-              ]
-            }
-          ],
-          "outputs": {
-            "privateDNSResolver_Inbound_Endpoint_IPAddress": {
-              "type": "string",
-              "value": "[reference(resourceId('Microsoft.Network/dnsResolvers/inboundEndpoints', parameters('dnsPrivateResolver_Name'), parameters('inboundEndpoint_Name')), '2022-07-01').ipConfigurations[0].privateIpAddress]"
-            }
-          }
-        }
-      },
-      "dependsOn": [
-        "OnPremVM_WinDNS",
-        "[resourceId('Microsoft.Resources/deployments', 'hubVNet')]"
       ]
     }
   ]
