@@ -177,8 +177,16 @@ module storageAccount '../../modules/Microsoft.Storage/StorageAccount.bicep' = {
     privateEndpoints_Blob_Name: '${storageAccount_Name}_blob_pe'
     storageAccount_Name: storageAccount_Name
     privateEndpoint_SubnetID: [virtualNetwork_Spoke_A.outputs.privateEndpoint_SubnetID]
-    privateDNSZoneLinkedVnetIDList: [virtualNetwork_Hub.outputs.virtualNetwork_ID, virtualNetwork_Spoke_A.outputs.virtualNetwork_ID, virtualNetwork_Spoke_B.outputs.virtualNetwork_ID]
-    privateDNSZoneLinkedVnetNamesList: [virtualNetwork_Hub.outputs.virtualNetwork_Name, virtualNetwork_Spoke_A.outputs.virtualNetwork_Name, virtualNetwork_Spoke_B.outputs.virtualNetwork_Name]
+    privateDNSZoneLinkedVnetIDList: [
+      virtualNetwork_Hub.outputs.virtualNetwork_ID 
+      virtualNetwork_Spoke_A.outputs.virtualNetwork_ID
+      virtualNetwork_Spoke_B.outputs.virtualNetwork_ID
+    ]
+    privateDNSZoneLinkedVnetNamesList: [
+      virtualNetwork_Hub.outputs.virtualNetwork_Name
+      virtualNetwork_Spoke_A.outputs.virtualNetwork_Name
+      virtualNetwork_Spoke_B.outputs.virtualNetwork_Name
+    ]
     privateEndpoint_VirtualNetwork_Name: [virtualNetwork_Spoke_A.outputs.virtualNetwork_Name]
   }
 }
