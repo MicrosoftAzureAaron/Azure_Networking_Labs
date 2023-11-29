@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.18.4.5664",
-      "templateHash": "13918672386745211182"
+      "templateHash": "11948145061368449975"
     }
   },
   "parameters": {
@@ -94,7 +94,7 @@
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2022-09-01",
-      "name": "hub_vnet",
+      "name": "hub_VNet",
       "properties": {
         "expressionEvaluationOptions": {
           "scope": "inner"
@@ -108,7 +108,7 @@
             "value": "[parameters('locationA')]"
           },
           "virtualNetwork_Name": {
-            "value": "hub_vnet"
+            "value": "hub_VNet"
           }
         },
         "template": {
@@ -606,7 +606,7 @@
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2022-09-01",
-      "name": "spokeA_vnet",
+      "name": "spokeA_VNet",
       "properties": {
         "expressionEvaluationOptions": {
           "scope": "inner"
@@ -629,7 +629,7 @@
             "value": "[parameters('locationA')]"
           },
           "virtualNetwork_Name": {
-            "value": "spokeA_vnet"
+            "value": "spokeA_VNet"
           }
         },
         "template": {
@@ -952,13 +952,13 @@
         }
       },
       "dependsOn": [
-        "hubWinVMs"
+        "hub_WinVMs"
       ]
     },
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2022-09-01",
-      "name": "spokeB_vnet",
+      "name": "spokeB_VNet",
       "properties": {
         "expressionEvaluationOptions": {
           "scope": "inner"
@@ -981,7 +981,7 @@
             "value": "[parameters('locationB')]"
           },
           "virtualNetwork_Name": {
-            "value": "spokeB_vnet"
+            "value": "spokeB_VNet"
           }
         },
         "template": {
@@ -1304,7 +1304,7 @@
         }
       },
       "dependsOn": [
-        "hubWinVMs"
+        "hub_WinVMs"
       ]
     },
     {
@@ -1318,10 +1318,10 @@
         "mode": "Incremental",
         "parameters": {
           "virtualNetwork_Hub_Name": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hub_vnet'), '2022-09-01').outputs.virtualNetwork_Name.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hub_VNet'), '2022-09-01').outputs.virtualNetwork_Name.value]"
           },
           "virtualNetwork_Spoke_Name": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'spokeA_vnet'), '2022-09-01').outputs.virtualNetwork_Name.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'spokeA_VNet'), '2022-09-01').outputs.virtualNetwork_Name.value]"
           }
         },
         "template": {
@@ -1383,8 +1383,8 @@
       "dependsOn": [
         "[resourceId('Microsoft.Resources/deployments', 'Hub_to_OnPrem_conn')]",
         "[resourceId('Microsoft.Resources/deployments', 'OnPrem_to_Hub_conn')]",
-        "[resourceId('Microsoft.Resources/deployments', 'hub_vnet')]",
-        "[resourceId('Microsoft.Resources/deployments', 'spokeA_vnet')]"
+        "[resourceId('Microsoft.Resources/deployments', 'hub_VNet')]",
+        "[resourceId('Microsoft.Resources/deployments', 'spokeA_VNet')]"
       ]
     },
     {
@@ -1398,10 +1398,10 @@
         "mode": "Incremental",
         "parameters": {
           "virtualNetwork_Hub_Name": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hub_vnet'), '2022-09-01').outputs.virtualNetwork_Name.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hub_VNet'), '2022-09-01').outputs.virtualNetwork_Name.value]"
           },
           "virtualNetwork_Spoke_Name": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'spokeB_vnet'), '2022-09-01').outputs.virtualNetwork_Name.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'spokeB_VNet'), '2022-09-01').outputs.virtualNetwork_Name.value]"
           }
         },
         "template": {
@@ -1463,13 +1463,13 @@
       "dependsOn": [
         "[resourceId('Microsoft.Resources/deployments', 'Hub_to_OnPrem_conn')]",
         "[resourceId('Microsoft.Resources/deployments', 'OnPrem_to_Hub_conn')]",
-        "[resourceId('Microsoft.Resources/deployments', 'hub_vnet')]",
-        "[resourceId('Microsoft.Resources/deployments', 'spokeB_vnet')]"
+        "[resourceId('Microsoft.Resources/deployments', 'hub_VNet')]",
+        "[resourceId('Microsoft.Resources/deployments', 'spokeB_VNet')]"
       ]
     },
     {
       "copy": {
-        "name": "hubWinVMs",
+        "name": "hub_WinVMs",
         "count": "[length(range(0, 2))]"
       },
       "type": "Microsoft.Resources/deployments",
@@ -1488,7 +1488,7 @@
             "value": "[parameters('locationA')]"
           },
           "subnet_ID": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hub_vnet'), '2022-09-01').outputs.general_SubnetID.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hub_VNet'), '2022-09-01').outputs.general_SubnetID.value]"
           },
           "virtualMachine_AdminPassword": {
             "value": "[parameters('virtualMachine_AdminPassword')]"
@@ -1838,7 +1838,7 @@
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'hub_vnet')]"
+        "[resourceId('Microsoft.Resources/deployments', 'hub_VNet')]"
       ]
     },
     {
@@ -1858,7 +1858,7 @@
             "value": "[parameters('locationA')]"
           },
           "subnet_ID": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'spokeA_vnet'), '2022-09-01').outputs.general_SubnetID.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'spokeA_VNet'), '2022-09-01').outputs.general_SubnetID.value]"
           },
           "virtualMachine_AdminPassword": {
             "value": "[parameters('virtualMachine_AdminPassword')]"
@@ -2209,7 +2209,7 @@
       },
       "dependsOn": [
         "[resourceId('Microsoft.Resources/deployments', 'hubToSpokeAPeering')]",
-        "[resourceId('Microsoft.Resources/deployments', 'spokeA_vnet')]"
+        "[resourceId('Microsoft.Resources/deployments', 'spokeA_VNet')]"
       ]
     },
     {
@@ -2229,7 +2229,7 @@
             "value": "[parameters('locationB')]"
           },
           "subnet_ID": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'spokeB_vnet'), '2022-09-01').outputs.general_SubnetID.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'spokeB_VNet'), '2022-09-01').outputs.general_SubnetID.value]"
           },
           "virtualMachine_AdminPassword": {
             "value": "[parameters('virtualMachine_AdminPassword')]"
@@ -2580,7 +2580,7 @@
       },
       "dependsOn": [
         "[resourceId('Microsoft.Resources/deployments', 'hubToSpokeBPeering')]",
-        "[resourceId('Microsoft.Resources/deployments', 'spokeB_vnet')]"
+        "[resourceId('Microsoft.Resources/deployments', 'spokeB_VNet')]"
       ]
     },
     {
@@ -2597,7 +2597,7 @@
             "value": "[parameters('acceleratedNetworking')]"
           },
           "internalLoadBalancer_SubnetID": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'spokeB_vnet'), '2022-09-01').outputs.general_SubnetID.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'spokeB_VNet'), '2022-09-01').outputs.general_SubnetID.value]"
           },
           "location": {
             "value": "[parameters('locationB')]"
@@ -2613,13 +2613,19 @@
             ]
           },
           "networkInterface_SubnetID": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'spokeB_vnet'), '2022-09-01').outputs.general_SubnetID.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'spokeB_VNet'), '2022-09-01').outputs.general_SubnetID.value]"
           },
           "privateEndpoint_SubnetID": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'spokeB_vnet'), '2022-09-01').outputs.privateEndpoint_SubnetID.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'spokeB_VNet'), '2022-09-01').outputs.privateEndpoint_SubnetID.value]"
           },
           "privateLink_SubnetID": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'spokeB_vnet'), '2022-09-01').outputs.privateLinkService_SubnetID.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'spokeB_VNet'), '2022-09-01').outputs.privateLinkService_SubnetID.value]"
+          },
+          "privateLink_Name": {
+            "value": "spokeB_PrivateLink"
+          },
+          "privateEndpoint_name": {
+            "value": "hub_PrivateEndpoint_to_PrivateLink"
           }
         },
         "template": {
@@ -2883,7 +2889,7 @@
       },
       "dependsOn": [
         "[resourceId('Microsoft.Resources/deployments', 'spokeB-WinVM')]",
-        "[resourceId('Microsoft.Resources/deployments', 'spokeB_vnet')]"
+        "[resourceId('Microsoft.Resources/deployments', 'spokeB_VNet')]"
       ]
     },
     {
@@ -2899,38 +2905,8 @@
           "location": {
             "value": "[parameters('locationB')]"
           },
-          "privateEndpoints_File_Name": {
-            "value": "[format('{0}_file_pe', parameters('storageAccount_Name'))]"
-          },
-          "privateEndpoints_Blob_Name": {
-            "value": "[format('{0}_blob_pe', parameters('storageAccount_Name'))]"
-          },
           "storageAccount_Name": {
             "value": "[parameters('storageAccount_Name')]"
-          },
-          "privateEndpoint_SubnetID": {
-            "value": [
-              "[reference(resourceId('Microsoft.Resources/deployments', 'spokeA_vnet'), '2022-09-01').outputs.privateEndpoint_SubnetID.value]"
-            ]
-          },
-          "privateDNSZoneLinkedVnetIDList": {
-            "value": [
-              "[reference(resourceId('Microsoft.Resources/deployments', 'hub_vnet'), '2022-09-01').outputs.virtualNetwork_ID.value]",
-              "[reference(resourceId('Microsoft.Resources/deployments', 'spokeA_vnet'), '2022-09-01').outputs.virtualNetwork_ID.value]",
-              "[reference(resourceId('Microsoft.Resources/deployments', 'spokeB_vnet'), '2022-09-01').outputs.virtualNetwork_ID.value]"
-            ]
-          },
-          "privateDNSZoneLinkedVnetNamesList": {
-            "value": [
-              "[reference(resourceId('Microsoft.Resources/deployments', 'hub_vnet'), '2022-09-01').outputs.virtualNetwork_Name.value]",
-              "[reference(resourceId('Microsoft.Resources/deployments', 'spokeA_vnet'), '2022-09-01').outputs.virtualNetwork_Name.value]",
-              "[reference(resourceId('Microsoft.Resources/deployments', 'spokeB_vnet'), '2022-09-01').outputs.virtualNetwork_Name.value]"
-            ]
-          },
-          "privateEndpoint_VirtualNetwork_Name": {
-            "value": [
-              "[reference(resourceId('Microsoft.Resources/deployments', 'spokeA_vnet'), '2022-09-01').outputs.virtualNetwork_Name.value]"
-            ]
           }
         },
         "template": {
@@ -2940,7 +2916,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.18.4.5664",
-              "templateHash": "5651012902893304007"
+              "templateHash": "18094188133768702999"
             }
           },
           "parameters": {
@@ -2950,21 +2926,6 @@
                 "description": "Azure Datacenter that the resource is deployed to"
               }
             },
-            "privateEndpoint_VirtualNetwork_Name": {
-              "type": "array",
-              "metadata": {
-                "description": "Name of the Virtual Network that the Private Endpoint will be deployed to."
-              }
-            },
-            "privateDNSZoneLinkedVnetNamesList": {
-              "type": "array"
-            },
-            "privateDNSZoneLinkedVnetIDList": {
-              "type": "array"
-            },
-            "privateEndpoint_SubnetID": {
-              "type": "array"
-            },
             "storageAccount_Name": {
               "type": "string",
               "maxLength": 24,
@@ -2972,25 +2933,10 @@
               "metadata": {
                 "description": "Storage account name restrictions:\r\n- Storage account names must be between 3 and 24 characters in length and may contain numbers and lowercase letters only.\r\n- Your storage account name must be unique within Azure. No two storage accounts can have the same name.\r\n"
               }
-            },
-            "usingBlobPrivateEndpoints": {
-              "type": "bool",
-              "defaultValue": true
-            },
-            "usingFilePrivateEndpoints": {
-              "type": "bool",
-              "defaultValue": true
-            },
-            "privateEndpoints_Blob_Name": {
-              "type": "string"
-            },
-            "privateEndpoints_File_Name": {
-              "type": "string"
             }
           },
           "variables": {
-            "privateDNSZone_Blob_Name": "privatelink.blob.core.windows.net",
-            "privateDNSZone_File_Name": "privatelink.file.core.windows.net"
+            "privateDNSZone_Blob_Name": "privatelink.blob.core.windows.net"
           },
           "resources": [
             {
@@ -3064,93 +3010,6 @@
               ]
             },
             {
-              "copy": {
-                "name": "privateEndpoints_Blob",
-                "count": "[length(range(0, length(parameters('privateEndpoint_SubnetID'))))]"
-              },
-              "condition": "[parameters('usingBlobPrivateEndpoints')]",
-              "type": "Microsoft.Network/privateEndpoints",
-              "apiVersion": "2023-04-01",
-              "name": "[format('{0}{1}', parameters('privateEndpoints_Blob_Name'), range(0, length(parameters('privateEndpoint_SubnetID')))[copyIndex()])]",
-              "location": "[parameters('location')]",
-              "properties": {
-                "privateLinkServiceConnections": [
-                  {
-                    "name": "[format('{0}_in_{1}_to_{2}', parameters('privateEndpoints_Blob_Name'), parameters('privateEndpoint_VirtualNetwork_Name'), parameters('storageAccount_Name'))]",
-                    "properties": {
-                      "privateLinkServiceId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccount_Name'))]",
-                      "groupIds": [
-                        "blob"
-                      ]
-                    }
-                  }
-                ],
-                "manualPrivateLinkServiceConnections": [],
-                "subnet": {
-                  "id": "[parameters('privateEndpoint_SubnetID')[range(0, length(parameters('privateEndpoint_SubnetID')))[copyIndex()]]]"
-                },
-                "ipConfigurations": [],
-                "customDnsConfigs": [
-                  {
-                    "fqdn": "[take(substring(reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccount_Name')), '2023-01-01').primaryEndpoints.blob, 7, 8), sub(length(substring(reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccount_Name')), '2023-01-01').primaryEndpoints.blob, 7, 8)), 1))]"
-                  }
-                ]
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccount_Name'))]"
-              ]
-            },
-            {
-              "condition": "[parameters('usingBlobPrivateEndpoints')]",
-              "type": "Microsoft.Network/privateDnsZones",
-              "apiVersion": "2018-09-01",
-              "name": "[variables('privateDNSZone_Blob_Name')]",
-              "location": "global"
-            },
-            {
-              "copy": {
-                "name": "privateDNSZone_StorageAccount_Blob_Group",
-                "count": "[length(range(0, length(parameters('privateEndpoint_SubnetID'))))]"
-              },
-              "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
-              "apiVersion": "2023-04-01",
-              "name": "[format('{0}/{1}', format('{0}{1}', parameters('privateEndpoints_Blob_Name'), range(0, length(parameters('privateEndpoint_SubnetID')))[range(0, length(parameters('privateEndpoint_SubnetID')))[copyIndex()]]), 'blobZoneGroup')]",
-              "properties": {
-                "privateDnsZoneConfigs": [
-                  {
-                    "name": "default",
-                    "properties": {
-                      "privateDnsZoneId": "[resourceId('Microsoft.Network/privateDnsZones', variables('privateDNSZone_Blob_Name'))]"
-                    }
-                  }
-                ]
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.Network/privateDnsZones', variables('privateDNSZone_Blob_Name'))]",
-                "[resourceId('Microsoft.Network/privateEndpoints', format('{0}{1}', parameters('privateEndpoints_Blob_Name'), range(0, length(parameters('privateEndpoint_SubnetID')))[range(0, length(parameters('privateEndpoint_SubnetID')))[copyIndex()]]))]"
-              ]
-            },
-            {
-              "copy": {
-                "name": "virtualNetworkLink_Blob",
-                "count": "[length(range(0, length(parameters('privateDNSZoneLinkedVnetIDList'))))]"
-              },
-              "condition": "[parameters('usingBlobPrivateEndpoints')]",
-              "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
-              "apiVersion": "2018-09-01",
-              "name": "[format('{0}/{1}', variables('privateDNSZone_Blob_Name'), format('{0}_to_{1}', variables('privateDNSZone_Blob_Name'), parameters('privateDNSZoneLinkedVnetNamesList')[range(0, length(parameters('privateDNSZoneLinkedVnetIDList')))[copyIndex()]]))]",
-              "location": "global",
-              "properties": {
-                "registrationEnabled": false,
-                "virtualNetwork": {
-                  "id": "[parameters('privateDNSZoneLinkedVnetIDList')[range(0, length(parameters('privateDNSZoneLinkedVnetIDList')))[copyIndex()]]]"
-                }
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.Network/privateDnsZones', variables('privateDNSZone_Blob_Name'))]"
-              ]
-            },
-            {
               "type": "Microsoft.Storage/storageAccounts/fileServices",
               "apiVersion": "2023-01-01",
               "name": "[format('{0}/{1}', parameters('storageAccount_Name'), 'default')]",
@@ -3169,92 +3028,6 @@
               "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts/fileServices', parameters('storageAccount_Name'), 'default')]"
               ]
-            },
-            {
-              "copy": {
-                "name": "privateEndpoints_File",
-                "count": "[length(range(0, length(parameters('privateEndpoint_SubnetID'))))]"
-              },
-              "condition": "[parameters('usingFilePrivateEndpoints')]",
-              "type": "Microsoft.Network/privateEndpoints",
-              "apiVersion": "2023-05-01",
-              "name": "[format('{0}{1}', parameters('privateEndpoints_File_Name'), range(0, length(parameters('privateEndpoint_SubnetID')))[copyIndex()])]",
-              "location": "[parameters('location')]",
-              "properties": {
-                "privateLinkServiceConnections": [
-                  {
-                    "name": "[format('{0}_in_{1}_to_{2}', parameters('privateEndpoints_File_Name'), parameters('privateEndpoint_VirtualNetwork_Name'), parameters('storageAccount_Name'))]",
-                    "properties": {
-                      "privateLinkServiceId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccount_Name'))]",
-                      "groupIds": [
-                        "file"
-                      ]
-                    }
-                  }
-                ],
-                "manualPrivateLinkServiceConnections": [],
-                "subnet": {
-                  "id": "[parameters('privateEndpoint_SubnetID')[range(0, length(parameters('privateEndpoint_SubnetID')))[copyIndex()]]]"
-                },
-                "ipConfigurations": [],
-                "customDnsConfigs": [
-                  {
-                    "fqdn": "[take(substring(reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccount_Name')), '2023-01-01').primaryEndpoints.file, 7, 8), sub(length(substring(reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccount_Name')), '2023-01-01').primaryEndpoints.file, 7, 8)), 1))]"
-                  }
-                ]
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccount_Name'))]"
-              ]
-            },
-            {
-              "type": "Microsoft.Network/privateDnsZones",
-              "apiVersion": "2020-06-01",
-              "name": "[variables('privateDNSZone_File_Name')]",
-              "location": "global"
-            },
-            {
-              "copy": {
-                "name": "privateDNSZone_StorageAccount_File_Group",
-                "count": "[length(range(0, length(parameters('privateEndpoint_SubnetID'))))]"
-              },
-              "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
-              "apiVersion": "2023-04-01",
-              "name": "[format('{0}/{1}', format('{0}{1}', parameters('privateEndpoints_File_Name'), range(0, length(parameters('privateEndpoint_SubnetID')))[range(0, length(parameters('privateEndpoint_SubnetID')))[copyIndex()]]), 'fileZoneGroup')]",
-              "properties": {
-                "privateDnsZoneConfigs": [
-                  {
-                    "name": "default",
-                    "properties": {
-                      "privateDnsZoneId": "[resourceId('Microsoft.Network/privateDnsZones', variables('privateDNSZone_File_Name'))]"
-                    }
-                  }
-                ]
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.Network/privateDnsZones', variables('privateDNSZone_File_Name'))]",
-                "[resourceId('Microsoft.Network/privateEndpoints', format('{0}{1}', parameters('privateEndpoints_File_Name'), range(0, length(parameters('privateEndpoint_SubnetID')))[range(0, length(parameters('privateEndpoint_SubnetID')))[copyIndex()]]))]"
-              ]
-            },
-            {
-              "copy": {
-                "name": "virtualNetworkLink_File",
-                "count": "[length(range(0, length(parameters('privateDNSZoneLinkedVnetIDList'))))]"
-              },
-              "condition": "[parameters('usingFilePrivateEndpoints')]",
-              "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
-              "apiVersion": "2018-09-01",
-              "name": "[format('{0}/{1}', variables('privateDNSZone_File_Name'), format('{0}_to_{1}', variables('privateDNSZone_File_Name'), parameters('privateDNSZoneLinkedVnetNamesList')[range(0, length(parameters('privateDNSZoneLinkedVnetIDList')))[copyIndex()]]))]",
-              "location": "global",
-              "properties": {
-                "registrationEnabled": false,
-                "virtualNetwork": {
-                  "id": "[parameters('privateDNSZoneLinkedVnetIDList')[range(0, length(parameters('privateDNSZoneLinkedVnetIDList')))[copyIndex()]]]"
-                }
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.Network/privateDnsZones', variables('privateDNSZone_File_Name'))]"
-              ]
             }
           ],
           "outputs": {
@@ -3270,6 +3043,10 @@
               "type": "string",
               "value": "[parameters('storageAccount_Name')]"
             },
+            "storageAccount_ID": {
+              "type": "string",
+              "value": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccount_Name'))]"
+            },
             "storageAccountFileShare_Name": {
               "type": "string",
               "value": "defaultfileshare"
@@ -3280,11 +3057,186 @@
             }
           }
         }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "hub_StorageAccount_Blob_PrivateEndpoint",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "fqdn": {
+            "value": "[format('{0}.blob.core.windows.net', parameters('storageAccount_Name'))]"
+          },
+          "groupID": {
+            "value": "blob"
+          },
+          "location": {
+            "value": "[parameters('locationA')]"
+          },
+          "privateDNSZone_Name": {
+            "value": "privatelink.blob.core.windows.net"
+          },
+          "privateEndpoint_Name": {
+            "value": "[format('hub_{0}_blob_pe', parameters('storageAccount_Name'))]"
+          },
+          "privateEndpoint_SubnetID": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hub_VNet'), '2022-09-01').outputs.privateEndpoint_SubnetID.value]"
+          },
+          "privateLinkServiceId": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'storageAccount'), '2022-09-01').outputs.storageAccount_ID.value]"
+          },
+          "virtualNetwork_IDs": {
+            "value": [
+              "[reference(resourceId('Microsoft.Resources/deployments', 'hub_VNet'), '2022-09-01').outputs.virtualNetwork_ID.value]"
+            ]
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.18.4.5664",
+              "templateHash": "4992159741547619207"
+            }
+          },
+          "parameters": {
+            "location": {
+              "type": "string",
+              "metadata": {
+                "description": "Azure Datacenter that the resource is deployed to"
+              }
+            },
+            "privateEndpoint_Name": {
+              "type": "string",
+              "metadata": {
+                "description": "Name of the Private Endpoint"
+              }
+            },
+            "privateLinkServiceId": {
+              "type": "string"
+            },
+            "privateEndpoint_SubnetID": {
+              "type": "string",
+              "metadata": {
+                "description": "Subnet ID that the Private Endpoint will be deployed to"
+              }
+            },
+            "virtualNetwork_IDs": {
+              "type": "array",
+              "metadata": {
+                "description": "Resource ID of the Virtual Networks to be linked to the Private DNS Zone"
+              }
+            },
+            "groupID": {
+              "type": "string",
+              "metadata": {
+                "description": "The ID of a group obtained from the remote resource that this private endpoint should connect to."
+              }
+            },
+            "fqdn": {
+              "type": "string",
+              "metadata": {
+                "description": "Fqdn that resolves to private endpoint ip address."
+              }
+            },
+            "privateDNSZone_Name": {
+              "type": "string",
+              "metadata": {
+                "description": "Name of the Private DNS Zone\r\nExample: privatelink.blob.core.windows.net"
+              }
+            }
+          },
+          "variables": {
+            "resource_Name": "[last(split(parameters('privateLinkServiceId'), '/'))]"
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Network/privateEndpoints",
+              "apiVersion": "2023-05-01",
+              "name": "[parameters('privateEndpoint_Name')]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "privateLinkServiceConnections": [
+                  {
+                    "name": "[format('{0}_to_{1}', parameters('privateEndpoint_Name'), variables('resource_Name'))]",
+                    "properties": {
+                      "privateLinkServiceId": "[parameters('privateLinkServiceId')]",
+                      "groupIds": [
+                        "[parameters('groupID')]"
+                      ]
+                    }
+                  }
+                ],
+                "manualPrivateLinkServiceConnections": [],
+                "subnet": {
+                  "id": "[parameters('privateEndpoint_SubnetID')]"
+                },
+                "ipConfigurations": [],
+                "customDnsConfigs": [
+                  {
+                    "fqdn": "[parameters('fqdn')]"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "Microsoft.Network/privateDnsZones",
+              "apiVersion": "2020-06-01",
+              "name": "[parameters('privateDNSZone_Name')]",
+              "location": "global"
+            },
+            {
+              "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
+              "apiVersion": "2023-04-01",
+              "name": "[format('{0}/{1}', parameters('privateEndpoint_Name'), format('{0}ZoneGroup', parameters('groupID')))]",
+              "properties": {
+                "privateDnsZoneConfigs": [
+                  {
+                    "name": "default",
+                    "properties": {
+                      "privateDnsZoneId": "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDNSZone_Name'))]"
+                    }
+                  }
+                ]
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDNSZone_Name'))]",
+                "[resourceId('Microsoft.Network/privateEndpoints', parameters('privateEndpoint_Name'))]"
+              ]
+            },
+            {
+              "copy": {
+                "name": "virtualNetworkLink_File",
+                "count": "[length(parameters('virtualNetwork_IDs'))]"
+              },
+              "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+              "apiVersion": "2018-09-01",
+              "name": "[format('{0}/{1}', parameters('privateDNSZone_Name'), format('{0}_to_{1}', parameters('privateEndpoint_Name'), last(split(parameters('virtualNetwork_IDs')[copyIndex()], '/'))))]",
+              "location": "global",
+              "properties": {
+                "registrationEnabled": false,
+                "virtualNetwork": {
+                  "id": "[parameters('virtualNetwork_IDs')[copyIndex()]]"
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDNSZone_Name'))]",
+                "[resourceId('Microsoft.Network/privateEndpoints', parameters('privateEndpoint_Name'))]"
+              ]
+            }
+          ]
+        }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'hub_vnet')]",
-        "[resourceId('Microsoft.Resources/deployments', 'spokeA_vnet')]",
-        "[resourceId('Microsoft.Resources/deployments', 'spokeB_vnet')]"
+        "[resourceId('Microsoft.Resources/deployments', 'storageAccount')]",
+        "[resourceId('Microsoft.Resources/deployments', 'hub_VNet')]"
       ]
     },
     {
@@ -3299,19 +3251,19 @@
         "mode": "Incremental",
         "parameters": {
           "azureFirewall_ManagementSubnet_ID": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hub_vnet'), '2022-09-01').outputs.azureFirewallManagement_SubnetID.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hub_VNet'), '2022-09-01').outputs.azureFirewallManagement_SubnetID.value]"
           },
           "azureFirewall_Name": {
-            "value": "hubAzFW"
+            "value": "hub_AzFW"
           },
           "azureFirewall_SKU": {
             "value": "Basic"
           },
           "azureFirewall_Subnet_ID": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hub_vnet'), '2022-09-01').outputs.azureFirewall_SubnetID.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hub_VNet'), '2022-09-01').outputs.azureFirewall_SubnetID.value]"
           },
           "azureFirewallPolicy_Name": {
-            "value": "hubAzFW_Policy"
+            "value": "hub_AzFWPolicy"
           },
           "location": {
             "value": "[parameters('locationA')]"
@@ -3510,7 +3462,7 @@
       "dependsOn": [
         "[resourceId('Microsoft.Resources/deployments', 'Hub_to_OnPrem_conn')]",
         "[resourceId('Microsoft.Resources/deployments', 'OnPrem_to_Hub_conn')]",
-        "[resourceId('Microsoft.Resources/deployments', 'hub_vnet')]"
+        "[resourceId('Microsoft.Resources/deployments', 'hub_VNet')]"
       ]
     },
     {
@@ -3524,10 +3476,13 @@
         "mode": "Incremental",
         "parameters": {
           "bastion_SubnetID": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hub_vnet'), '2022-09-01').outputs.bastion_SubnetID.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hub_VNet'), '2022-09-01').outputs.bastion_SubnetID.value]"
           },
           "location": {
             "value": "[parameters('locationA')]"
+          },
+          "bastion_name": {
+            "value": "hub_bastion"
           }
         },
         "template": {
@@ -3633,7 +3588,7 @@
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'hub_vnet')]"
+        "[resourceId('Microsoft.Resources/deployments', 'hub_VNet')]"
       ]
     },
     {
@@ -3646,17 +3601,20 @@
         },
         "mode": "Incremental",
         "parameters": {
+          "dnsPrivateResolver_Name": {
+            "value": "hub_DNSPrivateResolver"
+          },
           "dnsPrivateResolver_Inbound_SubnetID": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hub_vnet'), '2022-09-01').outputs.privateResolver_Inbound_SubnetID.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hub_VNet'), '2022-09-01').outputs.privateResolver_Inbound_SubnetID.value]"
           },
           "dnsPrivateResolver_Outbound_SubnetID": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hub_vnet'), '2022-09-01').outputs.privateResolver_Outbound_SubnetID.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hub_VNet'), '2022-09-01').outputs.privateResolver_Outbound_SubnetID.value]"
           },
           "location": {
             "value": "[parameters('locationA')]"
           },
           "virtualNetwork_ID": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hub_vnet'), '2022-09-01').outputs.virtualNetwork_ID.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hub_VNet'), '2022-09-01').outputs.virtualNetwork_ID.value]"
           }
         },
         "template": {
@@ -3775,7 +3733,7 @@
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'hub_vnet')]"
+        "[resourceId('Microsoft.Resources/deployments', 'hub_VNet')]"
       ]
     },
     {
@@ -3808,9 +3766,9 @@
           },
           "virtualNetwork_IDs": {
             "value": [
-              "[reference(resourceId('Microsoft.Resources/deployments', 'hub_vnet'), '2022-09-01').outputs.virtualNetwork_ID.value]",
-              "[reference(resourceId('Microsoft.Resources/deployments', 'spokeA_vnet'), '2022-09-01').outputs.virtualNetwork_ID.value]",
-              "[reference(resourceId('Microsoft.Resources/deployments', 'spokeB_vnet'), '2022-09-01').outputs.virtualNetwork_ID.value]"
+              "[reference(resourceId('Microsoft.Resources/deployments', 'hub_VNet'), '2022-09-01').outputs.virtualNetwork_ID.value]",
+              "[reference(resourceId('Microsoft.Resources/deployments', 'spokeA_VNet'), '2022-09-01').outputs.virtualNetwork_ID.value]",
+              "[reference(resourceId('Microsoft.Resources/deployments', 'spokeB_VNet'), '2022-09-01').outputs.virtualNetwork_ID.value]"
             ]
           }
         },
@@ -3912,15 +3870,15 @@
       "dependsOn": [
         "[resourceId('Microsoft.Resources/deployments', 'dnsPrivateResolver')]",
         "OnPremVM_WinDNS",
-        "[resourceId('Microsoft.Resources/deployments', 'hub_vnet')]",
-        "[resourceId('Microsoft.Resources/deployments', 'spokeA_vnet')]",
-        "[resourceId('Microsoft.Resources/deployments', 'spokeB_vnet')]"
+        "[resourceId('Microsoft.Resources/deployments', 'hub_VNet')]",
+        "[resourceId('Microsoft.Resources/deployments', 'spokeA_VNet')]",
+        "[resourceId('Microsoft.Resources/deployments', 'spokeB_VNet')]"
       ]
     },
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2022-09-01",
-      "name": "onprem_vnet",
+      "name": "onprem_VNet",
       "properties": {
         "expressionEvaluationOptions": {
           "scope": "inner"
@@ -3934,7 +3892,7 @@
             "value": "[parameters('locationOnPrem')]"
           },
           "virtualNetwork_Name": {
-            "value": "onprem_vnet"
+            "value": "onprem_VNet"
           }
         },
         "template": {
@@ -4450,7 +4408,7 @@
             "value": "[parameters('locationOnPrem')]"
           },
           "subnet_ID": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'onprem_vnet'), '2022-09-01').outputs.general_SubnetID.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'onprem_VNet'), '2022-09-01').outputs.general_SubnetID.value]"
           },
           "virtualMachine_AdminPassword": {
             "value": "[parameters('virtualMachine_AdminPassword')]"
@@ -4459,7 +4417,7 @@
             "value": "[parameters('virtualMachine_AdminUsername')]"
           },
           "virtualMachine_Name": {
-            "value": "[format('OnPremWinDNS{0}', range(0, 2)[copyIndex()])]"
+            "value": "[format('OnPrem-WinDNS{0}', range(0, 2)[copyIndex()])]"
           },
           "virtualMachine_Size": {
             "value": "[parameters('virtualMachine_Size')]"
@@ -4804,7 +4762,7 @@
       },
       "dependsOn": [
         "[resourceId('Microsoft.Resources/deployments', 'dnsPrivateResolver')]",
-        "[resourceId('Microsoft.Resources/deployments', 'onprem_vnet')]"
+        "[resourceId('Microsoft.Resources/deployments', 'onprem_VNet')]"
       ]
     },
     {
@@ -4824,10 +4782,10 @@
             "value": 65000
           },
           "virtualNetworkGateway_Name": {
-            "value": "OnPremVNG"
+            "value": "OnPrem_VNG"
           },
           "virtualNetworkGateway_Subnet_ResourceID": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'onprem_vnet'), '2022-09-01').outputs.gateway_SubnetID.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'onprem_VNet'), '2022-09-01').outputs.gateway_SubnetID.value]"
           }
         },
         "template": {
@@ -4961,7 +4919,7 @@
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'onprem_vnet')]"
+        "[resourceId('Microsoft.Resources/deployments', 'onprem_VNet')]"
       ]
     },
     {
@@ -4981,10 +4939,10 @@
             "value": 65001
           },
           "virtualNetworkGateway_Name": {
-            "value": "HubVNG"
+            "value": "Hub_VNG"
           },
           "virtualNetworkGateway_Subnet_ResourceID": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hub_vnet'), '2022-09-01').outputs.gateway_SubnetID.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'hub_VNet'), '2022-09-01').outputs.gateway_SubnetID.value]"
           }
         },
         "template": {
@@ -5118,7 +5076,7 @@
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'hub_vnet')]"
+        "[resourceId('Microsoft.Resources/deployments', 'hub_VNet')]"
       ]
     },
     {
@@ -5160,7 +5118,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.18.4.5664",
-              "templateHash": "4104203714567954468"
+              "templateHash": "13918332347059304611"
             }
           },
           "parameters": {
@@ -5215,7 +5173,7 @@
             {
               "type": "Microsoft.Network/connections",
               "apiVersion": "2022-11-01",
-              "name": "[format('Connection_for_{0}_to_{1}', variables('virtualNetworkGateway_Name'), parameters('vpn_Destination_Name'))]",
+              "name": "[format('{0}_to_{1}_Connection', variables('virtualNetworkGateway_Name'), parameters('vpn_Destination_Name'))]",
               "location": "[parameters('location')]",
               "properties": {
                 "virtualNetworkGateway1": {
@@ -5223,7 +5181,7 @@
                   "properties": {}
                 },
                 "localNetworkGateway2": {
-                  "id": "[resourceId('Microsoft.Network/localNetworkGateways', format('localNetworkGateway_for_{0}', parameters('vpn_Destination_Name')))]",
+                  "id": "[resourceId('Microsoft.Network/localNetworkGateways', format('{0}_LocalNetworkGateway', parameters('vpn_Destination_Name')))]",
                   "properties": {}
                 },
                 "connectionType": "IPsec",
@@ -5237,13 +5195,13 @@
                 "connectionMode": "Default"
               },
               "dependsOn": [
-                "[resourceId('Microsoft.Network/localNetworkGateways', format('localNetworkGateway_for_{0}', parameters('vpn_Destination_Name')))]"
+                "[resourceId('Microsoft.Network/localNetworkGateways', format('{0}_LocalNetworkGateway', parameters('vpn_Destination_Name')))]"
               ]
             },
             {
               "type": "Microsoft.Network/localNetworkGateways",
               "apiVersion": "2022-11-01",
-              "name": "[format('localNetworkGateway_for_{0}', parameters('vpn_Destination_Name'))]",
+              "name": "[format('{0}_LocalNetworkGateway', parameters('vpn_Destination_Name'))]",
               "location": "[parameters('location')]",
               "properties": {
                 "gatewayIpAddress": "[parameters('vpn_Destination_PublicIPAddress')]",
@@ -5300,7 +5258,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.18.4.5664",
-              "templateHash": "4104203714567954468"
+              "templateHash": "13918332347059304611"
             }
           },
           "parameters": {
@@ -5355,7 +5313,7 @@
             {
               "type": "Microsoft.Network/connections",
               "apiVersion": "2022-11-01",
-              "name": "[format('Connection_for_{0}_to_{1}', variables('virtualNetworkGateway_Name'), parameters('vpn_Destination_Name'))]",
+              "name": "[format('{0}_to_{1}_Connection', variables('virtualNetworkGateway_Name'), parameters('vpn_Destination_Name'))]",
               "location": "[parameters('location')]",
               "properties": {
                 "virtualNetworkGateway1": {
@@ -5363,7 +5321,7 @@
                   "properties": {}
                 },
                 "localNetworkGateway2": {
-                  "id": "[resourceId('Microsoft.Network/localNetworkGateways', format('localNetworkGateway_for_{0}', parameters('vpn_Destination_Name')))]",
+                  "id": "[resourceId('Microsoft.Network/localNetworkGateways', format('{0}_LocalNetworkGateway', parameters('vpn_Destination_Name')))]",
                   "properties": {}
                 },
                 "connectionType": "IPsec",
@@ -5377,13 +5335,13 @@
                 "connectionMode": "Default"
               },
               "dependsOn": [
-                "[resourceId('Microsoft.Network/localNetworkGateways', format('localNetworkGateway_for_{0}', parameters('vpn_Destination_Name')))]"
+                "[resourceId('Microsoft.Network/localNetworkGateways', format('{0}_LocalNetworkGateway', parameters('vpn_Destination_Name')))]"
               ]
             },
             {
               "type": "Microsoft.Network/localNetworkGateways",
               "apiVersion": "2022-11-01",
-              "name": "[format('localNetworkGateway_for_{0}', parameters('vpn_Destination_Name'))]",
+              "name": "[format('{0}_LocalNetworkGateway', parameters('vpn_Destination_Name'))]",
               "location": "[parameters('location')]",
               "properties": {
                 "gatewayIpAddress": "[parameters('vpn_Destination_PublicIPAddress')]",
