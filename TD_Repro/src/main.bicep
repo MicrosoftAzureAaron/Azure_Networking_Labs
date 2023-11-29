@@ -23,6 +23,7 @@ I'd recommend Standard_D2s_v3 for a cheap VM that supports Accel Net.
 ''')
 param acceleratedNetworking bool = true
 
+@description('Use this name to help differentiate between tests.')
 param scenario_Name string
 
 @description('Number of Client Virtual Machines to be used as the source of the traffic')
@@ -31,7 +32,7 @@ param numberOfClientVMs int
 @description('Number of Server Virtual Machines to be used as the destination of the traffic')
 param numberOfServerVMs int
 
-
+@description('Set to true if you want to use an Azure Firewall between client and server.')
 param usingAzureFirewall bool = false
 
 @description('''
@@ -103,7 +104,6 @@ module ServerVM_Linux '../../modules/Microsoft.Compute/Ubuntu20/VirtualMachine.b
     commandToExecute: './conntestServer.sh ${scenario_Name} ${storageAccount.outputs.storageAccount_Name} ${storageAccount.outputs.storageAccountFileShare_Name} ${storageAccount.outputs.storageAccount_key0}'
   }
   dependsOn: [
-
     storageAccount
   ]
 } ]
