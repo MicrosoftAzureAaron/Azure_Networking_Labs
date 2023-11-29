@@ -52,39 +52,39 @@ param onpremResolvableDomainName string = 'contoso.com.'
 
 
 module virtualNetwork_Hub '../../modules/Microsoft.Network/VirtualNetworkHub.bicep' = {
-  name: 'hub_vnet'
+  name: 'hub_VNet'
   params: {
     firstTwoOctetsOfVirtualNetworkPrefix: '10.0'
     location: locationA
-    virtualNetwork_Name: 'hub_vnet'
+    virtualNetwork_Name: 'hub_VNet'
   }
 }
 
-module virtualNetwork_Spoke_A '../../modules/Microsoft.Network/VirtualNetworkSpoke.bicep' = {
-  name: 'spokeA_vnet'
+module virtualNetwork_SpokeA '../../modules/Microsoft.Network/VirtualNetworkSpoke.bicep' = {
+  name: 'spokeA_VNet'
   params: {
     firstTwoOctetsOfVirtualNetworkPrefix: '10.1'
-    dnsServers: [for i in range(0, 2) : hubWinVMs[i].outputs.networkInterface_PrivateIPAddress]
+    dnsServers: [for i in range(0, 2) : hub_WinVMs[i].outputs.networkInterface_PrivateIPAddress]
     location: locationA
-    virtualNetwork_Name: 'spokeA_vnet'
+    virtualNetwork_Name: 'spokeA_VNet'
   }
 }
 
-module virtualNetwork_Spoke_B '../../modules/Microsoft.Network/VirtualNetworkSpoke.bicep' = {
-  name: 'spokeB_vnet'
+module virtualNetwork_SpokeB '../../modules/Microsoft.Network/VirtualNetworkSpoke.bicep' = {
+  name: 'spokeB_VNet'
   params: {
     firstTwoOctetsOfVirtualNetworkPrefix: '10.2'
-    dnsServers: [for i in range(0, 2) : hubWinVMs[i].outputs.networkInterface_PrivateIPAddress]
+    dnsServers: [for i in range(0, 2) : hub_WinVMs[i].outputs.networkInterface_PrivateIPAddress]
     location: locationB
-    virtualNetwork_Name: 'spokeB_vnet'
+    virtualNetwork_Name: 'spokeB_VNet'
   }
 }
 
-module hubToSpokeAPeering '../../modules/Microsoft.Network/VirtualNetworkPeeringHub2Spoke.bicep' = {
+module hub_To_SpokeA_Peering '../../modules/Microsoft.Network/VirtualNetworkPeeringHub2Spoke.bicep' = {
   name: 'hubToSpokeAPeering'
   params: {
     virtualNetwork_Hub_Name: virtualNetwork_Hub.outputs.virtualNetwork_Name
-    virtualNetwork_Spoke_Name: virtualNetwork_Spoke_A.outputs.virtualNetwork_Name
+    virtualNetwork_Spoke_Name: virtualNetwork_SpokeA.outputs.virtualNetwork_Name
   }
   dependsOn: [
     Hub_to_OnPrem_conn
@@ -92,11 +92,11 @@ module hubToSpokeAPeering '../../modules/Microsoft.Network/VirtualNetworkPeering
   ]
 }
 
-module hubToSpokeBPeering '../../modules/Microsoft.Network/VirtualNetworkPeeringHub2Spoke.bicep' = {
+module hub_To_SpokeB_Peering '../../modules/Microsoft.Network/VirtualNetworkPeeringHub2Spoke.bicep' = {
   name: 'hubToSpokeBPeering'
   params: {
     virtualNetwork_Hub_Name: virtualNetwork_Hub.outputs.virtualNetwork_Name
-    virtualNetwork_Spoke_Name: virtualNetwork_Spoke_B.outputs.virtualNetwork_Name
+    virtualNetwork_Spoke_Name: virtualNetwork_SpokeB.outputs.virtualNetwork_Name
   }
   dependsOn: [
     Hub_to_OnPrem_conn
@@ -104,7 +104,7 @@ module hubToSpokeBPeering '../../modules/Microsoft.Network/VirtualNetworkPeering
   ]
 }
 
-module hubWinVMs '../../modules/Microsoft.Compute/WindowsServer2022/VirtualMachine.bicep' = [ for i in range(0, 2) : {
+module hub_WinVMs '../../modules/Microsoft.Compute/WindowsServer2022/VirtualMachine.bicep' = [ for i in range(0, 2) : {
   name: 'hub-WinVM${i}'
   params: {
     acceleratedNetworking: acceleratedNetworking
@@ -124,7 +124,7 @@ module spokeA_WinVM '../../modules/Microsoft.Compute/WindowsServer2022/VirtualMa
   params: {
     acceleratedNetworking: acceleratedNetworking
     location: locationA
-    subnet_ID: virtualNetwork_Spoke_A.outputs.general_SubnetID
+    subnet_ID: virtualNetwork_SpokeA.outputs.general_SubnetID
     virtualMachine_AdminPassword: virtualMachine_AdminPassword
     virtualMachine_AdminUsername: virtualMachine_AdminUsername
     virtualMachine_Name: 'spokeA-WinVM'
@@ -133,7 +133,7 @@ module spokeA_WinVM '../../modules/Microsoft.Compute/WindowsServer2022/VirtualMa
     virtualMachine_ScriptFileName: 'WinServ2022_General_InitScript.ps1'
   }
   dependsOn: [
-    hubToSpokeAPeering
+    hub_To_SpokeA_Peering
   ]
 }
 
@@ -142,7 +142,7 @@ module spokeB_WinVM '../../modules/Microsoft.Compute/WindowsServer2022/VirtualMa
   params: {
     acceleratedNetworking: acceleratedNetworking
     location: locationB
-    subnet_ID: virtualNetwork_Spoke_B.outputs.general_SubnetID
+    subnet_ID: virtualNetwork_SpokeB.outputs.general_SubnetID
     virtualMachine_AdminPassword: virtualMachine_AdminPassword
     virtualMachine_AdminUsername: virtualMachine_AdminUsername
     virtualMachine_Name: 'spokeB-WinVM'
@@ -151,7 +151,7 @@ module spokeB_WinVM '../../modules/Microsoft.Compute/WindowsServer2022/VirtualMa
     virtualMachine_ScriptFileName: 'WinServ2022_WebServer_InitScript.ps1'
   }
   dependsOn: [
-    hubToSpokeBPeering
+    hub_To_SpokeB_Peering
   ]
 }
 
@@ -159,13 +159,15 @@ module privateLink '../../modules/Microsoft.Network/PrivateLink.bicep' = {
   name: 'privateLink'
   params: {
     acceleratedNetworking: acceleratedNetworking
-    internalLoadBalancer_SubnetID: virtualNetwork_Spoke_B.outputs.general_SubnetID
+    internalLoadBalancer_SubnetID: virtualNetwork_SpokeB.outputs.general_SubnetID
     location: locationB
     networkInterface_IPConfig_Names: [spokeB_WinVM.outputs.networkInterface_IPConfig0_Name]
     networkInterface_Names: [spokeB_WinVM.outputs.networkInterface_Name]
-    networkInterface_SubnetID: virtualNetwork_Spoke_B.outputs.general_SubnetID
-    privateEndpoint_SubnetID: virtualNetwork_Spoke_B.outputs.privateEndpoint_SubnetID
-    privateLink_SubnetID: virtualNetwork_Spoke_B.outputs.privateLinkService_SubnetID
+    networkInterface_SubnetID: virtualNetwork_SpokeB.outputs.general_SubnetID
+    privateEndpoint_SubnetID: virtualNetwork_SpokeB.outputs.privateEndpoint_SubnetID
+    privateLink_SubnetID: virtualNetwork_SpokeB.outputs.privateLinkService_SubnetID
+    privateLink_Name: 'spokeB_PrivateLink'
+    privateEndpoint_name: 'hub_PrivateEndpoint_to_PrivateLink'
   }
 }
 
@@ -173,21 +175,21 @@ module storageAccount '../../modules/Microsoft.Storage/StorageAccount.bicep' = {
   name: 'storageAccount'
   params: {
     location: locationB
-    privateEndpoints_File_Name: '${storageAccount_Name}_file_pe'
-    privateEndpoints_Blob_Name: '${storageAccount_Name}_blob_pe'
     storageAccount_Name: storageAccount_Name
-    privateEndpoint_SubnetID: [virtualNetwork_Spoke_A.outputs.privateEndpoint_SubnetID]
-    privateDNSZoneLinkedVnetIDList: [
-      virtualNetwork_Hub.outputs.virtualNetwork_ID 
-      virtualNetwork_Spoke_A.outputs.virtualNetwork_ID
-      virtualNetwork_Spoke_B.outputs.virtualNetwork_ID
-    ]
-    privateDNSZoneLinkedVnetNamesList: [
-      virtualNetwork_Hub.outputs.virtualNetwork_Name
-      virtualNetwork_Spoke_A.outputs.virtualNetwork_Name
-      virtualNetwork_Spoke_B.outputs.virtualNetwork_Name
-    ]
-    privateEndpoint_VirtualNetwork_Name: [virtualNetwork_Spoke_A.outputs.virtualNetwork_Name]
+  }
+}
+
+module hub_StorageAccount_Blob_PrivateEndpoint '../../modules/Microsoft.Network/PrivateEndpoint.bicep' = {
+  name: 'hub_StorageAccount_Blob_PrivateEndpoint'
+  params: {
+    fqdn: '${storageAccount_Name}.blob.core.windows.net'
+    groupID: 'blob'
+    location: locationA
+    privateDNSZone_Name: 'privatelink.blob.core.windows.net'
+    privateEndpoint_Name: 'hub_${storageAccount_Name}_blob_pe'
+    privateEndpoint_SubnetID: virtualNetwork_Hub.outputs.privateEndpoint_SubnetID
+    privateLinkServiceId: storageAccount.outputs.storageAccount_ID
+    virtualNetwork_IDs: [virtualNetwork_Hub.outputs.virtualNetwork_ID]
   }
 }
 
@@ -195,10 +197,10 @@ module azureFirewall '../../modules/Microsoft.Network/AzureFirewall.bicep' = if 
   name: 'hubAzureFirewall'
   params: {
     azureFirewall_ManagementSubnet_ID: virtualNetwork_Hub.outputs.azureFirewallManagement_SubnetID
-    azureFirewall_Name: 'hubAzFW'
+    azureFirewall_Name: 'hub_AzFW'
     azureFirewall_SKU: 'Basic'
     azureFirewall_Subnet_ID: virtualNetwork_Hub.outputs.azureFirewall_SubnetID
-    azureFirewallPolicy_Name: 'hubAzFW_Policy'
+    azureFirewallPolicy_Name: 'hub_AzFWPolicy'
     location: locationA
   }
   dependsOn: [
@@ -212,12 +214,14 @@ module hubBastion '../../modules/Microsoft.Network/Bastion.bicep' = {
   params: {
     bastion_SubnetID: virtualNetwork_Hub.outputs.bastion_SubnetID
     location: locationA
+    bastion_name: 'hub_bastion'
   }
 }
 
 module dnsPrivateResolver '../../modules/Microsoft.Network/DNSPrivateResolver.bicep' = {
   name: 'dnsPrivateResolver'
   params: {
+    dnsPrivateResolver_Name: 'hub_DNSPrivateResolver'
     dnsPrivateResolver_Inbound_SubnetID: virtualNetwork_Hub.outputs.privateResolver_Inbound_SubnetID
     dnsPrivateResolver_Outbound_SubnetID: virtualNetwork_Hub.outputs.privateResolver_Outbound_SubnetID
     location: locationA
@@ -237,18 +241,18 @@ module dnsPrivateResolverForwardingRuleSet '../../modules/Microsoft.Network/DNSP
     }]
     virtualNetwork_IDs: [
       virtualNetwork_Hub.outputs.virtualNetwork_ID 
-      virtualNetwork_Spoke_A.outputs.virtualNetwork_ID 
-      virtualNetwork_Spoke_B.outputs.virtualNetwork_ID
+      virtualNetwork_SpokeA.outputs.virtualNetwork_ID 
+      virtualNetwork_SpokeB.outputs.virtualNetwork_ID
     ]
   }
 }
 
 module virtualNetwork_OnPremHub '../../modules/Microsoft.Network/VirtualNetworkHub.bicep' = {
-  name: 'onprem_vnet'
+  name: 'onprem_VNet'
   params: {
     firstTwoOctetsOfVirtualNetworkPrefix: '10.100'
     location: locationOnPrem
-    virtualNetwork_Name: 'onprem_vnet'
+    virtualNetwork_Name: 'onprem_VNet'
   }
 }
 
@@ -260,7 +264,7 @@ module OnPremVM_WinDNS '../../modules/Microsoft.Compute/WindowsServer2022/Virtua
     subnet_ID: virtualNetwork_OnPremHub.outputs.general_SubnetID
     virtualMachine_AdminPassword: virtualMachine_AdminPassword
     virtualMachine_AdminUsername: virtualMachine_AdminUsername
-    virtualMachine_Name: 'OnPremWinDNS${i}'
+    virtualMachine_Name: 'OnPrem-WinDNS${i}'
     virtualMachine_Size: virtualMachine_Size
     virtualMachine_ScriptFileLocation: virtualMachine_ScriptFileLocation
     virtualMachine_ScriptFileName: 'WinServ2022_DNS_InitScript.ps1'
@@ -273,7 +277,7 @@ module virtualNetworkGateway_OnPrem '../../modules/Microsoft.Network/VirtualNetw
   params: {
     location: locationOnPrem
     virtualNetworkGateway_ASN: 65000
-    virtualNetworkGateway_Name: 'OnPremVNG'
+    virtualNetworkGateway_Name: 'OnPrem_VNG'
     virtualNetworkGateway_Subnet_ResourceID: virtualNetwork_OnPremHub.outputs.gateway_SubnetID
   }
 }
@@ -283,7 +287,7 @@ module virtualNetworkGateway_Hub '../../modules/Microsoft.Network/VirtualNetwork
   params: {
     location: locationA
     virtualNetworkGateway_ASN: 65001
-    virtualNetworkGateway_Name: 'HubVNG'
+    virtualNetworkGateway_Name: 'Hub_VNG'
     virtualNetworkGateway_Subnet_ResourceID: virtualNetwork_Hub.outputs.gateway_SubnetID
   }
 }

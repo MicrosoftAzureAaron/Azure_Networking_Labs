@@ -32,7 +32,7 @@ param numberOfClientVMs int
 param numberOfServerVMs int
 
 
-// param usingAzureFirewall bool = true
+param usingAzureFirewall bool = false
 
 @description('''
 Storage account name restrictions:
@@ -42,9 +42,6 @@ Storage account name restrictions:
 @minLength(3)
 @maxLength(24)
 param storageAccount_Name string
-
-// param aaron bool = false
-
 
 
 module virtualNetwork_Client '../../modules/Microsoft.Network/VirtualNetworkHub.bicep' = {
@@ -112,39 +109,39 @@ module ServerVM_Linux '../../modules/Microsoft.Compute/Ubuntu20/VirtualMachine.b
 } ]
 
 
-// module firewall '../../modules/Microsoft.Network/AzureFirewall.bicep' = if (usingAzureFirewall) {
-//   name: 'azfw'
-//   params: {
-//     azureFirewall_ManagementSubnet_ID: virtualNetwork_Hub.outputs.azureFirewallManagement_SubnetID
-//     azureFirewall_Name: 'azfw'
-//     azureFirewall_SKU: 'Basic'
-//     azureFirewall_Subnet_ID: virtualNetwork_Hub.outputs.azureFirewall_SubnetID
-//     azureFirewallPolicy_Name: 'azfw_policy'
-//     location: locationClient
-//   }
-// }
+module firewall '../../modules/Microsoft.Network/AzureFirewall.bicep' = if (usingAzureFirewall) {
+  name: 'azfw'
+  params: {
+    azureFirewall_ManagementSubnet_ID: virtualNetwork_Client.outputs.azureFirewallManagement_SubnetID
+    azureFirewall_Name: 'azfw'
+    azureFirewall_SKU: 'Basic'
+    azureFirewall_Subnet_ID: virtualNetwork_Client.outputs.azureFirewall_SubnetID
+    azureFirewallPolicy_Name: 'azfw_policy'
+    location: locationClient
+  }
+}
 
-// module udrToAzFW_Hub '../../modules/Microsoft.Network/RouteTable.bicep' = if (usingAzureFirewall) {
-//   name: 'udrToAzFW_Hub'
-//   params: {
-//     addressPrefix: '10.101.0.0/24'
-//     nextHopType: 'VirtualAppliance'
-//     routeTable_Name: virtualNetwork_Hub.outputs.routeTable_Name
-//     routeTableRoute_Name: 'toAzFW'
-//     nextHopIpAddress: firewall.outputs.azureFirewall_PrivateIPAddress
-//   }
-// }
+module udrToAzFW_Hub '../../modules/Microsoft.Network/RouteTable.bicep' = if (usingAzureFirewall) {
+  name: 'udrToAzFW_Hub'
+  params: {
+    addressPrefix: '10.101.0.0/24'
+    nextHopType: 'VirtualAppliance'
+    routeTable_Name: virtualNetwork_Client.outputs.routeTable_Name
+    routeTableRoute_Name: 'toAzFW'
+    nextHopIpAddress: firewall.outputs.azureFirewall_PrivateIPAddress
+  }
+}
 
-// module udrToAzFW_Server '../../modules/Microsoft.Network/RouteTable.bicep' = if (usingAzureFirewall) {
-//   name: 'udrToAzFW_Server'
-//   params: {
-//     addressPrefix: '10.100.0.0/24'
-//     nextHopType: 'VirtualAppliance'
-//     routeTable_Name: virtualNetwork_Server.outputs.routeTable_Name
-//     routeTableRoute_Name: 'toAzFW'
-//     nextHopIpAddress: firewall.outputs.azureFirewall_PrivateIPAddress
-//   }
-// }
+module udrToAzFW_Server '../../modules/Microsoft.Network/RouteTable.bicep' = if (usingAzureFirewall) {
+  name: 'udrToAzFW_Server'
+  params: {
+    addressPrefix: '10.100.0.0/24'
+    nextHopType: 'VirtualAppliance'
+    routeTable_Name: virtualNetwork_Server.outputs.routeTable_Name
+    routeTableRoute_Name: 'toAzFW'
+    nextHopIpAddress: firewall.outputs.azureFirewall_PrivateIPAddress
+  }
+}
 
 module clientBastion '../../modules/Microsoft.Network/Bastion.bicep' = {
   name: 'clientBastion'
@@ -158,33 +155,26 @@ module storageAccount '../../modules/Microsoft.Storage/StorageAccount.bicep' = {
   name: 'storageAccount'
   params: {
     location: locationClient
-    privateDNSZoneLinkedVnetIDList: [virtualNetwork_Client.outputs.virtualNetwork_ID, virtualNetwork_Server.outputs.virtualNetwork_ID]
-    privateDNSZoneLinkedVnetNamesList: [virtualNetwork_Client.outputs.virtualNetwork_Name, virtualNetwork_Server.outputs.virtualNetwork_Name]
-    privateEndpoint_SubnetID: [virtualNetwork_Client.outputs.privateEndpoint_SubnetID, virtualNetwork_Server.outputs.privateEndpoint_SubnetID]
-    privateEndpoint_VirtualNetwork_Name: [virtualNetwork_Client.outputs.virtualNetwork_Name, virtualNetwork_Server.outputs.virtualNetwork_Name]
-    privateEndpoints_Blob_Name: 'blob_pe'
-    privateEndpoints_File_Name: 'fileshare_pe'
-    usingFilePrivateEndpoints: true
-    usingBlobPrivateEndpoints: true
     storageAccount_Name: storageAccount_Name
   }
 }
 
-// module ilb '../../modules/Microsoft.Network/InternalLoadBalancer.bicep' = {
-  //   name: 'ilb'
-  //   params: {
-  //     internalLoadBalancer_SubnetID: virtualNetwork_Server.outputs.general_SubnetID
-  //     location: locationServer
-  //     networkInterface_IPConfig_Name: [ServerVM_Linux1.outputs.networkInterface_IPConfig0_Name, ServerVM_Linux2.outputs.networkInterface_IPConfig0_Name ]
-  //     networkInterface_Name: [ServerVM_Linux1.outputs.networkInterface_Name, ServerVM_Linux2.outputs.networkInterface_Name]
-  //     networkInterface_SubnetID: [virtualNetwork_Server.outputs.general_SubnetID, virtualNetwork_Server.outputs.general_SubnetID]
-  //     tcpPort: 5001
-  //     enableTcpReset: true
-  //   }
-  //   dependsOn: [
-  //     clientBastion
-  //   ]
-  // }
+module client_StorageAccount_File_PrivateEndpoint '../../modules/Microsoft.Network/PrivateEndpoint.bicep' = {
+  name: 'client_StorageAccount_File_PrivateEndpoint'
+  params: {
+    fqdn: '${storageAccount_Name}.file.core.windows.net'
+    groupID: 'file'
+    location: locationClient
+    privateDNSZone_Name: 'privatelink.file.core.windows.net'
+    privateEndpoint_Name: '${storageAccount_Name}_file_pe'
+    privateEndpoint_SubnetID: virtualNetwork_Client.outputs.privateEndpoint_SubnetID
+    privateLinkServiceId: storageAccount.outputs.storageAccount_ID
+    virtualNetwork_IDs: [
+      virtualNetwork_Client.outputs.virtualNetwork_ID
+      virtualNetwork_Server.outputs.virtualNetwork_ID
+    ]  
+  }
+}
 
 module privateLink '../../modules/Microsoft.Network/PrivateLink.bicep' = {
   name: 'privatelink'
@@ -207,33 +197,5 @@ module privateEndpoint_NIC '../../modules/Microsoft.Network/PrivateEndpointNetwo
     existing_PrivateEndpoint_NetworkInterface_Name: privateLink.outputs.privateEndpoint_NetworkInterface_Name
   }
 }
-
-// module filesharePrivateEndpoints '../../modules/Microsoft.Network/PrivateEndpoint.bicep' = {
-//   name: 'filesharePE'
-//   params: {
-//     fqdn: '${last(split(storageAccount_ID, '/'))}.file.core.windows.net'
-//     groupID: 'file'
-//     location: locationClient
-//     privateDNSZone_Name: 'privatelink.file.core.windows.net'
-//     privateEndpoint_Name: 'file_pe'
-//     privateEndpoint_SubnetID: virtualNetwork_Client.outputs.privateEndpoint_SubnetID
-//     privateLinkServiceId: storageAccount_ID
-//     virtualNetwork_IDs: [virtualNetwork_Client.outputs.virtualNetwork_ID, virtualNetwork_Server.outputs.virtualNetwork_ID]
-//   }
-// }
-
-// module blobPrivateEndpoints '../../modules/Microsoft.Network/PrivateEndpoint.bicep' = {
-//   name: 'blobPE'
-//   params: {
-//     fqdn: '${last(split(storageAccount_ID, '/'))}.blob.core.windows.net'
-//     groupID: 'blob'
-//     location: locationClient
-//     privateDNSZone_Name: 'privatelink.blob.core.windows.net'
-//     privateEndpoint_Name: 'blob_pe'
-//     privateEndpoint_SubnetID: virtualNetwork_Client.outputs.privateEndpoint_SubnetID
-//     privateLinkServiceId: storageAccount_ID
-//     virtualNetwork_IDs: [virtualNetwork_Client.outputs.virtualNetwork_ID, virtualNetwork_Server.outputs.virtualNetwork_ID]
-//   }
-// }
 
 
