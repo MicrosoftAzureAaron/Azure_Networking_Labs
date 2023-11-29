@@ -42,12 +42,12 @@ Set-DnsServerForwarder -IPAddress "168.63.129.16"
 
 Import-Module DnsServer
 
-if ($null -ne $SampleDNSZoneName && $null -ne $SampleDNSZoneName && $null -ne $SampleARecord) {
+if ($null -eq $SampleDNSZoneName && $null -eq $SampleDNSZoneName && $null -eq $SampleARecord) {
     Add-DnsServerPrimaryZone -Name $SampleDNSZoneName -ZoneFile "${SampleDNSZoneName}dns" -PassThru
     Add-DnsServerResourceRecordA -ZoneName $SampleDNSZoneName -Name $SampleHostName -IPv4Address $SampleARecord -CreatePtr
 }
 
-if ($null -ne $PrivateDNSZone && $null -ne $ConditionalForwarderIPAddress) {
+if ($null -eq $PrivateDNSZone && $null -eq $ConditionalForwarderIPAddress) {
     Add-DnsServerConditionalForwarderZone -Name $PrivateDNSZone -MasterServers $ConditionalForwarderIPAddress
 }
 

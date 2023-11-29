@@ -51,7 +51,7 @@
     },
     "virtualMachine_ScriptFileLocation": {
       "type": "string",
-      "defaultValue": "https://raw.githubusercontent.com/jimgodden/Azure_Networking_Labs/PrivateLinkDNSTesting/scripts/"
+      "defaultValue": "https://raw.githubusercontent.com/jimgodden/Azure_Networking_Labs/main/scripts/"
     },
     "acceleratedNetworking": {
       "type": "bool",

@@ -40,9 +40,9 @@ New-AzResourceGroupDeployment -ResourceGroupName $rgName -TemplateFile $mainBice
     -virtualMachine_Size $virtualMachine_Size `
     -storageAccount_Name "plconntestsa${randomFiveLetterString}" `
     -scenario_Name $scenario_Name `
-    -numberOfClientVMs 1
-    -numberOfServerVMs 1
-    # -usingAzureFirewall $false
+    -numberOfClientVMs 1 `
+    -numberOfServerVMs 1 `
+    -usingAzureFirewall $false
 
 $end = get-date -UFormat "%s"
 $timeTotalSeconds = $end - $start
