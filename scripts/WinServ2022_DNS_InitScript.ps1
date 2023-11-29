@@ -35,15 +35,19 @@ Invoke-WebRequest -Uri "https://github.com/microsoft/terminal/releases/download/
 
 
 New-Item -ItemType Directory -Name Tools -Path "c:\"
-Invoke-WebRequest -Uri "https://mainjamesgstorage.blob.core.windows.net/scripts/installTools.ps1" -OutFile "c:\installTools.ps1"
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/jimgodden/Azure_Networking_Labs/main/scripts/WinServ2022_InstallTools.ps1" -OutFile "c:\installTools.ps1"
 
 Install-WindowsFeature -Name DNS -IncludeManagementTools
 Set-DnsServerForwarder -IPAddress "168.63.129.16"
 
 Import-Module DnsServer
-Add-DnsServerPrimaryZone -Name $SampleDNSZoneName -ZoneFile "${SampleDNSZoneName}dns" -PassThru
-Add-DnsServerResourceRecordA -ZoneName $SampleDNSZoneName -Name $SampleHostName -IPv4Address $SampleARecord -CreatePtr
 
+if ($null -ne $SampleDNSZoneName && $null -ne $SampleDNSZoneName && $null -ne $SampleARecord) {
+    Add-DnsServerPrimaryZone -Name $SampleDNSZoneName -ZoneFile "${SampleDNSZoneName}dns" -PassThru
+    Add-DnsServerResourceRecordA -ZoneName $SampleDNSZoneName -Name $SampleHostName -IPv4Address $SampleARecord -CreatePtr
+}
 
-Add-DnsServerConditionalForwarderZone -Name $PrivateDNSZone -MasterServers $ConditionalForwarderIPAddress
+if ($null -ne $PrivateDNSZone && $null -ne $ConditionalForwarderIPAddress) {
+    Add-DnsServerConditionalForwarderZone -Name $PrivateDNSZone -MasterServers $ConditionalForwarderIPAddress
+}
 
