@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.18.4.5664",
-      "templateHash": "9468701855774726611"
+      "templateHash": "11318888364124801049"
     }
   },
   "parameters": {
@@ -1516,7 +1516,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.18.4.5664",
-              "templateHash": "8596784137539762860"
+              "templateHash": "2724639610599831888"
             }
           },
           "parameters": {
@@ -1569,7 +1569,7 @@
             },
             "virtualMachine_ScriptFileLocation": {
               "type": "string",
-              "defaultValue": "https://mainjamesgstorage.blob.core.windows.net/scripts/",
+              "defaultValue": "https://raw.githubusercontent.com/jimgodden/Azure_Networking_Labs/main/scripts/",
               "metadata": {
                 "description": "Location of the file to be ran while the Virtual Machine is being created.  Ensure that the path ends with a /\r\nExample: https://example.com/scripts/"
               }
@@ -1886,7 +1886,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.18.4.5664",
-              "templateHash": "8596784137539762860"
+              "templateHash": "2724639610599831888"
             }
           },
           "parameters": {
@@ -1939,7 +1939,7 @@
             },
             "virtualMachine_ScriptFileLocation": {
               "type": "string",
-              "defaultValue": "https://mainjamesgstorage.blob.core.windows.net/scripts/",
+              "defaultValue": "https://raw.githubusercontent.com/jimgodden/Azure_Networking_Labs/main/scripts/",
               "metadata": {
                 "description": "Location of the file to be ran while the Virtual Machine is being created.  Ensure that the path ends with a /\r\nExample: https://example.com/scripts/"
               }
@@ -2257,7 +2257,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.18.4.5664",
-              "templateHash": "8596784137539762860"
+              "templateHash": "2724639610599831888"
             }
           },
           "parameters": {
@@ -2310,7 +2310,7 @@
             },
             "virtualMachine_ScriptFileLocation": {
               "type": "string",
-              "defaultValue": "https://mainjamesgstorage.blob.core.windows.net/scripts/",
+              "defaultValue": "https://raw.githubusercontent.com/jimgodden/Azure_Networking_Labs/main/scripts/",
               "metadata": {
                 "description": "Location of the file to be ran while the Virtual Machine is being created.  Ensure that the path ends with a /\r\nExample: https://example.com/scripts/"
               }
@@ -2916,7 +2916,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.18.4.5664",
-              "templateHash": "18094188133768702999"
+              "templateHash": "15196234384234794453"
             }
           },
           "parameters": {
@@ -2934,9 +2934,6 @@
                 "description": "Storage account name restrictions:\r\n- Storage account names must be between 3 and 24 characters in length and may contain numbers and lowercase letters only.\r\n- Your storage account name must be unique within Azure. No two storage accounts can have the same name.\r\n"
               }
             }
-          },
-          "variables": {
-            "privateDNSZone_Blob_Name": "privatelink.blob.core.windows.net"
           },
           "resources": [
             {
@@ -3070,7 +3067,7 @@
         "mode": "Incremental",
         "parameters": {
           "fqdn": {
-            "value": "[format('{0}.blob.core.windows.net', parameters('storageAccount_Name'))]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'storageAccount'), '2022-09-01').outputs.storageaccount_Blob_FQDN.value]"
           },
           "groupID": {
             "value": "blob"
@@ -3079,7 +3076,7 @@
             "value": "[parameters('locationA')]"
           },
           "privateDNSZone_Name": {
-            "value": "privatelink.blob.core.windows.net"
+            "value": "[format('privatelink.blob.{0}', environment().suffixes.storage)]"
           },
           "privateEndpoint_Name": {
             "value": "[format('hub_{0}_blob_pe', parameters('storageAccount_Name'))]"
@@ -3103,7 +3100,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.18.4.5664",
-              "templateHash": "4992159741547619207"
+              "templateHash": "2677904829521907851"
             }
           },
           "parameters": {
@@ -3149,7 +3146,7 @@
             "privateDNSZone_Name": {
               "type": "string",
               "metadata": {
-                "description": "Name of the Private DNS Zone\r\nExample: privatelink.blob.core.windows.net"
+                "description": "Name of the Private DNS Zone\r\nExample: privatelink.blob.${environment().suffixes.storage}"
               }
             }
           },
@@ -4439,7 +4436,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.18.4.5664",
-              "templateHash": "8596784137539762860"
+              "templateHash": "2724639610599831888"
             }
           },
           "parameters": {
@@ -4492,7 +4489,7 @@
             },
             "virtualMachine_ScriptFileLocation": {
               "type": "string",
-              "defaultValue": "https://mainjamesgstorage.blob.core.windows.net/scripts/",
+              "defaultValue": "https://raw.githubusercontent.com/jimgodden/Azure_Networking_Labs/main/scripts/",
               "metadata": {
                 "description": "Location of the file to be ran while the Virtual Machine is being created.  Ensure that the path ends with a /\r\nExample: https://example.com/scripts/"
               }

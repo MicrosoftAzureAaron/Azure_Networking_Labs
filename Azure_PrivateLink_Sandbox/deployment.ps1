@@ -22,7 +22,7 @@ $iteration = "14"
 $rgName = "Bicep_PrivateLink${iteration}_Sandbox"
 $locationA = "eastus2"
 # $locationB = "eastus2"
-$randomFiveLetterString = .\scripts\deployment_Scripts\Get-LetterGUID.ps1
+# $randomFiveLetterString = .\scripts\deployment_Scripts\Get-LetterGUID.ps1
 
 Write-Host "Creating ${rgName}"
 New-AzResourceGroup -Name $rgName -Location $locationA

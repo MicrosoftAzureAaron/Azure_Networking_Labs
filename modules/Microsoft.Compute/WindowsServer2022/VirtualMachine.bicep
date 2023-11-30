@@ -28,7 +28,7 @@ param subnet_ID string
 
 @description('''Location of the file to be ran while the Virtual Machine is being created.  Ensure that the path ends with a /
 Example: https://example.com/scripts/''')
-param virtualMachine_ScriptFileLocation string = 'https://mainjamesgstorage.blob.core.windows.net/scripts/'
+param virtualMachine_ScriptFileLocation string = 'https://raw.githubusercontent.com/jimgodden/Azure_Networking_Labs/main/scripts/'
 
 @description('''Name of the file to be ran while the Virtual Machine is being created
 Example: InitScript.ps1''')

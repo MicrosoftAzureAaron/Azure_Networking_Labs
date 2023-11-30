@@ -19,7 +19,7 @@ param groupID string
 param fqdn string
 
 @description('''Name of the Private DNS Zone
-Example: privatelink.blob.core.windows.net''')
+Example: privatelink.blob.${environment().suffixes.storage}''')
 param privateDNSZone_Name string
 
 @description('Reads the last portion of the Service ID to get the name of the resource')

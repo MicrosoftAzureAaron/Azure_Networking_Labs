@@ -3,3 +3,4 @@ virtualMachines.parameters.json
 scripts/fsconn.sh
 full.parameters.bicepparam
 TD_Repro/deployment.ps1
+build.ps1

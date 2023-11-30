@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.18.4.5664",
-      "templateHash": "13730667042376811347"
+      "templateHash": "383655061231877168"
     }
   },
   "parameters": {
@@ -59,13 +59,15 @@
       "type": "int",
       "metadata": {
         "description": "Number of Client Virtual Machines to be used as the source of the traffic"
-      }
+      },
+      "maxValue": 1000
     },
     "numberOfServerVMs": {
       "type": "int",
       "metadata": {
         "description": "Number of Server Virtual Machines to be used as the destination of the traffic"
-      }
+      },
+      "maxValue": 1000
     },
     "usingAzureFirewall": {
       "type": "bool",
@@ -2294,7 +2296,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.18.4.5664",
-              "templateHash": "18094188133768702999"
+              "templateHash": "15196234384234794453"
             }
           },
           "parameters": {
@@ -2312,9 +2314,6 @@
                 "description": "Storage account name restrictions:\r\n- Storage account names must be between 3 and 24 characters in length and may contain numbers and lowercase letters only.\r\n- Your storage account name must be unique within Azure. No two storage accounts can have the same name.\r\n"
               }
             }
-          },
-          "variables": {
-            "privateDNSZone_Blob_Name": "privatelink.blob.core.windows.net"
           },
           "resources": [
             {
@@ -2448,7 +2447,7 @@
         "mode": "Incremental",
         "parameters": {
           "fqdn": {
-            "value": "[format('{0}.file.core.windows.net', parameters('storageAccount_Name'))]"
+            "value": "[format('{0}.file.{1}', parameters('storageAccount_Name'), environment().suffixes.storage)]"
           },
           "groupID": {
             "value": "file"
@@ -2457,7 +2456,7 @@
             "value": "[parameters('locationClient')]"
           },
           "privateDNSZone_Name": {
-            "value": "privatelink.file.core.windows.net"
+            "value": "[format('privatelink.file.{0}', environment().suffixes.storage)]"
           },
           "privateEndpoint_Name": {
             "value": "[format('{0}_file_pe', parameters('storageAccount_Name'))]"
