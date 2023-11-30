@@ -44,18 +44,22 @@ param isUsingAzureFirewall bool = true
 @description('If true, a Windows VM will be deployed in both source and destination')
 param isUsingWindows bool = true
 
+@maxValue(99)
 @description('Number of Windows Virtual Machines to deploy in the source side.  This number is irrelevant if not deploying Windows Virtual Machines')
 param numberOfSourceSideWindowsVMs int = 1
 
+@maxValue(99)
 @description('Number of Windows Virtual Machines to deploy in the destination side.  This number is irrelevant if not deploying Windows Virtual Machines')
 param numberOfDestinationSideWindowsVMs int = 1
 
 @description('If true, a Linux VM will be deployed in both source and destination')
 param isUsingLinux bool = true
 
+@maxValue(99)
 @description('Number of Linux Virtual Machines to deploy in the source side.  This number is irrelevant if not deploying Linux Virtual Machines')
 param numberOfSourceSideLinuxVMs  int = 1
 
+@maxValue(99)
 @description('Number of Linux Virtual Machines to deploy in the destination side.  This number is irrelevant if not deploying Linux Virtual Machines')
 param numberOfDestinationSideLinuxVMs  int = 1
 

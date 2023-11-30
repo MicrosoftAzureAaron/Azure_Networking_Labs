@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.18.4.5664",
-      "templateHash": "11318888364124801049"
+      "version": "0.23.1.45101",
+      "templateHash": "11490207121728583035"
     }
   },
   "parameters": {
@@ -63,8 +63,8 @@
     "storageAccount_Name": {
       "type": "string",
       "defaultValue": "[format('storagepl{0}', uniqueString(resourceGroup().id))]",
-      "maxLength": 24,
       "minLength": 3,
+      "maxLength": 24,
       "metadata": {
         "description": "Storage account name restrictions:\r\n- Storage account names must be between 3 and 24 characters in length and may contain numbers and lowercase letters only.\r\n- Your storage account name must be unique within Azure. No two storage accounts can have the same name.\r\n"
       }
@@ -117,8 +117,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "3260314232436169619"
+              "version": "0.23.1.45101",
+              "templateHash": "11630670201510111571"
             }
           },
           "parameters": {
@@ -638,8 +638,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "13445374038190341657"
+              "version": "0.23.1.45101",
+              "templateHash": "11965958325347156185"
             }
           },
           "parameters": {
@@ -990,8 +990,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "13445374038190341657"
+              "version": "0.23.1.45101",
+              "templateHash": "11965958325347156185"
             }
           },
           "parameters": {
@@ -1330,8 +1330,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "14501128757819657787"
+              "version": "0.23.1.45101",
+              "templateHash": "6277894807947009849"
             }
           },
           "parameters": {
@@ -1410,8 +1410,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "14501128757819657787"
+              "version": "0.23.1.45101",
+              "templateHash": "6277894807947009849"
             }
           },
           "parameters": {
@@ -1515,8 +1515,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "2724639610599831888"
+              "version": "0.23.1.45101",
+              "templateHash": "1096034176172248179"
             }
           },
           "parameters": {
@@ -1525,10 +1525,10 @@
             },
             "virtualMachine_Name": {
               "type": "string",
+              "maxLength": 15,
               "metadata": {
                 "description": "Name of the Virtual Machine"
-              },
-              "maxLength": 15
+              }
             },
             "virtualMachine_Size": {
               "type": "string",
@@ -1733,8 +1733,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.18.4.5664",
-                      "templateHash": "10775271075142205483"
+                      "version": "0.23.1.45101",
+                      "templateHash": "16646750190955539652"
                     }
                   },
                   "parameters": {
@@ -1885,8 +1885,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "2724639610599831888"
+              "version": "0.23.1.45101",
+              "templateHash": "1096034176172248179"
             }
           },
           "parameters": {
@@ -1895,10 +1895,10 @@
             },
             "virtualMachine_Name": {
               "type": "string",
+              "maxLength": 15,
               "metadata": {
                 "description": "Name of the Virtual Machine"
-              },
-              "maxLength": 15
+              }
             },
             "virtualMachine_Size": {
               "type": "string",
@@ -2103,8 +2103,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.18.4.5664",
-                      "templateHash": "10775271075142205483"
+                      "version": "0.23.1.45101",
+                      "templateHash": "16646750190955539652"
                     }
                   },
                   "parameters": {
@@ -2256,8 +2256,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "2724639610599831888"
+              "version": "0.23.1.45101",
+              "templateHash": "1096034176172248179"
             }
           },
           "parameters": {
@@ -2266,10 +2266,10 @@
             },
             "virtualMachine_Name": {
               "type": "string",
+              "maxLength": 15,
               "metadata": {
                 "description": "Name of the Virtual Machine"
-              },
-              "maxLength": 15
+              }
             },
             "virtualMachine_Size": {
               "type": "string",
@@ -2474,8 +2474,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.18.4.5664",
-                      "templateHash": "10775271075142205483"
+                      "version": "0.23.1.45101",
+                      "templateHash": "16646750190955539652"
                     }
                   },
                   "parameters": {
@@ -2634,8 +2634,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "4206720600241436975"
+              "version": "0.23.1.45101",
+              "templateHash": "4106892316679403389"
             }
           },
           "parameters": {
@@ -2915,8 +2915,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "15196234384234794453"
+              "version": "0.23.1.45101",
+              "templateHash": "14070102085477440278"
             }
           },
           "parameters": {
@@ -2928,8 +2928,8 @@
             },
             "storageAccount_Name": {
               "type": "string",
-              "maxLength": 24,
               "minLength": 3,
+              "maxLength": 24,
               "metadata": {
                 "description": "Storage account name restrictions:\r\n- Storage account names must be between 3 and 24 characters in length and may contain numbers and lowercase letters only.\r\n- Your storage account name must be unique within Azure. No two storage accounts can have the same name.\r\n"
               }
@@ -3099,8 +3099,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "2677904829521907851"
+              "version": "0.23.1.45101",
+              "templateHash": "5437966452409985071"
             }
           },
           "parameters": {
@@ -3272,8 +3272,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "4283712892023480457"
+              "version": "0.23.1.45101",
+              "templateHash": "5890929983380066864"
             }
           },
           "parameters": {
@@ -3488,8 +3488,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "16807152716578717234"
+              "version": "0.23.1.45101",
+              "templateHash": "16363490596801265941"
             }
           },
           "parameters": {
@@ -3620,8 +3620,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "14232006482936628786"
+              "version": "0.23.1.45101",
+              "templateHash": "15878823067332618533"
             }
           },
           "parameters": {
@@ -3775,8 +3775,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "5934516265450790172"
+              "version": "0.23.1.45101",
+              "templateHash": "4188353497153612131"
             }
           },
           "parameters": {
@@ -3898,8 +3898,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "3260314232436169619"
+              "version": "0.23.1.45101",
+              "templateHash": "11630670201510111571"
             }
           },
           "parameters": {
@@ -4435,8 +4435,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "2724639610599831888"
+              "version": "0.23.1.45101",
+              "templateHash": "1096034176172248179"
             }
           },
           "parameters": {
@@ -4445,10 +4445,10 @@
             },
             "virtualMachine_Name": {
               "type": "string",
+              "maxLength": 15,
               "metadata": {
                 "description": "Name of the Virtual Machine"
-              },
-              "maxLength": 15
+              }
             },
             "virtualMachine_Size": {
               "type": "string",
@@ -4653,8 +4653,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.18.4.5664",
-                      "templateHash": "10775271075142205483"
+                      "version": "0.23.1.45101",
+                      "templateHash": "16646750190955539652"
                     }
                   },
                   "parameters": {
@@ -4791,8 +4791,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "5892776891067736618"
+              "version": "0.23.1.45101",
+              "templateHash": "17326484030895480232"
             }
           },
           "parameters": {
@@ -4948,8 +4948,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "5892776891067736618"
+              "version": "0.23.1.45101",
+              "templateHash": "17326484030895480232"
             }
           },
           "parameters": {
@@ -5114,8 +5114,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "13918332347059304611"
+              "version": "0.23.1.45101",
+              "templateHash": "16532889140507493550"
             }
           },
           "parameters": {
@@ -5254,8 +5254,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "13918332347059304611"
+              "version": "0.23.1.45101",
+              "templateHash": "16532889140507493550"
             }
           },
           "parameters": {
