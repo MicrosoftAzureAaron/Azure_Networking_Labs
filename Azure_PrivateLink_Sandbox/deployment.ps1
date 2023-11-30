@@ -1,16 +1,55 @@
 # This file will be used for testing purposes until a proper CI/CD pipeline is in place.
 
-$mainBicepFile = ".\Azure_PrivateLink_Sandbox\src\main.bicep"
-$mainJSONFile = ".\Azure_PrivateLink_Sandbox\src\main.json"
-$mainParameterFile = ".\main.parameters.json"
+$deploymentName = "Azure_PrivateLink_Sandbox"
+$mainBicepFile = ".\${deploymentName}\src\main.bicep"
+# $mainParameterFile = ".\main.parameters.json"
+$mainParameterFile = ".\${deploymentName}\full.parameters.bicepparam"
+$iterationFile = ".\${deploymentName}\iteration.txt"
 
-$start = get-date -UFormat "%s"
+if (!(Test-Path $iterationFile)) {
+    New-Item -Path $iterationFile
+    Set-Content -Path $iterationFile -Value 1
+}
 
-$currentTime = Get-Date -Format "HH:mm K"
-Write-Host "Starting Bicep Deployment.  Process began at: ${currentTime}"
+$iteration = [int](Get-Content $iterationFile)
+$rgName = "Bicep_PrivateLink_Sandbox_${iteration}"
+$location = "eastus2"
 
-Write-Host "`nBuilding main.json from main.bicep.."
-bicep build $mainBicepFile --outfile $mainJSONFile
+if (Get-AzResourceGroup -Name $rgName) {
+    $response = Read-Host "Resource Group ${rgName} already exists.  How do you want to handle this?  Below are the options.  Type the corresponding number and enter to choose.
+
+    1 - Delete this Resource Group and create another Resource Group with a higher iteration number.
+    2 - Leave this Resource Group alone and create another Resource Group with a higher iteration number.
+    3 - Update this Resource Group with the latest changes."
+
+    if ($response -eq "1") {
+
+        Write-Host "Deleting $rgName"
+        Remove-AzResourceGroup -Name $rgName -Force -AsJob
+        Set-Content -Path $iterationFile -Value "$($iteration + 1)"
+        $iteration = [int](Get-Content $iterationFile)
+        $rgName = "Bicep_PrivateLink_Sandbox_${iteration}"
+        Write-Host "Creating $rgName"
+
+    } elseif ($response -eq "2") {
+
+        Write-Host "Disregarding $rgName"
+        Set-Content -Path $iterationFile -Value "$($iteration + 1)"
+        $iteration = [int](Get-Content $iterationFile)
+        $rgName = "Bicep_PrivateLink_Sandbox_${iteration}"
+        Write-Host "Creating $rgName"
+
+    } elseif ($response -eq "3") {
+
+        Write-Host "Updating $rgName"
+        
+    } else {
+
+        Write-Host "Invalid response.  Canceling Deploment.."
+        return
+
+    }
+}
 
 # Specifies the account and subscription where the deployment will take place.
 if (!$subID) {
@@ -18,25 +57,17 @@ if (!$subID) {
 }
 Set-AzContext -Subscription $subID
 
-$iteration = "15"
-$rgName = "Bicep_PrivateLink${iteration}_Sandbox"
-$locationA = "eastus2"
-# $locationB = "eastus2"
-# $randomFiveLetterString = .\scripts\deployment_Scripts\Get-LetterGUID.ps1
+Write-Host "`nCreating Resource Group ${rgName}"
+New-AzResourceGroup -Name $rgName -Location $location
 
-Write-Host "Creating ${rgName}"
-New-AzResourceGroup -Name $rgName -Location $locationA
+$stopwatch = [system.diagnostics.stopwatch]::StartNew()
 
-Write-Host "`nStarting Bicep Deployment.."
-New-AzResourceGroupDeployment -ResourceGroupName $rgName -TemplateFile $mainBicepFile -TemplateParameterFile $mainParameterFile `
-    -locationA $locationA # -locationB $locationB
-    # -storageAccount_Name "jamesgsa${randomFiveLetterString}" `
+Write-Host "`nStarting Bicep Deployment.  Process began at: $(Get-Date -Format "HH:mm K")"
 
-$end = get-date -UFormat "%s"
-$timeTotalSeconds = $end - $start
-$timeTotalMinutes = $timeTotalSeconds / 60
-$currentTime = Get-Date -Format "HH:mm K"
-Write-Host "Process finished at: ${currentTime}"
-Write-Host "Total time taken in seconds: ${timeTotalSeconds}"
-Write-Host "Total time taken in minutes: ${timeTotalMinutes}"
+New-AzResourceGroupDeployment -ResourceGroupName $rgName -TemplateFile $mainBicepFile -TemplateParameterFile $mainParameterFile
+
+$stopwatch.Stop()
+
+Write-Host "Process finished at: $(Get-Date -Format "HH:mm K")"
+Write-Host "Total time taken in minutes: $($stopwatch.Elapsed.TotalMinutes)"
 Read-Host "`nPress any key to exit.."
