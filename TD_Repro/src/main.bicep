@@ -26,9 +26,11 @@ param acceleratedNetworking bool = true
 @description('Use this name to help differentiate between tests.')
 param scenario_Name string
 
+@maxValue(1000)
 @description('Number of Client Virtual Machines to be used as the source of the traffic')
 param numberOfClientVMs int
 
+@maxValue(1000)
 @description('Number of Server Virtual Machines to be used as the destination of the traffic')
 param numberOfServerVMs int
 
@@ -51,6 +53,7 @@ module virtualNetwork_Client '../../modules/Microsoft.Network/VirtualNetworkHub.
     firstTwoOctetsOfVirtualNetworkPrefix: '10.100'
     location: locationClient
     virtualNetwork_Name: 'Client_VNet'
+
   }
 }
 
@@ -82,10 +85,15 @@ module clientVM_Linux '../../modules/Microsoft.Compute/Ubuntu20/VirtualMachine.b
     virtualMachine_Size: virtualMachine_Size
     virtualMachine_ScriptFileLocation: 'https://raw.githubusercontent.com/jimgodden/Azure_Networking_Labs/main/scripts/'
     virtualMachine_ScriptFileName: 'conntestClient.sh'
-    commandToExecute: './conntestClient.sh ${privateEndpoint_NIC.outputs.privateEndpoint_IPAddress} ${scenario_Name} ${storageAccount.outputs.storageAccount_Name} ${storageAccount.outputs.storageAccountFileShare_Name} ${storageAccount.outputs.storageAccount_key0}'
+    // Use the following for Private Link testing
+    // commandToExecute: './conntestClient.sh ${privateEndpoint_NIC.outputs.privateEndpoint_IPAddress} ${scenario_Name} ${storageAccount.outputs.storageAccount_Name} ${storageAccount.outputs.storageAccountFileShare_Name} ${storageAccount.outputs.storageAccount_key0}'
+    // Use the following for Load Balancer testing
+    commandToExecute: './conntestClient.sh ${privateLink.outputs.internalLoadBalancer_FrontendIPAddress} ${scenario_Name} ${storageAccount.outputs.storageAccount_Name} ${storageAccount.outputs.storageAccountFileShare_Name} ${storageAccount.outputs.storageAccount_key0}'
+
   }
   dependsOn: [
     storageAccount
+    client_StorageAccount_File_PrivateEndpoint
   ]
 } ]
 
@@ -104,7 +112,7 @@ module ServerVM_Linux '../../modules/Microsoft.Compute/Ubuntu20/VirtualMachine.b
     commandToExecute: './conntestServer.sh ${scenario_Name} ${storageAccount.outputs.storageAccount_Name} ${storageAccount.outputs.storageAccountFileShare_Name} ${storageAccount.outputs.storageAccount_key0}'
   }
   dependsOn: [
-    storageAccount
+    client_StorageAccount_File_PrivateEndpoint
   ]
 } ]
 
@@ -162,10 +170,10 @@ module storageAccount '../../modules/Microsoft.Storage/StorageAccount.bicep' = {
 module client_StorageAccount_File_PrivateEndpoint '../../modules/Microsoft.Network/PrivateEndpoint.bicep' = {
   name: 'client_StorageAccount_File_PrivateEndpoint'
   params: {
-    fqdn: '${storageAccount_Name}.file.core.windows.net'
+    fqdn: '${storageAccount_Name}.file.${environment().suffixes.storage}'
     groupID: 'file'
     location: locationClient
-    privateDNSZone_Name: 'privatelink.file.core.windows.net'
+    privateDNSZone_Name: 'privatelink.file.${environment().suffixes.storage}'
     privateEndpoint_Name: '${storageAccount_Name}_file_pe'
     privateEndpoint_SubnetID: virtualNetwork_Client.outputs.privateEndpoint_SubnetID
     privateLinkServiceId: storageAccount.outputs.storageAccount_ID
