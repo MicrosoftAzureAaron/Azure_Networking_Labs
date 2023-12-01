@@ -12,13 +12,17 @@ Write-Host "Below is the string needed for the Deploy to Azure button in a readm
 Write-host "[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/${encodedURL})"
 
 # Azure ApplicationGateway Sandbox
+Write-Host "Building Azure ApplicationGateway Sandbox" 
 bicep build "C:\Users\jamesgodden\OneDrive - Microsoft\Programming\Azure_Networking_Labs\Azure_ApplicationGateway_Sandbox\src\main.bicep" --outfile "C:\Users\jamesgodden\OneDrive - Microsoft\Programming\Azure_Networking_Labs\Azure_ApplicationGateway_Sandbox\src\main.json"
 
 # Azure PrivateLink Sandbox
+Write-Host "Building Azure PrivateLink Sandbox" 
 bicep build "C:\Users\jamesgodden\OneDrive - Microsoft\Programming\Azure_Networking_Labs\Azure_PrivateLink_Sandbox\src\main.bicep" --outfile "C:\Users\jamesgodden\OneDrive - Microsoft\Programming\Azure_Networking_Labs\Azure_PrivateLink_Sandbox\src\main.json"
 
 # Azure VirtualWAN Sandbox
+Write-Host "Building Azure VirtualWAN Sandbox" 
 bicep build "C:\Users\jamesgodden\OneDrive - Microsoft\Programming\Azure_Networking_Labs\Azure_VirtualWAN_Sandbox\src\main.bicep" --outfile "C:\Users\jamesgodden\OneDrive - Microsoft\Programming\Azure_Networking_Labs\Azure_VirtualWAN_Sandbox\src\main.json"
 
 # Azure VM to VM Sandbox
+Write-Host "Building Azure VM to VM Sandbox" 
 bicep build "C:\Users\jamesgodden\OneDrive - Microsoft\Programming\Azure_Networking_Labs\Azure_VM_to_VM_Sandbox\src\main.bicep" --outfile "C:\Users\jamesgodden\OneDrive - Microsoft\Programming\Azure_Networking_Labs\Azure_VM_to_VM_Sandbox\src\main.json"

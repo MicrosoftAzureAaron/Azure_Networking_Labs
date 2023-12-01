@@ -1,10 +1,10 @@
 # This file will be used for testing purposes until a proper CI/CD pipeline is in place.
 
 $deploymentName = "Azure_PrivateLink_Sandbox"
-$mainBicepFile = ".\${deploymentName}\src\main.bicep"
-# $mainParameterFile = ".\main.parameters.json"
-$mainParameterFile = ".\${deploymentName}\full.parameters.bicepparam"
-$iterationFile = ".\${deploymentName}\iteration.txt"
+$deploymentFilePath = ".\${deploymentName}\"
+$mainBicepFile = "${deploymentFilePath}src\main.bicep"
+$mainParameterFile = "${deploymentFilePath}main.parameters.bicepparam"
+$iterationFile = "${deploymentFilePath}iteration.txt"
 
 if (!(Test-Path $iterationFile)) {
     New-Item -Path $iterationFile
@@ -12,7 +12,7 @@ if (!(Test-Path $iterationFile)) {
 }
 
 $iteration = [int](Get-Content $iterationFile)
-$rgName = "Bicep_PrivateLink_Sandbox_${iteration}"
+$rgName = "${deploymentName}_${iteration}"
 $location = "eastus2"
 
 if (Get-AzResourceGroup -Name $rgName) {
@@ -23,32 +23,32 @@ if (Get-AzResourceGroup -Name $rgName) {
     3 - Update this Resource Group with the latest changes."
 
     if ($response -eq "1") {
-
         Write-Host "Deleting $rgName"
         Remove-AzResourceGroup -Name $rgName -Force -AsJob
         Set-Content -Path $iterationFile -Value "$($iteration + 1)"
         $iteration = [int](Get-Content $iterationFile)
-        $rgName = "Bicep_PrivateLink_Sandbox_${iteration}"
+        $rgName = "${deploymentName}_${iteration}"
         Write-Host "Creating $rgName"
-
-    } elseif ($response -eq "2") {
-
+    } 
+    elseif ($response -eq "2") {
         Write-Host "Disregarding $rgName"
         Set-Content -Path $iterationFile -Value "$($iteration + 1)"
         $iteration = [int](Get-Content $iterationFile)
-        $rgName = "Bicep_PrivateLink_Sandbox_${iteration}"
+        $rgName = "${deploymentName}_${iteration}"
         Write-Host "Creating $rgName"
-
-    } elseif ($response -eq "3") {
-
+    } 
+    elseif ($response -eq "3") {
         Write-Host "Updating $rgName"
-        
-    } else {
-
+    } 
+    else {
         Write-Host "Invalid response.  Canceling Deploment.."
         return
-
     }
+} 
+else {
+    Set-Content -Path $iterationFile -Value "$($iteration + 1)"
+    $iteration = [int](Get-Content $iterationFile)
+    $rgName = "${deploymentName}_${iteration}"
 }
 
 # Specifies the account and subscription where the deployment will take place.
