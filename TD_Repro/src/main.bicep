@@ -8,11 +8,11 @@ Use the same region as locationClient if you do not want to test multi-region
 param locationServer string = 'westeurope'
 
 @description('Username for the admin account of the Virtual Machines')
-param virtualMachine_adminUsername string
+param virtualMachine_AdminUsername string
 
 @description('Password for the admin account of the Virtual Machines')
 @secure()
-param virtualMachine_adminPassword string
+param virtualMachine_AdminPassword string
 
 @description('Password for the Virtual Machine Admin User')
 param virtualMachine_Size string = 'Standard_D2s_v3'
@@ -44,7 +44,7 @@ Storage account name restrictions:
 ''')
 @minLength(3)
 @maxLength(24)
-param storageAccount_Name string
+param storageAccount_Name string = 'stortemp${uniqueString(resourceGroup().id)}'
 
 
 module virtualNetwork_Client '../../modules/Microsoft.Network/VirtualNetworkHub.bicep' = {
@@ -79,8 +79,8 @@ module clientVM_Linux '../../modules/Microsoft.Compute/Ubuntu20/VirtualMachine.b
     acceleratedNetworking: acceleratedNetworking
     location: locationClient
     subnet_ID: virtualNetwork_Client.outputs.general_SubnetID
-    virtualMachine_AdminPassword: virtualMachine_adminPassword
-    virtualMachine_AdminUsername: virtualMachine_adminUsername
+    virtualMachine_AdminPassword: virtualMachine_AdminPassword
+    virtualMachine_AdminUsername: virtualMachine_AdminUsername
     virtualMachine_Name: 'ClientVM${i}'
     virtualMachine_Size: virtualMachine_Size
     virtualMachine_ScriptFileLocation: 'https://raw.githubusercontent.com/jimgodden/Azure_Networking_Labs/main/scripts/'
@@ -103,8 +103,8 @@ module ServerVM_Linux '../../modules/Microsoft.Compute/Ubuntu20/VirtualMachine.b
     acceleratedNetworking: acceleratedNetworking
     location: locationServer
     subnet_ID: virtualNetwork_Server.outputs.general_SubnetID
-    virtualMachine_AdminPassword: virtualMachine_adminPassword
-    virtualMachine_AdminUsername: virtualMachine_adminUsername
+    virtualMachine_AdminPassword: virtualMachine_AdminPassword
+    virtualMachine_AdminUsername: virtualMachine_AdminUsername
     virtualMachine_Name: 'ServerVM${i}'
     virtualMachine_Size: virtualMachine_Size
     virtualMachine_ScriptFileLocation: 'https://raw.githubusercontent.com/jimgodden/Azure_Networking_Labs/main/scripts/'
