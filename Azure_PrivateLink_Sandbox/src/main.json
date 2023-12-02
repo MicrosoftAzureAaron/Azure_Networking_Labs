@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.23.1.45101",
-      "templateHash": "11490207121728583035"
+      "templateHash": "18064532177415870778"
     }
   },
   "parameters": {
@@ -101,8 +101,8 @@
         },
         "mode": "Incremental",
         "parameters": {
-          "firstTwoOctetsOfVirtualNetworkPrefix": {
-            "value": "10.0"
+          "virtualNetwork_AddressPrefix": {
+            "value": "10.0.0.0/16"
           },
           "location": {
             "value": "[parameters('locationA')]"
@@ -118,7 +118,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.23.1.45101",
-              "templateHash": "11630670201510111571"
+              "templateHash": "8230852748103601460"
             }
           },
           "parameters": {
@@ -132,13 +132,6 @@
               "type": "string",
               "metadata": {
                 "description": "Name of the Virtual Network"
-              }
-            },
-            "virtualNetwork_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.0.0/16', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the Virtual Network"
               }
             },
             "dnsServers": {
@@ -162,166 +155,31 @@
                 "description": "Name of the General Route Table"
               }
             },
-            "firstTwoOctetsOfVirtualNetworkPrefix": {
-              "type": "string",
-              "metadata": {
-                "description": "First two octects of the Virtual Network address prefix\r\nExample: for a network address of '10.0.0.0/16' you would enter '10.0' here"
-              }
-            },
-            "subnet_General_Name": {
-              "type": "string",
-              "defaultValue": "General",
-              "metadata": {
-                "description": "Name of the General Subnet for any other resources"
-              }
-            },
-            "subnet_General_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.0.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the General Subnet"
-              }
-            },
-            "subnet_PrivateEndpoints_Name": {
-              "type": "string",
-              "defaultValue": "PrivateEndpoints",
-              "metadata": {
-                "description": "Name of the PrivateEndpoint Subnet"
-              }
-            },
-            "subnet_PrivateEndpoints_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.1.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the PrivateEndpoint Subnet"
-              }
-            },
-            "subnet_PrivateLinkService_Name": {
-              "type": "string",
-              "defaultValue": "PrivateLinkService",
-              "metadata": {
-                "description": "Name of the PrivateEndpoint Subnet"
-              }
-            },
-            "subnet_PrivateLinkService_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.2.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the PrivateEndpoint Subnet"
-              }
-            },
-            "subnet_ApplicationGatewaySubnet_Name": {
-              "type": "string",
-              "defaultValue": "ApplicationGatewaySubnet",
-              "metadata": {
-                "description": "Name of the ApplicationGateway Subnet"
-              }
-            },
-            "subnet_ApplicationGatewaySubnet_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.3.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the ApplicationGateway Subnet"
-              }
-            },
-            "subnet_AppServiceSubnet_Name": {
-              "type": "string",
-              "defaultValue": "AppServiceSubnet",
-              "metadata": {
-                "description": "Name of the AppService Subnet"
-              }
-            },
-            "subnet_AppServiceSubnet_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.4.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the AppService Subnet"
-              }
-            },
-            "subnet_Gateway_Name": {
-              "type": "string",
-              "defaultValue": "GatewaySubnet",
-              "metadata": {
-                "description": "Name of the Azure Virtual Network Gateway Subnet"
-              }
-            },
-            "subnet_Gateway_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.5.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the Azure Virtual Network Gateway Subnet"
-              }
-            },
-            "subnet_azureFirewall_Name": {
-              "type": "string",
-              "defaultValue": "AzureFirewallSubnet",
-              "metadata": {
-                "description": "Name of the Azure Firewall Subnet"
-              }
-            },
-            "subnet_azureFirewall_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.6.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the Azure Firewall Subnet"
-              }
-            },
-            "subnet_azureFirewall_Management_Name": {
-              "type": "string",
-              "defaultValue": "AzureFirewallManagementSubnet",
-              "metadata": {
-                "description": "Name of the Azure Firewall Management Subnet"
-              }
-            },
-            "subnet_azureFirewall_Management_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.7.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the Azure Firewall Management Subnet"
-              }
-            },
-            "subnet_Bastion_Name": {
-              "type": "string",
-              "defaultValue": "AzureBastionSubnet",
-              "metadata": {
-                "description": "Name of the Azure Bastion Subnet"
-              }
-            },
-            "subnet_Bastion_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.8.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the Azure Bastion Subnet"
-              }
-            },
-            "subnet_PrivateResolver_Inbound_Name": {
-              "type": "string",
-              "defaultValue": "PrivateResolver_Inbound",
-              "metadata": {
-                "description": "Name of the Azure Bastion Subnet"
-              }
-            },
-            "subnet_PrivateResolver_Inbound_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.9.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the Azure Bastion Subnet"
-              }
-            },
-            "subnet_PrivateResolver_Outbound_Name": {
-              "type": "string",
-              "defaultValue": "PrivateResolver_Outbound",
-              "metadata": {
-                "description": "Name of the Azure Bastion Subnet"
-              }
-            },
-            "subnet_PrivateResolver_Outbound_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.10.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the Azure Bastion Subnet"
-              }
+            "virtualNetwork_AddressPrefix": {
+              "type": "string"
             }
+          },
+          "variables": {
+            "copy": [
+              {
+                "name": "subnet_AddressRangeCIDRs",
+                "count": "[length(range(0, 255))]",
+                "input": "[cidrSubnet(parameters('virtualNetwork_AddressPrefix'), 24, range(0, 255)[copyIndex('subnet_AddressRangeCIDRs')])]"
+              }
+            ],
+            "subnet_Names": [
+              "General",
+              "PrivateEndpoints",
+              "PrivateLinkService",
+              "ApplicationGatewaySubnet",
+              "AppServiceSubnet",
+              "GatewaySubnet",
+              "AzureFirewallSubnet",
+              "AzureFirewallManagementSubnet",
+              "AzureBastionSubnet",
+              "PrivateResolver_Inbound",
+              "PrivateResolver_Outbound"
+            ]
           },
           "resources": [
             {
@@ -340,9 +198,9 @@
                 },
                 "subnets": [
                   {
-                    "name": "[parameters('subnet_General_Name')]",
+                    "name": "[variables('subnet_Names')[0]]",
                     "properties": {
-                      "addressPrefix": "[parameters('subnet_General_AddressPrefix')]",
+                      "addressPrefix": "[variables('subnet_AddressRangeCIDRs')[0]]",
                       "networkSecurityGroup": {
                         "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroup_Default_Name'))]"
                       },
@@ -355,9 +213,9 @@
                     }
                   },
                   {
-                    "name": "[parameters('subnet_PrivateEndpoints_Name')]",
+                    "name": "[variables('subnet_Names')[1]]",
                     "properties": {
-                      "addressPrefix": "[parameters('subnet_PrivateEndpoints_AddressPrefix')]",
+                      "addressPrefix": "[variables('subnet_AddressRangeCIDRs')[1]]",
                       "networkSecurityGroup": {
                         "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroup_Default_Name'))]"
                       },
@@ -370,9 +228,9 @@
                     }
                   },
                   {
-                    "name": "[parameters('subnet_PrivateLinkService_Name')]",
+                    "name": "[variables('subnet_Names')[2]]",
                     "properties": {
-                      "addressPrefix": "[parameters('subnet_PrivateLinkService_AddressPrefix')]",
+                      "addressPrefix": "[variables('subnet_AddressRangeCIDRs')[2]]",
                       "networkSecurityGroup": {
                         "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroup_Default_Name'))]"
                       },
@@ -385,9 +243,9 @@
                     }
                   },
                   {
-                    "name": "[parameters('subnet_ApplicationGatewaySubnet_Name')]",
+                    "name": "[variables('subnet_Names')[3]]",
                     "properties": {
-                      "addressPrefix": "[parameters('subnet_ApplicationGatewaySubnet_AddressPrefix')]",
+                      "addressPrefix": "[variables('subnet_AddressRangeCIDRs')[3]]",
                       "networkSecurityGroup": {
                         "id": "[resourceId('Microsoft.Network/networkSecurityGroups', format('{0}_networkSecurityGroup_ApplicationGateway', parameters('virtualNetwork_Name')))]"
                       },
@@ -397,9 +255,9 @@
                     }
                   },
                   {
-                    "name": "[parameters('subnet_AppServiceSubnet_Name')]",
+                    "name": "[variables('subnet_Names')[4]]",
                     "properties": {
-                      "addressPrefix": "[parameters('subnet_AppServiceSubnet_AddressPrefix')]",
+                      "addressPrefix": "[variables('subnet_AddressRangeCIDRs')[4]]",
                       "networkSecurityGroup": {
                         "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroup_Default_Name'))]"
                       },
@@ -417,45 +275,45 @@
                     }
                   },
                   {
-                    "name": "[parameters('subnet_Gateway_Name')]",
+                    "name": "[variables('subnet_Names')[5]]",
                     "properties": {
-                      "addressPrefix": "[parameters('subnet_Gateway_AddressPrefix')]",
+                      "addressPrefix": "[variables('subnet_AddressRangeCIDRs')[5]]",
                       "delegations": [],
                       "privateEndpointNetworkPolicies": "Disabled",
                       "privateLinkServiceNetworkPolicies": "Enabled"
                     }
                   },
                   {
-                    "name": "[parameters('subnet_azureFirewall_Name')]",
+                    "name": "[variables('subnet_Names')[6]]",
                     "properties": {
-                      "addressPrefix": "[parameters('subnet_azureFirewall_AddressPrefix')]",
+                      "addressPrefix": "[variables('subnet_AddressRangeCIDRs')[6]]",
                       "delegations": [],
                       "privateEndpointNetworkPolicies": "Disabled",
                       "privateLinkServiceNetworkPolicies": "Enabled"
                     }
                   },
                   {
-                    "name": "[parameters('subnet_azureFirewall_Management_Name')]",
+                    "name": "[variables('subnet_Names')[7]]",
                     "properties": {
-                      "addressPrefix": "[parameters('subnet_azureFirewall_Management_AddressPrefix')]",
+                      "addressPrefix": "[variables('subnet_AddressRangeCIDRs')[7]]",
                       "delegations": [],
                       "privateEndpointNetworkPolicies": "Disabled",
                       "privateLinkServiceNetworkPolicies": "Enabled"
                     }
                   },
                   {
-                    "name": "[parameters('subnet_Bastion_Name')]",
+                    "name": "[variables('subnet_Names')[8]]",
                     "properties": {
-                      "addressPrefix": "[parameters('subnet_Bastion_AddressPrefix')]",
+                      "addressPrefix": "[variables('subnet_AddressRangeCIDRs')[8]]",
                       "delegations": [],
                       "privateEndpointNetworkPolicies": "Disabled",
                       "privateLinkServiceNetworkPolicies": "Enabled"
                     }
                   },
                   {
-                    "name": "[parameters('subnet_PrivateResolver_Inbound_Name')]",
+                    "name": "[variables('subnet_Names')[9]]",
                     "properties": {
-                      "addressPrefix": "[parameters('subnet_PrivateResolver_Inbound_AddressPrefix')]",
+                      "addressPrefix": "[variables('subnet_AddressRangeCIDRs')[9]]",
                       "delegations": [
                         {
                           "name": "Microsoft.Network.dnsResolvers",
@@ -467,9 +325,9 @@
                     }
                   },
                   {
-                    "name": "[parameters('subnet_PrivateResolver_Outbound_Name')]",
+                    "name": "[variables('subnet_Names')[10]]",
                     "properties": {
-                      "addressPrefix": "[parameters('subnet_PrivateResolver_Outbound_AddressPrefix')]",
+                      "addressPrefix": "[variables('subnet_AddressRangeCIDRs')[10]]",
                       "delegations": [
                         {
                           "name": "Microsoft.Network.dnsResolvers",
@@ -585,7 +443,7 @@
             },
             "applicationGateway_PrivateIP": {
               "type": "string",
-              "value": "[format('{0}.3.254', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]"
+              "value": "[cidrHost(variables('subnet_AddressRangeCIDRs')[3], 250)]"
             },
             "virtualNetwork_Name": {
               "type": "string",
@@ -613,8 +471,8 @@
         },
         "mode": "Incremental",
         "parameters": {
-          "firstTwoOctetsOfVirtualNetworkPrefix": {
-            "value": "10.1"
+          "virtualNetwork_AddressPrefix": {
+            "value": "10.1.0.0/16"
           },
           "dnsServers": {
             "copy": [
@@ -639,7 +497,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.23.1.45101",
-              "templateHash": "11965958325347156185"
+              "templateHash": "7497823782549619897"
             }
           },
           "parameters": {
@@ -655,19 +513,15 @@
                 "description": "Name of the Virtual Network"
               }
             },
-            "virtualNetwork_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.0.0/16', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the Virtual Network"
-              }
-            },
             "dnsServers": {
               "type": "array",
               "defaultValue": [],
               "metadata": {
                 "description": "An Array of Custom DNS Server IP Addresses.  Azure Wireserver will be used if left as an empty array [].\r\nExample:\r\n[10.0.0.4, 10.0.0.5]\r\n"
               }
+            },
+            "virtualNetwork_AddressPrefix": {
+              "type": "string"
             },
             "networkSecurityGroup_Default_Name": {
               "type": "string",
@@ -682,83 +536,23 @@
               "metadata": {
                 "description": "Name of the General Route Table"
               }
-            },
-            "firstTwoOctetsOfVirtualNetworkPrefix": {
-              "type": "string",
-              "metadata": {
-                "description": "First two octects of the Virtual Network address prefix\r\nExample: for a network address of '10.0.0.0/16' you would enter '10.0' here"
-              }
-            },
-            "subnet_General_Name": {
-              "type": "string",
-              "defaultValue": "General",
-              "metadata": {
-                "description": "Name of the General Subnet for any other resources"
-              }
-            },
-            "subnet_General_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.0.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the General Subnet"
-              }
-            },
-            "subnet_PrivateEndpoints_Name": {
-              "type": "string",
-              "defaultValue": "PrivateEndpoints",
-              "metadata": {
-                "description": "Name of the PrivateEndpoint Subnet"
-              }
-            },
-            "subnet_PrivateEndpoints_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.1.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the PrivateEndpoint Subnet"
-              }
-            },
-            "subnet_PrivateLinkService_Name": {
-              "type": "string",
-              "defaultValue": "PrivateLinkService",
-              "metadata": {
-                "description": "Name of the PrivateEndpoint Subnet"
-              }
-            },
-            "subnet_PrivateLinkService_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.2.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the PrivateEndpoint Subnet"
-              }
-            },
-            "subnet_ApplicationGatewaySubnet_Name": {
-              "type": "string",
-              "defaultValue": "ApplicationGatewaySubnet",
-              "metadata": {
-                "description": "Name of the ApplicationGateway Subnet"
-              }
-            },
-            "subnet_ApplicationGatewaySubnet_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.3.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the ApplicationGateway Subnet"
-              }
-            },
-            "subnet_AppServiceSubnet_Name": {
-              "type": "string",
-              "defaultValue": "AppServiceSubnet",
-              "metadata": {
-                "description": "Name of the AppService Subnet"
-              }
-            },
-            "subnet_AppServiceSubnet_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.4.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the AppService Subnet"
-              }
             }
+          },
+          "variables": {
+            "copy": [
+              {
+                "name": "subnet_AddressRangeCIDRs",
+                "count": "[length(range(0, 255))]",
+                "input": "[cidrSubnet(parameters('virtualNetwork_AddressPrefix'), 24, range(0, 255)[copyIndex('subnet_AddressRangeCIDRs')])]"
+              }
+            ],
+            "subnet_Names": [
+              "General",
+              "PrivateEndpoints",
+              "PrivateLinkService",
+              "ApplicationGatewaySubnet",
+              "AppServiceSubnet"
+            ]
           },
           "resources": [
             {
@@ -777,9 +571,9 @@
                 },
                 "subnets": [
                   {
-                    "name": "[parameters('subnet_General_Name')]",
+                    "name": "[variables('subnet_Names')[0]]",
                     "properties": {
-                      "addressPrefix": "[parameters('subnet_General_AddressPrefix')]",
+                      "addressPrefix": "[variables('subnet_AddressRangeCIDRs')[0]]",
                       "networkSecurityGroup": {
                         "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroup_Default_Name'))]"
                       },
@@ -792,9 +586,9 @@
                     }
                   },
                   {
-                    "name": "[parameters('subnet_PrivateEndpoints_Name')]",
+                    "name": "[variables('subnet_Names')[1]]",
                     "properties": {
-                      "addressPrefix": "[parameters('subnet_PrivateEndpoints_AddressPrefix')]",
+                      "addressPrefix": "[variables('subnet_AddressRangeCIDRs')[1]]",
                       "networkSecurityGroup": {
                         "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroup_Default_Name'))]"
                       },
@@ -807,9 +601,9 @@
                     }
                   },
                   {
-                    "name": "[parameters('subnet_PrivateLinkService_Name')]",
+                    "name": "[variables('subnet_Names')[2]]",
                     "properties": {
-                      "addressPrefix": "[parameters('subnet_PrivateLinkService_AddressPrefix')]",
+                      "addressPrefix": "[variables('subnet_AddressRangeCIDRs')[2]]",
                       "networkSecurityGroup": {
                         "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroup_Default_Name'))]"
                       },
@@ -822,9 +616,9 @@
                     }
                   },
                   {
-                    "name": "[parameters('subnet_ApplicationGatewaySubnet_Name')]",
+                    "name": "[variables('subnet_Names')[3]]",
                     "properties": {
-                      "addressPrefix": "[parameters('subnet_ApplicationGatewaySubnet_AddressPrefix')]",
+                      "addressPrefix": "[variables('subnet_AddressRangeCIDRs')[3]]",
                       "networkSecurityGroup": {
                         "id": "[resourceId('Microsoft.Network/networkSecurityGroups', format('{0}_networkSecurityGroup_ApplicationGateway', parameters('virtualNetwork_Name')))]"
                       },
@@ -834,9 +628,9 @@
                     }
                   },
                   {
-                    "name": "[parameters('subnet_AppServiceSubnet_Name')]",
+                    "name": "[variables('subnet_Names')[4]]",
                     "properties": {
-                      "addressPrefix": "[parameters('subnet_AppServiceSubnet_AddressPrefix')]",
+                      "addressPrefix": "[variables('subnet_AddressRangeCIDRs')[4]]",
                       "networkSecurityGroup": {
                         "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroup_Default_Name'))]"
                       },
@@ -934,7 +728,7 @@
             },
             "applicationGateway_PrivateIP": {
               "type": "string",
-              "value": "[format('{0}.3.254', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]"
+              "value": "[cidrHost(variables('subnet_AddressRangeCIDRs')[3], 250)]"
             },
             "virtualNetwork_Name": {
               "type": "string",
@@ -965,8 +759,8 @@
         },
         "mode": "Incremental",
         "parameters": {
-          "firstTwoOctetsOfVirtualNetworkPrefix": {
-            "value": "10.2"
+          "virtualNetwork_AddressPrefix": {
+            "value": "10.2.0.0/16"
           },
           "dnsServers": {
             "copy": [
@@ -991,7 +785,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.23.1.45101",
-              "templateHash": "11965958325347156185"
+              "templateHash": "7497823782549619897"
             }
           },
           "parameters": {
@@ -1007,19 +801,15 @@
                 "description": "Name of the Virtual Network"
               }
             },
-            "virtualNetwork_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.0.0/16', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the Virtual Network"
-              }
-            },
             "dnsServers": {
               "type": "array",
               "defaultValue": [],
               "metadata": {
                 "description": "An Array of Custom DNS Server IP Addresses.  Azure Wireserver will be used if left as an empty array [].\r\nExample:\r\n[10.0.0.4, 10.0.0.5]\r\n"
               }
+            },
+            "virtualNetwork_AddressPrefix": {
+              "type": "string"
             },
             "networkSecurityGroup_Default_Name": {
               "type": "string",
@@ -1034,83 +824,23 @@
               "metadata": {
                 "description": "Name of the General Route Table"
               }
-            },
-            "firstTwoOctetsOfVirtualNetworkPrefix": {
-              "type": "string",
-              "metadata": {
-                "description": "First two octects of the Virtual Network address prefix\r\nExample: for a network address of '10.0.0.0/16' you would enter '10.0' here"
-              }
-            },
-            "subnet_General_Name": {
-              "type": "string",
-              "defaultValue": "General",
-              "metadata": {
-                "description": "Name of the General Subnet for any other resources"
-              }
-            },
-            "subnet_General_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.0.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the General Subnet"
-              }
-            },
-            "subnet_PrivateEndpoints_Name": {
-              "type": "string",
-              "defaultValue": "PrivateEndpoints",
-              "metadata": {
-                "description": "Name of the PrivateEndpoint Subnet"
-              }
-            },
-            "subnet_PrivateEndpoints_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.1.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the PrivateEndpoint Subnet"
-              }
-            },
-            "subnet_PrivateLinkService_Name": {
-              "type": "string",
-              "defaultValue": "PrivateLinkService",
-              "metadata": {
-                "description": "Name of the PrivateEndpoint Subnet"
-              }
-            },
-            "subnet_PrivateLinkService_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.2.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the PrivateEndpoint Subnet"
-              }
-            },
-            "subnet_ApplicationGatewaySubnet_Name": {
-              "type": "string",
-              "defaultValue": "ApplicationGatewaySubnet",
-              "metadata": {
-                "description": "Name of the ApplicationGateway Subnet"
-              }
-            },
-            "subnet_ApplicationGatewaySubnet_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.3.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the ApplicationGateway Subnet"
-              }
-            },
-            "subnet_AppServiceSubnet_Name": {
-              "type": "string",
-              "defaultValue": "AppServiceSubnet",
-              "metadata": {
-                "description": "Name of the AppService Subnet"
-              }
-            },
-            "subnet_AppServiceSubnet_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.4.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the AppService Subnet"
-              }
             }
+          },
+          "variables": {
+            "copy": [
+              {
+                "name": "subnet_AddressRangeCIDRs",
+                "count": "[length(range(0, 255))]",
+                "input": "[cidrSubnet(parameters('virtualNetwork_AddressPrefix'), 24, range(0, 255)[copyIndex('subnet_AddressRangeCIDRs')])]"
+              }
+            ],
+            "subnet_Names": [
+              "General",
+              "PrivateEndpoints",
+              "PrivateLinkService",
+              "ApplicationGatewaySubnet",
+              "AppServiceSubnet"
+            ]
           },
           "resources": [
             {
@@ -1129,9 +859,9 @@
                 },
                 "subnets": [
                   {
-                    "name": "[parameters('subnet_General_Name')]",
+                    "name": "[variables('subnet_Names')[0]]",
                     "properties": {
-                      "addressPrefix": "[parameters('subnet_General_AddressPrefix')]",
+                      "addressPrefix": "[variables('subnet_AddressRangeCIDRs')[0]]",
                       "networkSecurityGroup": {
                         "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroup_Default_Name'))]"
                       },
@@ -1144,9 +874,9 @@
                     }
                   },
                   {
-                    "name": "[parameters('subnet_PrivateEndpoints_Name')]",
+                    "name": "[variables('subnet_Names')[1]]",
                     "properties": {
-                      "addressPrefix": "[parameters('subnet_PrivateEndpoints_AddressPrefix')]",
+                      "addressPrefix": "[variables('subnet_AddressRangeCIDRs')[1]]",
                       "networkSecurityGroup": {
                         "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroup_Default_Name'))]"
                       },
@@ -1159,9 +889,9 @@
                     }
                   },
                   {
-                    "name": "[parameters('subnet_PrivateLinkService_Name')]",
+                    "name": "[variables('subnet_Names')[2]]",
                     "properties": {
-                      "addressPrefix": "[parameters('subnet_PrivateLinkService_AddressPrefix')]",
+                      "addressPrefix": "[variables('subnet_AddressRangeCIDRs')[2]]",
                       "networkSecurityGroup": {
                         "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroup_Default_Name'))]"
                       },
@@ -1174,9 +904,9 @@
                     }
                   },
                   {
-                    "name": "[parameters('subnet_ApplicationGatewaySubnet_Name')]",
+                    "name": "[variables('subnet_Names')[3]]",
                     "properties": {
-                      "addressPrefix": "[parameters('subnet_ApplicationGatewaySubnet_AddressPrefix')]",
+                      "addressPrefix": "[variables('subnet_AddressRangeCIDRs')[3]]",
                       "networkSecurityGroup": {
                         "id": "[resourceId('Microsoft.Network/networkSecurityGroups', format('{0}_networkSecurityGroup_ApplicationGateway', parameters('virtualNetwork_Name')))]"
                       },
@@ -1186,9 +916,9 @@
                     }
                   },
                   {
-                    "name": "[parameters('subnet_AppServiceSubnet_Name')]",
+                    "name": "[variables('subnet_Names')[4]]",
                     "properties": {
-                      "addressPrefix": "[parameters('subnet_AppServiceSubnet_AddressPrefix')]",
+                      "addressPrefix": "[variables('subnet_AddressRangeCIDRs')[4]]",
                       "networkSecurityGroup": {
                         "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroup_Default_Name'))]"
                       },
@@ -1286,7 +1016,7 @@
             },
             "applicationGateway_PrivateIP": {
               "type": "string",
-              "value": "[format('{0}.3.254', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]"
+              "value": "[cidrHost(variables('subnet_AddressRangeCIDRs')[3], 250)]"
             },
             "virtualNetwork_Name": {
               "type": "string",
@@ -3882,8 +3612,8 @@
         },
         "mode": "Incremental",
         "parameters": {
-          "firstTwoOctetsOfVirtualNetworkPrefix": {
-            "value": "10.100"
+          "virtualNetwork_AddressPrefix": {
+            "value": "10.100.0.0/16"
           },
           "location": {
             "value": "[parameters('locationOnPrem')]"
@@ -3899,7 +3629,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.23.1.45101",
-              "templateHash": "11630670201510111571"
+              "templateHash": "8230852748103601460"
             }
           },
           "parameters": {
@@ -3913,13 +3643,6 @@
               "type": "string",
               "metadata": {
                 "description": "Name of the Virtual Network"
-              }
-            },
-            "virtualNetwork_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.0.0/16', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the Virtual Network"
               }
             },
             "dnsServers": {
@@ -3943,166 +3666,31 @@
                 "description": "Name of the General Route Table"
               }
             },
-            "firstTwoOctetsOfVirtualNetworkPrefix": {
-              "type": "string",
-              "metadata": {
-                "description": "First two octects of the Virtual Network address prefix\r\nExample: for a network address of '10.0.0.0/16' you would enter '10.0' here"
-              }
-            },
-            "subnet_General_Name": {
-              "type": "string",
-              "defaultValue": "General",
-              "metadata": {
-                "description": "Name of the General Subnet for any other resources"
-              }
-            },
-            "subnet_General_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.0.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the General Subnet"
-              }
-            },
-            "subnet_PrivateEndpoints_Name": {
-              "type": "string",
-              "defaultValue": "PrivateEndpoints",
-              "metadata": {
-                "description": "Name of the PrivateEndpoint Subnet"
-              }
-            },
-            "subnet_PrivateEndpoints_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.1.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the PrivateEndpoint Subnet"
-              }
-            },
-            "subnet_PrivateLinkService_Name": {
-              "type": "string",
-              "defaultValue": "PrivateLinkService",
-              "metadata": {
-                "description": "Name of the PrivateEndpoint Subnet"
-              }
-            },
-            "subnet_PrivateLinkService_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.2.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the PrivateEndpoint Subnet"
-              }
-            },
-            "subnet_ApplicationGatewaySubnet_Name": {
-              "type": "string",
-              "defaultValue": "ApplicationGatewaySubnet",
-              "metadata": {
-                "description": "Name of the ApplicationGateway Subnet"
-              }
-            },
-            "subnet_ApplicationGatewaySubnet_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.3.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the ApplicationGateway Subnet"
-              }
-            },
-            "subnet_AppServiceSubnet_Name": {
-              "type": "string",
-              "defaultValue": "AppServiceSubnet",
-              "metadata": {
-                "description": "Name of the AppService Subnet"
-              }
-            },
-            "subnet_AppServiceSubnet_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.4.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the AppService Subnet"
-              }
-            },
-            "subnet_Gateway_Name": {
-              "type": "string",
-              "defaultValue": "GatewaySubnet",
-              "metadata": {
-                "description": "Name of the Azure Virtual Network Gateway Subnet"
-              }
-            },
-            "subnet_Gateway_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.5.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the Azure Virtual Network Gateway Subnet"
-              }
-            },
-            "subnet_azureFirewall_Name": {
-              "type": "string",
-              "defaultValue": "AzureFirewallSubnet",
-              "metadata": {
-                "description": "Name of the Azure Firewall Subnet"
-              }
-            },
-            "subnet_azureFirewall_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.6.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the Azure Firewall Subnet"
-              }
-            },
-            "subnet_azureFirewall_Management_Name": {
-              "type": "string",
-              "defaultValue": "AzureFirewallManagementSubnet",
-              "metadata": {
-                "description": "Name of the Azure Firewall Management Subnet"
-              }
-            },
-            "subnet_azureFirewall_Management_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.7.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the Azure Firewall Management Subnet"
-              }
-            },
-            "subnet_Bastion_Name": {
-              "type": "string",
-              "defaultValue": "AzureBastionSubnet",
-              "metadata": {
-                "description": "Name of the Azure Bastion Subnet"
-              }
-            },
-            "subnet_Bastion_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.8.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the Azure Bastion Subnet"
-              }
-            },
-            "subnet_PrivateResolver_Inbound_Name": {
-              "type": "string",
-              "defaultValue": "PrivateResolver_Inbound",
-              "metadata": {
-                "description": "Name of the Azure Bastion Subnet"
-              }
-            },
-            "subnet_PrivateResolver_Inbound_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.9.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the Azure Bastion Subnet"
-              }
-            },
-            "subnet_PrivateResolver_Outbound_Name": {
-              "type": "string",
-              "defaultValue": "PrivateResolver_Outbound",
-              "metadata": {
-                "description": "Name of the Azure Bastion Subnet"
-              }
-            },
-            "subnet_PrivateResolver_Outbound_AddressPrefix": {
-              "type": "string",
-              "defaultValue": "[format('{0}.10.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
-              "metadata": {
-                "description": "Address Prefix of the Azure Bastion Subnet"
-              }
+            "virtualNetwork_AddressPrefix": {
+              "type": "string"
             }
+          },
+          "variables": {
+            "copy": [
+              {
+                "name": "subnet_AddressRangeCIDRs",
+                "count": "[length(range(0, 255))]",
+                "input": "[cidrSubnet(parameters('virtualNetwork_AddressPrefix'), 24, range(0, 255)[copyIndex('subnet_AddressRangeCIDRs')])]"
+              }
+            ],
+            "subnet_Names": [
+              "General",
+              "PrivateEndpoints",
+              "PrivateLinkService",
+              "ApplicationGatewaySubnet",
+              "AppServiceSubnet",
+              "GatewaySubnet",
+              "AzureFirewallSubnet",
+              "AzureFirewallManagementSubnet",
+              "AzureBastionSubnet",
+              "PrivateResolver_Inbound",
+              "PrivateResolver_Outbound"
+            ]
           },
           "resources": [
             {
@@ -4121,9 +3709,9 @@
                 },
                 "subnets": [
                   {
-                    "name": "[parameters('subnet_General_Name')]",
+                    "name": "[variables('subnet_Names')[0]]",
                     "properties": {
-                      "addressPrefix": "[parameters('subnet_General_AddressPrefix')]",
+                      "addressPrefix": "[variables('subnet_AddressRangeCIDRs')[0]]",
                       "networkSecurityGroup": {
                         "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroup_Default_Name'))]"
                       },
@@ -4136,9 +3724,9 @@
                     }
                   },
                   {
-                    "name": "[parameters('subnet_PrivateEndpoints_Name')]",
+                    "name": "[variables('subnet_Names')[1]]",
                     "properties": {
-                      "addressPrefix": "[parameters('subnet_PrivateEndpoints_AddressPrefix')]",
+                      "addressPrefix": "[variables('subnet_AddressRangeCIDRs')[1]]",
                       "networkSecurityGroup": {
                         "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroup_Default_Name'))]"
                       },
@@ -4151,9 +3739,9 @@
                     }
                   },
                   {
-                    "name": "[parameters('subnet_PrivateLinkService_Name')]",
+                    "name": "[variables('subnet_Names')[2]]",
                     "properties": {
-                      "addressPrefix": "[parameters('subnet_PrivateLinkService_AddressPrefix')]",
+                      "addressPrefix": "[variables('subnet_AddressRangeCIDRs')[2]]",
                       "networkSecurityGroup": {
                         "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroup_Default_Name'))]"
                       },
@@ -4166,9 +3754,9 @@
                     }
                   },
                   {
-                    "name": "[parameters('subnet_ApplicationGatewaySubnet_Name')]",
+                    "name": "[variables('subnet_Names')[3]]",
                     "properties": {
-                      "addressPrefix": "[parameters('subnet_ApplicationGatewaySubnet_AddressPrefix')]",
+                      "addressPrefix": "[variables('subnet_AddressRangeCIDRs')[3]]",
                       "networkSecurityGroup": {
                         "id": "[resourceId('Microsoft.Network/networkSecurityGroups', format('{0}_networkSecurityGroup_ApplicationGateway', parameters('virtualNetwork_Name')))]"
                       },
@@ -4178,9 +3766,9 @@
                     }
                   },
                   {
-                    "name": "[parameters('subnet_AppServiceSubnet_Name')]",
+                    "name": "[variables('subnet_Names')[4]]",
                     "properties": {
-                      "addressPrefix": "[parameters('subnet_AppServiceSubnet_AddressPrefix')]",
+                      "addressPrefix": "[variables('subnet_AddressRangeCIDRs')[4]]",
                       "networkSecurityGroup": {
                         "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroup_Default_Name'))]"
                       },
@@ -4198,45 +3786,45 @@
                     }
                   },
                   {
-                    "name": "[parameters('subnet_Gateway_Name')]",
+                    "name": "[variables('subnet_Names')[5]]",
                     "properties": {
-                      "addressPrefix": "[parameters('subnet_Gateway_AddressPrefix')]",
+                      "addressPrefix": "[variables('subnet_AddressRangeCIDRs')[5]]",
                       "delegations": [],
                       "privateEndpointNetworkPolicies": "Disabled",
                       "privateLinkServiceNetworkPolicies": "Enabled"
                     }
                   },
                   {
-                    "name": "[parameters('subnet_azureFirewall_Name')]",
+                    "name": "[variables('subnet_Names')[6]]",
                     "properties": {
-                      "addressPrefix": "[parameters('subnet_azureFirewall_AddressPrefix')]",
+                      "addressPrefix": "[variables('subnet_AddressRangeCIDRs')[6]]",
                       "delegations": [],
                       "privateEndpointNetworkPolicies": "Disabled",
                       "privateLinkServiceNetworkPolicies": "Enabled"
                     }
                   },
                   {
-                    "name": "[parameters('subnet_azureFirewall_Management_Name')]",
+                    "name": "[variables('subnet_Names')[7]]",
                     "properties": {
-                      "addressPrefix": "[parameters('subnet_azureFirewall_Management_AddressPrefix')]",
+                      "addressPrefix": "[variables('subnet_AddressRangeCIDRs')[7]]",
                       "delegations": [],
                       "privateEndpointNetworkPolicies": "Disabled",
                       "privateLinkServiceNetworkPolicies": "Enabled"
                     }
                   },
                   {
-                    "name": "[parameters('subnet_Bastion_Name')]",
+                    "name": "[variables('subnet_Names')[8]]",
                     "properties": {
-                      "addressPrefix": "[parameters('subnet_Bastion_AddressPrefix')]",
+                      "addressPrefix": "[variables('subnet_AddressRangeCIDRs')[8]]",
                       "delegations": [],
                       "privateEndpointNetworkPolicies": "Disabled",
                       "privateLinkServiceNetworkPolicies": "Enabled"
                     }
                   },
                   {
-                    "name": "[parameters('subnet_PrivateResolver_Inbound_Name')]",
+                    "name": "[variables('subnet_Names')[9]]",
                     "properties": {
-                      "addressPrefix": "[parameters('subnet_PrivateResolver_Inbound_AddressPrefix')]",
+                      "addressPrefix": "[variables('subnet_AddressRangeCIDRs')[9]]",
                       "delegations": [
                         {
                           "name": "Microsoft.Network.dnsResolvers",
@@ -4248,9 +3836,9 @@
                     }
                   },
                   {
-                    "name": "[parameters('subnet_PrivateResolver_Outbound_Name')]",
+                    "name": "[variables('subnet_Names')[10]]",
                     "properties": {
-                      "addressPrefix": "[parameters('subnet_PrivateResolver_Outbound_AddressPrefix')]",
+                      "addressPrefix": "[variables('subnet_AddressRangeCIDRs')[10]]",
                       "delegations": [
                         {
                           "name": "Microsoft.Network.dnsResolvers",
@@ -4366,7 +3954,7 @@
             },
             "applicationGateway_PrivateIP": {
               "type": "string",
-              "value": "[format('{0}.3.254', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]"
+              "value": "[cidrHost(variables('subnet_AddressRangeCIDRs')[3], 250)]"
             },
             "virtualNetwork_Name": {
               "type": "string",
