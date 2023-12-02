@@ -54,7 +54,8 @@ param onpremResolvableDomainName string = 'contoso.com.'
 module virtualNetwork_Hub '../../modules/Microsoft.Network/VirtualNetworkHub.bicep' = {
   name: 'hub_VNet'
   params: {
-    firstTwoOctetsOfVirtualNetworkPrefix: '10.0'
+    // firstTwoOctetsOfVirtualNetworkPrefix: '10.0'
+    virtualNetwork_AddressPrefix: '10.0.0.0/16'
     location: locationA
     virtualNetwork_Name: 'hub_VNet'
   }
@@ -63,7 +64,8 @@ module virtualNetwork_Hub '../../modules/Microsoft.Network/VirtualNetworkHub.bic
 module virtualNetwork_SpokeA '../../modules/Microsoft.Network/VirtualNetworkSpoke.bicep' = {
   name: 'spokeA_VNet'
   params: {
-    firstTwoOctetsOfVirtualNetworkPrefix: '10.1'
+    // firstTwoOctetsOfVirtualNetworkPrefix: '10.1'
+    virtualNetwork_AddressPrefix: '10.1.0.0/16'
     dnsServers: [for i in range(0, 2) : hub_WinVMs[i].outputs.networkInterface_PrivateIPAddress]
     location: locationA
     virtualNetwork_Name: 'spokeA_VNet'
@@ -73,7 +75,8 @@ module virtualNetwork_SpokeA '../../modules/Microsoft.Network/VirtualNetworkSpok
 module virtualNetwork_SpokeB '../../modules/Microsoft.Network/VirtualNetworkSpoke.bicep' = {
   name: 'spokeB_VNet'
   params: {
-    firstTwoOctetsOfVirtualNetworkPrefix: '10.2'
+    // firstTwoOctetsOfVirtualNetworkPrefix: '10.2'
+    virtualNetwork_AddressPrefix: '10.2.0.0/16'
     dnsServers: [for i in range(0, 2) : hub_WinVMs[i].outputs.networkInterface_PrivateIPAddress]
     location: locationB
     virtualNetwork_Name: 'spokeB_VNet'
@@ -250,7 +253,8 @@ module dnsPrivateResolverForwardingRuleSet '../../modules/Microsoft.Network/DNSP
 module virtualNetwork_OnPremHub '../../modules/Microsoft.Network/VirtualNetworkHub.bicep' = {
   name: 'onprem_VNet'
   params: {
-    firstTwoOctetsOfVirtualNetworkPrefix: '10.100'
+    // firstTwoOctetsOfVirtualNetworkPrefix: '10.100'
+    virtualNetwork_AddressPrefix: '10.100.0.0/16'
     location: locationOnPrem
     virtualNetwork_Name: 'onprem_VNet'
   }

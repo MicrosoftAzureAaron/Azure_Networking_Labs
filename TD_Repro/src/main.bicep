@@ -50,7 +50,8 @@ param storageAccount_Name string = 'stortemp${uniqueString(resourceGroup().id)}'
 module virtualNetwork_Client '../../modules/Microsoft.Network/VirtualNetworkHub.bicep' = {
   name: 'clientVNet'
   params: {
-    firstTwoOctetsOfVirtualNetworkPrefix: '10.100'
+    // firstTwoOctetsOfVirtualNetworkPrefix: '10.100'
+    virtualNetwork_AddressPrefix: '10.100.0.0/16'
     location: locationClient
     virtualNetwork_Name: 'Client_VNet'
 
@@ -60,7 +61,8 @@ module virtualNetwork_Client '../../modules/Microsoft.Network/VirtualNetworkHub.
 module virtualNetwork_Server '../../modules/Microsoft.Network/VirtualNetworkSpoke.bicep' = {
   name: 'serverVNet'
   params: {
-    firstTwoOctetsOfVirtualNetworkPrefix: '10.101'
+    // firstTwoOctetsOfVirtualNetworkPrefix: '10.101'
+    virtualNetwork_AddressPrefix: '10.101.0.0/16'
     location: locationServer
     virtualNetwork_Name: 'Server_VNet'
   }

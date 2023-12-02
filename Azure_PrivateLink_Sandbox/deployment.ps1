@@ -23,7 +23,7 @@ if (Get-AzResourceGroup -Name $rgName) {
     3 - Update this Resource Group with the latest changes."
 
     if ($response -eq "1") {
-        Write-Host "Deleting $rgName"
+        Write-Host "`nDeleting $rgName"
         Remove-AzResourceGroup -Name $rgName -Force -AsJob
         Set-Content -Path $iterationFile -Value "$($iteration + 1)"
         $iteration = [int](Get-Content $iterationFile)
@@ -31,14 +31,14 @@ if (Get-AzResourceGroup -Name $rgName) {
         Write-Host "Creating $rgName"
     } 
     elseif ($response -eq "2") {
-        Write-Host "Disregarding $rgName"
+        Write-Host "`nDisregarding $rgName"
         Set-Content -Path $iterationFile -Value "$($iteration + 1)"
         $iteration = [int](Get-Content $iterationFile)
         $rgName = "${deploymentName}_${iteration}"
         Write-Host "Creating $rgName"
     } 
     elseif ($response -eq "3") {
-        Write-Host "Updating $rgName"
+        Write-Host "`nUpdating $rgName"
     } 
     else {
         Write-Host "Invalid response.  Canceling Deploment.."

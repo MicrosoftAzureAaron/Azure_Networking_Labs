@@ -1,8 +1,11 @@
 @description('Azure Datacenter location that the main resouces will be deployed to.')
 param location string
 
+// @description('Address Prefix of the Virtual Network.')
+// param firstTwoOctetsOfVirtualNetworkPrefix string
+
 @description('Address Prefix of the Virtual Network.')
-param firstTwoOctetsOfVirtualNetworkPrefix string
+param virtualNetwork_AddressPrefix string
 
 @description('Deploys a Az FW if true')
 param usingAzureFirewall bool
@@ -26,7 +29,8 @@ module virtualNetwork_Hub '../../../../modules/Microsoft.Network/VirtualNetworkH
   name: 'OnPrem_VNET'
   params: {
     location: location
-    firstTwoOctetsOfVirtualNetworkPrefix: firstTwoOctetsOfVirtualNetworkPrefix
+    // firstTwoOctetsOfVirtualNetworkPrefix: firstTwoOctetsOfVirtualNetworkPrefix
+    virtualNetwork_AddressPrefix: virtualNetwork_AddressPrefix
     virtualNetwork_Name: 'OnPrem_VNet_Hub'
   }
 }

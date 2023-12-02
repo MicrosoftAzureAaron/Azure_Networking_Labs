@@ -22,10 +22,9 @@ param acceleratedNetworking bool = false
 module virtualNetwork_Hub '../../modules/Microsoft.Network/VirtualNetworkHub.bicep' = {
   name: 'VirtualNetworkHub'
   params: {
-    firstTwoOctetsOfVirtualNetworkPrefix: '10.0'
+    // firstTwoOctetsOfVirtualNetworkPrefix: '10.0'
+    virtualNetwork_AddressPrefix: '10.0.0.0/16'
     location: location
-    networkSecurityGroup_Default_Name: 'nsg_General'
-    routeTable_Name: 'rt_General'
     virtualNetwork_Name: 'VirutalNetworkHub'
   }
 }

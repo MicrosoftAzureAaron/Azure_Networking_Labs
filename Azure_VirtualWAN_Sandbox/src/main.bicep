@@ -36,8 +36,10 @@ module virtualWAN '../../modules/Microsoft.Network/VirtualWAN.bicep' = {
 module virtualHubA_and_Contents 'modules/AzureResources/VirtualHub_and_Contents.bicep' = {
   name: 'vHubA'
   params: {
-    firstTwoOctetsOfVirtualHubNetworkPrefix: '10.110'
-    firstTwoOctetsOfVirtualNetworkPrefix: ['10.111', '10.112']
+    // firstTwoOctetsOfVirtualHubNetworkPrefix: '10.110'
+    virtualNetwork_VirtualHub_AddressPrefix: '10.110.0.0/16'
+    // firstTwoOctetsOfVirtualNetworkPrefix: ['10.111', '10.112']
+    virtualNetwork_AddressPrefixs: ['10.111.0.0/16', '10.112.0.0/16']
     location: mainLocation
     usingAzureFirewall: true
     usingVPN: true
@@ -67,8 +69,10 @@ module vHubA_to_OnPrem 'modules/AzureResources/VWANToVNGConnection.bicep' = {
 module virtualHubB_and_Contents 'modules/AzureResources/VirtualHub_and_Contents.bicep' = if (multiRegion) {
   name: 'vHubB'
   params: {
-    firstTwoOctetsOfVirtualHubNetworkPrefix: '10.120'
-    firstTwoOctetsOfVirtualNetworkPrefix: ['10.121', '10.122']
+    // firstTwoOctetsOfVirtualHubNetworkPrefix: '10.120'
+    virtualNetwork_VirtualHub_AddressPrefix: '10.120.0.0/16'
+    // firstTwoOctetsOfVirtualNetworkPrefix: ['10.121', '10.122']
+    virtualNetwork_AddressPrefixs: ['10.121.0.0/16', '10.122.0.0/16']
     location: branchLocation
     usingAzureFirewall: false
     usingVPN: false
@@ -102,7 +106,8 @@ module OnPremResources 'modules/OnPremResources/OnPremResources.bicep' = {
     virtualMachine_AdminPassword: virtualMachine_AdminPassword
     virtualMachine_AdminUsername: virtualMachine_AdminUsername
     usingAzureFirewall: false
-    firstTwoOctetsOfVirtualNetworkPrefix: '10.200'
+    // firstTwoOctetsOfVirtualNetworkPrefix: '10.200'
+    virtualNetwork_AddressPrefix: '10.200.0.0/16'
     azureFirewall_SKU: 'Basic'
   }
 }
