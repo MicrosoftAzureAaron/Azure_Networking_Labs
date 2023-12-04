@@ -44,18 +44,22 @@ param isUsingAzureFirewall bool = true
 @description('If true, a Windows VM will be deployed in both source and destination')
 param isUsingWindows bool = true
 
+@maxValue(99)
 @description('Number of Windows Virtual Machines to deploy in the source side.  This number is irrelevant if not deploying Windows Virtual Machines')
 param numberOfSourceSideWindowsVMs int = 1
 
+@maxValue(99)
 @description('Number of Windows Virtual Machines to deploy in the destination side.  This number is irrelevant if not deploying Windows Virtual Machines')
 param numberOfDestinationSideWindowsVMs int = 1
 
 @description('If true, a Linux VM will be deployed in both source and destination')
 param isUsingLinux bool = true
 
+@maxValue(99)
 @description('Number of Linux Virtual Machines to deploy in the source side.  This number is irrelevant if not deploying Linux Virtual Machines')
 param numberOfSourceSideLinuxVMs  int = 1
 
+@maxValue(99)
 @description('Number of Linux Virtual Machines to deploy in the destination side.  This number is irrelevant if not deploying Linux Virtual Machines')
 param numberOfDestinationSideLinuxVMs  int = 1
 
@@ -64,9 +68,9 @@ module virtualNetwork_Source '../../Modules/Microsoft.Network/VirtualNetworkHub.
   name: 'srcVNET'
   params: {
     networkSecurityGroup_Default_Name: 'srcNSG'
-    firstTwoOctetsOfVirtualNetworkPrefix: '10.0'
+    // firstTwoOctetsOfVirtualNetworkPrefix: '10.0'
+    virtualNetwork_AddressPrefix: '10.0.0.0/16'
     location: srcLocation
-    routeTable_Name: 'srcRT'
     virtualNetwork_Name: 'srcVNET'
   }
 }
@@ -75,9 +79,9 @@ module virtualNetwork_Destination '../../Modules/Microsoft.Network/VirtualNetwor
   name: 'dstVNET'
   params: {
     networkSecurityGroup_Default_Name: 'dstNSG'
-    firstTwoOctetsOfVirtualNetworkPrefix: '10.1'
+    // firstTwoOctetsOfVirtualNetworkPrefix: '10.1'
+    virtualNetwork_AddressPrefix: '10.1.0.0/16'
     location: dstLocation
-    routeTable_Name: 'dstRT'
     virtualNetwork_Name: 'dstVNET'
   }
 }

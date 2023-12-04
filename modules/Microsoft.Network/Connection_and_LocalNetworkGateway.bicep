@@ -24,7 +24,7 @@ var virtualNetworkGateway_ID_Split = split(virtualNetworkGateway_ID, '/')
 var virtualNetworkGateway_Name = virtualNetworkGateway_ID_Split[8]  // Needs to be tested.  Might be 7 instead.
 
 resource connection 'Microsoft.Network/connections@2022-11-01' = {
-    name: 'Connection_for_${virtualNetworkGateway_Name}_to_${vpn_Destination_Name}'
+    name: '${virtualNetworkGateway_Name}_to_${vpn_Destination_Name}_Connection'
     location: location
     properties: {
       virtualNetworkGateway1: {
@@ -66,7 +66,7 @@ resource connection 'Microsoft.Network/connections@2022-11-01' = {
 }
 
 resource localNetworkGateway 'Microsoft.Network/localNetworkGateways@2022-11-01' = {
-  name: 'localNetworkGateway_for_${vpn_Destination_Name}'
+  name: '${vpn_Destination_Name}_LocalNetworkGateway'
   location: location
   properties: {
     gatewayIpAddress: vpn_Destination_PublicIPAddress

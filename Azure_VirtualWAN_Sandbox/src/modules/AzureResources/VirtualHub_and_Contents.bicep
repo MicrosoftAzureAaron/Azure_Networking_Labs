@@ -4,9 +4,13 @@ param virtualWAN_ID string
 
 param virtualHub_UniquePrefix string
 
-param firstTwoOctetsOfVirtualHubNetworkPrefix string
+// param firstTwoOctetsOfVirtualHubNetworkPrefix string
 
-param firstTwoOctetsOfVirtualNetworkPrefix array
+param virtualNetwork_VirtualHub_AddressPrefix string
+
+param virtualNetwork_AddressPrefixs array
+
+// param firstTwoOctetsOfVirtualNetworkPrefix array
 
 @secure()
 param virtualMachine_AdminPassword string
@@ -21,7 +25,7 @@ module virtualHub '../../../../modules/Microsoft.Network/VirtualHub.bicep' = {
   name: 'vhub'
   params: {
     location: location
-    virtualHub_AddressPrefix: '${firstTwoOctetsOfVirtualHubNetworkPrefix}.0.0/16'
+    virtualHub_AddressPrefix: virtualNetwork_VirtualHub_AddressPrefix
     virtualHub_Name: 'vhub${virtualHub_UniquePrefix}'
     virtualWAN_ID: virtualWAN_ID
     usingAzureFirewall: usingAzureFirewall
@@ -30,16 +34,17 @@ module virtualHub '../../../../modules/Microsoft.Network/VirtualHub.bicep' = {
   }
 }
 
-module virtualNetwork_Spoke '../../../../modules/Microsoft.Network/VirtualNetworkSpoke.bicep' = [ for i in range(1, length(firstTwoOctetsOfVirtualNetworkPrefix)): {
+module virtualNetwork_Spoke '../../../../modules/Microsoft.Network/VirtualNetworkSpoke.bicep' = [ for i in range(0, length(virtualNetwork_AddressPrefixs)): {
   name: 'spokeVNet${i}'
   params: {
-    firstTwoOctetsOfVirtualNetworkPrefix: firstTwoOctetsOfVirtualNetworkPrefix[i]
+    // firstTwoOctetsOfVirtualNetworkPrefix: firstTwoOctetsOfVirtualNetworkPrefix[i]
+    virtualNetwork_AddressPrefix: virtualNetwork_AddressPrefixs[i]
     location: location
     virtualNetwork_Name: 'spoke${i}_VNet'
   }
 } ]
 
-module virtualHubToVirtualNetworkSpokeAConn '../../../../modules/Microsoft.Network/hubVirtualNetworkConnections.bicep' = [ for i in range(1, length(firstTwoOctetsOfVirtualNetworkPrefix)): {
+module virtualHubToVirtualNetworkSpokeAConn '../../../../modules/Microsoft.Network/hubVirtualNetworkConnections.bicep' = [ for i in range(0, length(virtualNetwork_AddressPrefixs)): {
   name: 'vhubA_to_spoke${i}_Conn'
   params: {
     virtualHub_Name: virtualHub.outputs.virtualHub_Name
@@ -49,7 +54,7 @@ module virtualHubToVirtualNetworkSpokeAConn '../../../../modules/Microsoft.Netwo
   }
 } ]
 
-module virtualMachine_Windows '../../../../modules/Microsoft.Compute/WindowsServer2022/VirtualMachine.bicep' = [ for i in range(1, length(firstTwoOctetsOfVirtualNetworkPrefix)): {
+module virtualMachine_Windows '../../../../modules/Microsoft.Compute/WindowsServer2022/VirtualMachine.bicep' = [ for i in range(0, length(virtualNetwork_AddressPrefixs)): {
   name: 'windowsVM${i}'
   params: {
     acceleratedNetworking: false

@@ -28,7 +28,7 @@ param subnet_ID string
 
 @description('''Location of the file to be ran while the Virtual Machine is being created.  Ensure that the path ends with a /
 Example: https://example.com/scripts/''')
-param virtualMachine_ScriptFileLocation string = 'https://mainjamesgstorage.blob.core.windows.net/scripts/'
+param virtualMachine_ScriptFileLocation string = 'https://raw.githubusercontent.com/jimgodden/Azure_Networking_Labs/main/scripts/'
 
 @description('''Name of the file to be ran while the Virtual Machine is being created
 Example: InitScript.ps1''')
@@ -36,6 +36,12 @@ param virtualMachine_ScriptFileName string = 'InitScript.ps1'
 
 @description('Joins the file path and the file name together')
 var virtualMachine_ScriptFileUri = '${virtualMachine_ScriptFileLocation}${virtualMachine_ScriptFileName}'
+
+@description(''''Command to execute while the Virtual Machine is being created.
+Example:
+'powershell -ExecutionPolicy Unrestricted -File ${virtualMachine_ScriptFileName}'
+''')
+param commandToExecute string = 'powershell -ExecutionPolicy Unrestricted -File ${virtualMachine_ScriptFileName}'
 
 
 module networkInterface '../../Microsoft.Network/NetworkInterface.bicep' = {
@@ -169,7 +175,7 @@ resource virtualMachine_CustomScriptExtension 'Microsoft.Compute/virtualMachines
       ]
     }
     protectedSettings: {
-      commandToExecute: 'powershell -ExecutionPolicy Unrestricted -File ${virtualMachine_ScriptFileName}'
+      commandToExecute: commandToExecute
     }
   }
 }

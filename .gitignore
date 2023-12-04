@@ -1,5 +1,10 @@
 main.parameters.json
 virtualMachines.parameters.json
-scripts/fsconn.sh
 full.parameters.bicepparam
-TD_Repro/deployment.ps1
+build.ps1
+Azure_PrivateLink_Sandbox/iteration.txt
+Azure_PrivateLink_Sandbox/main.parameters.bicepparam
+Azure_VirtualWAN_Sandbox/iteration.txt
+Azure_VirtualWAN_Sandbox/main.parameters.bicepparam
+TD_Repro/iteration.txt
+TD_Repro/main.parameters.bicepparam

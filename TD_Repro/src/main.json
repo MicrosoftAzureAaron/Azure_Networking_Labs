@@ -4,8 +4,13 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
+<<<<<<< HEAD
       "version": "0.23.1.45101",
       "templateHash": "10583805730745159242"
+=======
+      "version": "0.18.4.5664",
+      "templateHash": "383655061231877168"
+>>>>>>> a0d753352a1da0ad4a3cdfd85f3902b00c9d51cf
     }
   },
   "parameters": {
@@ -57,18 +62,36 @@
         "description": "True enables Accelerated Networking and False disabled it.  \r\nNot all VM sizes support Accel Net (i.e. Standard_B2ms).  \r\nI'd recommend Standard_D2s_v3 for a cheap VM that supports Accel Net.\r\n"
       }
     },
+<<<<<<< HEAD
+=======
+    "scenario_Name": {
+      "type": "string",
+      "metadata": {
+        "description": "Use this name to help differentiate between tests."
+      }
+    },
+>>>>>>> a0d753352a1da0ad4a3cdfd85f3902b00c9d51cf
     "numberOfClientVMs": {
       "type": "int",
       "defaultValue": 1,
       "metadata": {
         "description": "Number of Client Virtual Machines to be used as the source of the traffic"
-      }
+      },
+      "maxValue": 1000
     },
     "numberOfServerVMs": {
       "type": "int",
       "defaultValue": 1,
       "metadata": {
         "description": "Number of Server Virtual Machines to be used as the destination of the traffic"
+      },
+      "maxValue": 1000
+    },
+    "usingAzureFirewall": {
+      "type": "bool",
+      "defaultValue": false,
+      "metadata": {
+        "description": "Set to true if you want to use an Azure Firewall between client and server."
       }
     },
     "storageAccount_Name": {
@@ -117,8 +140,13 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
+<<<<<<< HEAD
               "version": "0.23.1.45101",
               "templateHash": "7577646102433357364"
+=======
+              "version": "0.18.4.5664",
+              "templateHash": "3260314232436169619"
+>>>>>>> a0d753352a1da0ad4a3cdfd85f3902b00c9d51cf
             }
           },
           "parameters": {
@@ -141,6 +169,30 @@
                 "description": "Address Prefix of the Virtual Network"
               }
             },
+<<<<<<< HEAD
+=======
+            "dnsServers": {
+              "type": "array",
+              "defaultValue": [],
+              "metadata": {
+                "description": "An Array of Custom DNS Server IP Addresses.  Azure Wireserver will be used if left as an empty array [].\r\nExample:\r\n[10.0.0.4, 10.0.0.5]\r\n"
+              }
+            },
+            "networkSecurityGroup_Default_Name": {
+              "type": "string",
+              "defaultValue": "[format('{0}_NSG_General', parameters('virtualNetwork_Name'))]",
+              "metadata": {
+                "description": "Name of the General Network Security Group"
+              }
+            },
+            "routeTable_Name": {
+              "type": "string",
+              "defaultValue": "[format('{0}_RT_General', parameters('virtualNetwork_Name'))]",
+              "metadata": {
+                "description": "Name of the General Route Table"
+              }
+            },
+>>>>>>> a0d753352a1da0ad4a3cdfd85f3902b00c9d51cf
             "firstTwoOctetsOfVirtualNetworkPrefix": {
               "type": "string",
               "metadata": {
@@ -160,6 +212,149 @@
               "metadata": {
                 "description": "Address Prefix of the General Subnet"
               }
+<<<<<<< HEAD
+=======
+            },
+            "subnet_PrivateEndpoints_Name": {
+              "type": "string",
+              "defaultValue": "PrivateEndpoints",
+              "metadata": {
+                "description": "Name of the PrivateEndpoint Subnet"
+              }
+            },
+            "subnet_PrivateEndpoints_AddressPrefix": {
+              "type": "string",
+              "defaultValue": "[format('{0}.1.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
+              "metadata": {
+                "description": "Address Prefix of the PrivateEndpoint Subnet"
+              }
+            },
+            "subnet_PrivateLinkService_Name": {
+              "type": "string",
+              "defaultValue": "PrivateLinkService",
+              "metadata": {
+                "description": "Name of the PrivateEndpoint Subnet"
+              }
+            },
+            "subnet_PrivateLinkService_AddressPrefix": {
+              "type": "string",
+              "defaultValue": "[format('{0}.2.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
+              "metadata": {
+                "description": "Address Prefix of the PrivateEndpoint Subnet"
+              }
+            },
+            "subnet_ApplicationGatewaySubnet_Name": {
+              "type": "string",
+              "defaultValue": "ApplicationGatewaySubnet",
+              "metadata": {
+                "description": "Name of the ApplicationGateway Subnet"
+              }
+            },
+            "subnet_ApplicationGatewaySubnet_AddressPrefix": {
+              "type": "string",
+              "defaultValue": "[format('{0}.3.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
+              "metadata": {
+                "description": "Address Prefix of the ApplicationGateway Subnet"
+              }
+            },
+            "subnet_AppServiceSubnet_Name": {
+              "type": "string",
+              "defaultValue": "AppServiceSubnet",
+              "metadata": {
+                "description": "Name of the AppService Subnet"
+              }
+            },
+            "subnet_AppServiceSubnet_AddressPrefix": {
+              "type": "string",
+              "defaultValue": "[format('{0}.4.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
+              "metadata": {
+                "description": "Address Prefix of the AppService Subnet"
+              }
+            },
+            "subnet_Gateway_Name": {
+              "type": "string",
+              "defaultValue": "GatewaySubnet",
+              "metadata": {
+                "description": "Name of the Azure Virtual Network Gateway Subnet"
+              }
+            },
+            "subnet_Gateway_AddressPrefix": {
+              "type": "string",
+              "defaultValue": "[format('{0}.5.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
+              "metadata": {
+                "description": "Address Prefix of the Azure Virtual Network Gateway Subnet"
+              }
+            },
+            "subnet_azureFirewall_Name": {
+              "type": "string",
+              "defaultValue": "AzureFirewallSubnet",
+              "metadata": {
+                "description": "Name of the Azure Firewall Subnet"
+              }
+            },
+            "subnet_azureFirewall_AddressPrefix": {
+              "type": "string",
+              "defaultValue": "[format('{0}.6.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
+              "metadata": {
+                "description": "Address Prefix of the Azure Firewall Subnet"
+              }
+            },
+            "subnet_azureFirewall_Management_Name": {
+              "type": "string",
+              "defaultValue": "AzureFirewallManagementSubnet",
+              "metadata": {
+                "description": "Name of the Azure Firewall Management Subnet"
+              }
+            },
+            "subnet_azureFirewall_Management_AddressPrefix": {
+              "type": "string",
+              "defaultValue": "[format('{0}.7.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
+              "metadata": {
+                "description": "Address Prefix of the Azure Firewall Management Subnet"
+              }
+            },
+            "subnet_Bastion_Name": {
+              "type": "string",
+              "defaultValue": "AzureBastionSubnet",
+              "metadata": {
+                "description": "Name of the Azure Bastion Subnet"
+              }
+            },
+            "subnet_Bastion_AddressPrefix": {
+              "type": "string",
+              "defaultValue": "[format('{0}.8.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
+              "metadata": {
+                "description": "Address Prefix of the Azure Bastion Subnet"
+              }
+            },
+            "subnet_PrivateResolver_Inbound_Name": {
+              "type": "string",
+              "defaultValue": "PrivateResolver_Inbound",
+              "metadata": {
+                "description": "Name of the Azure Bastion Subnet"
+              }
+            },
+            "subnet_PrivateResolver_Inbound_AddressPrefix": {
+              "type": "string",
+              "defaultValue": "[format('{0}.9.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
+              "metadata": {
+                "description": "Address Prefix of the Azure Bastion Subnet"
+              }
+            },
+            "subnet_PrivateResolver_Outbound_Name": {
+              "type": "string",
+              "defaultValue": "PrivateResolver_Outbound",
+              "metadata": {
+                "description": "Name of the Azure Bastion Subnet"
+              }
+            },
+            "subnet_PrivateResolver_Outbound_AddressPrefix": {
+              "type": "string",
+              "defaultValue": "[format('{0}.10.0/24', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]",
+              "metadata": {
+                "description": "Address Prefix of the Azure Bastion Subnet"
+              }
+>>>>>>> a0d753352a1da0ad4a3cdfd85f3902b00c9d51cf
             }
           },
           "resources": [
@@ -169,6 +364,9 @@
               "name": "[parameters('virtualNetwork_Name')]",
               "location": "[parameters('location')]",
               "properties": {
+                "dhcpOptions": {
+                  "dnsServers": "[parameters('dnsServers')]"
+                },
                 "addressSpace": {
                   "addressPrefixes": [
                     "[parameters('virtualNetwork_AddressPrefix')]"
@@ -183,6 +381,34 @@
                       "privateEndpointNetworkPolicies": "Disabled",
                       "privateLinkServiceNetworkPolicies": "Enabled"
                     }
+                  },
+                  {
+                    "name": "[parameters('subnet_PrivateResolver_Inbound_Name')]",
+                    "properties": {
+                      "addressPrefix": "[parameters('subnet_PrivateResolver_Inbound_AddressPrefix')]",
+                      "delegations": [
+                        {
+                          "name": "Microsoft.Network.dnsResolvers",
+                          "properties": {
+                            "serviceName": "Microsoft.Network/dnsResolvers"
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "[parameters('subnet_PrivateResolver_Outbound_Name')]",
+                    "properties": {
+                      "addressPrefix": "[parameters('subnet_PrivateResolver_Outbound_AddressPrefix')]",
+                      "delegations": [
+                        {
+                          "name": "Microsoft.Network.dnsResolvers",
+                          "properties": {
+                            "serviceName": "Microsoft.Network/dnsResolvers"
+                          }
+                        }
+                      ]
+                    }
                   }
                 ],
                 "enableDdosProtection": false
@@ -194,6 +420,53 @@
               "type": "string",
               "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork_Name')), '2022-09-01').subnets[0].id]"
             },
+<<<<<<< HEAD
+=======
+            "privateEndpoint_SubnetID": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork_Name')), '2022-09-01').subnets[1].id]"
+            },
+            "privateLinkService_SubnetID": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork_Name')), '2022-09-01').subnets[2].id]"
+            },
+            "applicationGateway_SubnetID": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork_Name')), '2022-09-01').subnets[3].id]"
+            },
+            "appService_SubnetID": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork_Name')), '2022-09-01').subnets[4].id]"
+            },
+            "gateway_SubnetID": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork_Name')), '2022-09-01').subnets[5].id]"
+            },
+            "azureFirewall_SubnetID": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork_Name')), '2022-09-01').subnets[6].id]"
+            },
+            "azureFirewallManagement_SubnetID": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork_Name')), '2022-09-01').subnets[7].id]"
+            },
+            "bastion_SubnetID": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork_Name')), '2022-09-01').subnets[8].id]"
+            },
+            "privateResolver_Inbound_SubnetID": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork_Name')), '2022-09-01').subnets[9].id]"
+            },
+            "privateResolver_Outbound_SubnetID": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork_Name')), '2022-09-01').subnets[10].id]"
+            },
+            "applicationGateway_PrivateIP": {
+              "type": "string",
+              "value": "[format('{0}.3.254', parameters('firstTwoOctetsOfVirtualNetworkPrefix'))]"
+            },
+>>>>>>> a0d753352a1da0ad4a3cdfd85f3902b00c9d51cf
             "virtualNetwork_Name": {
               "type": "string",
               "value": "[parameters('virtualNetwork_Name')]"
@@ -236,8 +509,13 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
+<<<<<<< HEAD
               "version": "0.23.1.45101",
               "templateHash": "7577646102433357364"
+=======
+              "version": "0.18.4.5664",
+              "templateHash": "13445374038190341657"
+>>>>>>> a0d753352a1da0ad4a3cdfd85f3902b00c9d51cf
             }
           },
           "parameters": {
@@ -260,6 +538,30 @@
                 "description": "Address Prefix of the Virtual Network"
               }
             },
+<<<<<<< HEAD
+=======
+            "dnsServers": {
+              "type": "array",
+              "defaultValue": [],
+              "metadata": {
+                "description": "An Array of Custom DNS Server IP Addresses.  Azure Wireserver will be used if left as an empty array [].\r\nExample:\r\n[10.0.0.4, 10.0.0.5]\r\n"
+              }
+            },
+            "networkSecurityGroup_Default_Name": {
+              "type": "string",
+              "defaultValue": "[format('{0}_NSG_General', parameters('virtualNetwork_Name'))]",
+              "metadata": {
+                "description": "Name of the General Network Security Group"
+              }
+            },
+            "routeTable_Name": {
+              "type": "string",
+              "defaultValue": "[format('{0}_RT_General', parameters('virtualNetwork_Name'))]",
+              "metadata": {
+                "description": "Name of the General Route Table"
+              }
+            },
+>>>>>>> a0d753352a1da0ad4a3cdfd85f3902b00c9d51cf
             "firstTwoOctetsOfVirtualNetworkPrefix": {
               "type": "string",
               "metadata": {
@@ -288,6 +590,9 @@
               "name": "[parameters('virtualNetwork_Name')]",
               "location": "[parameters('location')]",
               "properties": {
+                "dhcpOptions": {
+                  "dnsServers": "[parameters('dnsServers')]"
+                },
                 "addressSpace": {
                   "addressPrefixes": [
                     "[parameters('virtualNetwork_AddressPrefix')]"
@@ -441,7 +746,11 @@
             "value": "client.sh"
           },
           "commandToExecute": {
+<<<<<<< HEAD
             "value": "[format('./client.sh {0} {1} {2} {3} {4}', reference(resourceId('Microsoft.Resources/deployments', 'pe_NIC'), '2022-09-01').outputs.privateEndpoint_IPAddress.value, reference(resourceId('Microsoft.Resources/deployments', 'storageAccount'), '2022-09-01').outputs.storageAccount_Name.value, reference(resourceId('Microsoft.Resources/deployments', 'storageAccount'), '2022-09-01').outputs.storageAccountFileShare_Name.value, reference(resourceId('Microsoft.Resources/deployments', 'storageAccount'), '2022-09-01').outputs.storageAccount_key0.value, parameters('dur'))]"
+=======
+            "value": "[format('./conntestClient.sh {0} {1} {2} {3} {4}', reference(resourceId('Microsoft.Resources/deployments', 'privatelink'), '2022-09-01').outputs.internalLoadBalancer_FrontendIPAddress.value, parameters('scenario_Name'), reference(resourceId('Microsoft.Resources/deployments', 'storageAccount'), '2022-09-01').outputs.storageAccount_Name.value, reference(resourceId('Microsoft.Resources/deployments', 'storageAccount'), '2022-09-01').outputs.storageAccountFileShare_Name.value, reference(resourceId('Microsoft.Resources/deployments', 'storageAccount'), '2022-09-01').outputs.storageAccount_key0.value)]"
+>>>>>>> a0d753352a1da0ad4a3cdfd85f3902b00c9d51cf
           }
         },
         "template": {
@@ -760,7 +1069,8 @@
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'pe_NIC')]",
+        "[resourceId('Microsoft.Resources/deployments', 'client_StorageAccount_File_PrivateEndpoint')]",
+        "[resourceId('Microsoft.Resources/deployments', 'privatelink')]",
         "[resourceId('Microsoft.Resources/deployments', 'storageAccount')]",
         "[resourceId('Microsoft.Resources/deployments', 'clientVNet')]"
       ]
@@ -1126,8 +1436,417 @@
         }
       },
       "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'client_StorageAccount_File_PrivateEndpoint')]",
         "[resourceId('Microsoft.Resources/deployments', 'storageAccount')]",
         "[resourceId('Microsoft.Resources/deployments', 'clientVNet')]",
+        "[resourceId('Microsoft.Resources/deployments', 'serverVNet')]"
+      ]
+    },
+    {
+      "condition": "[parameters('usingAzureFirewall')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "azfw",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "azureFirewall_ManagementSubnet_ID": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'clientVNet'), '2022-09-01').outputs.azureFirewallManagement_SubnetID.value]"
+          },
+          "azureFirewall_Name": {
+            "value": "azfw"
+          },
+          "azureFirewall_SKU": {
+            "value": "Basic"
+          },
+          "azureFirewall_Subnet_ID": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'clientVNet'), '2022-09-01').outputs.azureFirewall_SubnetID.value]"
+          },
+          "azureFirewallPolicy_Name": {
+            "value": "azfw_policy"
+          },
+          "location": {
+            "value": "[parameters('locationClient')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.18.4.5664",
+              "templateHash": "4283712892023480457"
+            }
+          },
+          "parameters": {
+            "location": {
+              "type": "string",
+              "metadata": {
+                "description": "Azure Datacenter location that the main resouces will be deployed to."
+              }
+            },
+            "azureFirewall_Name": {
+              "type": "string",
+              "metadata": {
+                "description": "Name of the Azure Firewall within the vHub A"
+              }
+            },
+            "azureFirewall_SKU": {
+              "type": "string",
+              "allowedValues": [
+                "Basic",
+                "Standard",
+                "Premium"
+              ],
+              "metadata": {
+                "description": "Sku name of the Azure Firewall.  Allowed values are Basic, Standard, and Premium"
+              }
+            },
+            "azureFirewallPolicy_Name": {
+              "type": "string",
+              "metadata": {
+                "description": "Name of the Azure Firewall Policy"
+              }
+            },
+            "azureFirewall_Subnet_ID": {
+              "type": "string",
+              "metadata": {
+                "description": "Resource ID of the Azure Firewall Subnet.  Note: The subnet name must be \"AzureFirewallSubnet"
+              }
+            },
+            "azureFirewall_ManagementSubnet_ID": {
+              "type": "string",
+              "metadata": {
+                "description": "Resource ID of the Azure Firewall Management Subnet.  Note: The subnet name must be \"AzureFirewallManagementSubnet"
+              }
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Network/publicIPAddresses",
+              "apiVersion": "2022-11-01",
+              "name": "[format('{0}_PIP', parameters('azureFirewall_Name'))]",
+              "location": "[parameters('location')]",
+              "sku": {
+                "name": "Standard",
+                "tier": "Regional"
+              },
+              "properties": {
+                "publicIPAddressVersion": "IPv4",
+                "publicIPAllocationMethod": "Static",
+                "idleTimeoutInMinutes": 4,
+                "ipTags": []
+              }
+            },
+            {
+              "type": "Microsoft.Network/publicIPAddresses",
+              "apiVersion": "2022-11-01",
+              "name": "[format('{0}_Management_PIP', parameters('azureFirewall_Name'))]",
+              "location": "[parameters('location')]",
+              "sku": {
+                "name": "Standard",
+                "tier": "Regional"
+              },
+              "properties": {
+                "publicIPAddressVersion": "IPv4",
+                "publicIPAllocationMethod": "Static",
+                "idleTimeoutInMinutes": 4,
+                "ipTags": []
+              }
+            },
+            {
+              "type": "Microsoft.Network/firewallPolicies",
+              "apiVersion": "2022-07-01",
+              "name": "[parameters('azureFirewallPolicy_Name')]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "sku": {
+                  "tier": "[parameters('azureFirewall_SKU')]"
+                }
+              }
+            },
+            {
+              "type": "Microsoft.Network/azureFirewalls",
+              "apiVersion": "2022-11-01",
+              "name": "[parameters('azureFirewall_Name')]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "sku": {
+                  "name": "AZFW_VNet",
+                  "tier": "[parameters('azureFirewall_SKU')]"
+                },
+                "additionalProperties": {},
+                "managementIpConfiguration": {
+                  "name": "managementipconfig",
+                  "properties": {
+                    "publicIPAddress": {
+                      "id": "[resourceId('Microsoft.Network/publicIPAddresses', format('{0}_Management_PIP', parameters('azureFirewall_Name')))]"
+                    },
+                    "subnet": {
+                      "id": "[parameters('azureFirewall_ManagementSubnet_ID')]"
+                    }
+                  }
+                },
+                "ipConfigurations": [
+                  {
+                    "name": "ipconfiguration",
+                    "properties": {
+                      "publicIPAddress": {
+                        "id": "[resourceId('Microsoft.Network/publicIPAddresses', format('{0}_PIP', parameters('azureFirewall_Name')))]"
+                      },
+                      "subnet": {
+                        "id": "[parameters('azureFirewall_Subnet_ID')]"
+                      }
+                    }
+                  }
+                ],
+                "firewallPolicy": {
+                  "id": "[resourceId('Microsoft.Network/firewallPolicies', parameters('azureFirewallPolicy_Name'))]"
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', format('{0}_Management_PIP', parameters('azureFirewall_Name')))]",
+                "[resourceId('Microsoft.Network/publicIPAddresses', format('{0}_PIP', parameters('azureFirewall_Name')))]",
+                "[resourceId('Microsoft.Network/firewallPolicies', parameters('azureFirewallPolicy_Name'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.Network/firewallPolicies/ruleCollectionGroups",
+              "apiVersion": "2023-05-01",
+              "name": "[format('{0}/{1}', parameters('azureFirewallPolicy_Name'), 'DefaultNetworkRuleCollectionGroup')]",
+              "properties": {
+                "priority": 200,
+                "ruleCollections": [
+                  {
+                    "name": "allowall",
+                    "priority": 100,
+                    "ruleCollectionType": "FirewallPolicyFilterRuleCollection",
+                    "action": {
+                      "type": "Allow"
+                    },
+                    "rules": [
+                      {
+                        "ruleType": "NetworkRule",
+                        "name": "any",
+                        "ipProtocols": [
+                          "any"
+                        ],
+                        "sourceAddresses": [
+                          "*"
+                        ],
+                        "destinationAddresses": [
+                          "*"
+                        ],
+                        "destinationPorts": [
+                          "*"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/firewallPolicies', parameters('azureFirewallPolicy_Name'))]"
+              ]
+            }
+          ],
+          "outputs": {
+            "azureFirewall_PrivateIPAddress": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Network/azureFirewalls', parameters('azureFirewall_Name')), '2022-11-01').ipConfigurations[0].properties.privateIPAddress]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'clientVNet')]"
+      ]
+    },
+    {
+      "condition": "[parameters('usingAzureFirewall')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "udrToAzFW_Hub",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "addressPrefix": {
+            "value": "10.101.0.0/24"
+          },
+          "nextHopType": {
+            "value": "VirtualAppliance"
+          },
+          "routeTable_Name": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'clientVNet'), '2022-09-01').outputs.routeTable_Name.value]"
+          },
+          "routeTableRoute_Name": {
+            "value": "toAzFW"
+          },
+          "nextHopIpAddress": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'azfw'), '2022-09-01').outputs.azureFirewall_PrivateIPAddress.value]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.18.4.5664",
+              "templateHash": "10611522189333570940"
+            }
+          },
+          "parameters": {
+            "routeTable_Name": {
+              "type": "string"
+            },
+            "routeTableRoute_Name": {
+              "type": "string"
+            },
+            "addressPrefix": {
+              "type": "string"
+            },
+            "nextHopIpAddress": {
+              "type": "string",
+              "defaultValue": ""
+            },
+            "nextHopType": {
+              "type": "string",
+              "allowedValues": [
+                "None",
+                "VirtualAppliance",
+                "Internet",
+                "VirtualNetworkGateway",
+                "VnetLocal"
+              ]
+            }
+          },
+          "resources": [
+            {
+              "condition": "[equals(parameters('nextHopType'), 'VirtualAppliance')]",
+              "type": "Microsoft.Network/routeTables/routes",
+              "apiVersion": "2023-05-01",
+              "name": "[format('{0}/{1}', parameters('routeTable_Name'), parameters('routeTableRoute_Name'))]",
+              "properties": {
+                "addressPrefix": "[parameters('addressPrefix')]",
+                "nextHopType": "[parameters('nextHopType')]",
+                "nextHopIpAddress": "[parameters('nextHopIpAddress')]"
+              }
+            },
+            {
+              "condition": "[not(equals(parameters('nextHopType'), 'VirtualAppliance'))]",
+              "type": "Microsoft.Network/routeTables/routes",
+              "apiVersion": "2023-05-01",
+              "name": "[format('{0}/{1}', parameters('routeTable_Name'), parameters('routeTableRoute_Name'))]",
+              "properties": {
+                "addressPrefix": "[parameters('addressPrefix')]",
+                "nextHopType": "[parameters('nextHopType')]"
+              }
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'azfw')]",
+        "[resourceId('Microsoft.Resources/deployments', 'clientVNet')]"
+      ]
+    },
+    {
+      "condition": "[parameters('usingAzureFirewall')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "udrToAzFW_Server",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "addressPrefix": {
+            "value": "10.100.0.0/24"
+          },
+          "nextHopType": {
+            "value": "VirtualAppliance"
+          },
+          "routeTable_Name": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'serverVNet'), '2022-09-01').outputs.routeTable_Name.value]"
+          },
+          "routeTableRoute_Name": {
+            "value": "toAzFW"
+          },
+          "nextHopIpAddress": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'azfw'), '2022-09-01').outputs.azureFirewall_PrivateIPAddress.value]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.18.4.5664",
+              "templateHash": "10611522189333570940"
+            }
+          },
+          "parameters": {
+            "routeTable_Name": {
+              "type": "string"
+            },
+            "routeTableRoute_Name": {
+              "type": "string"
+            },
+            "addressPrefix": {
+              "type": "string"
+            },
+            "nextHopIpAddress": {
+              "type": "string",
+              "defaultValue": ""
+            },
+            "nextHopType": {
+              "type": "string",
+              "allowedValues": [
+                "None",
+                "VirtualAppliance",
+                "Internet",
+                "VirtualNetworkGateway",
+                "VnetLocal"
+              ]
+            }
+          },
+          "resources": [
+            {
+              "condition": "[equals(parameters('nextHopType'), 'VirtualAppliance')]",
+              "type": "Microsoft.Network/routeTables/routes",
+              "apiVersion": "2023-05-01",
+              "name": "[format('{0}/{1}', parameters('routeTable_Name'), parameters('routeTableRoute_Name'))]",
+              "properties": {
+                "addressPrefix": "[parameters('addressPrefix')]",
+                "nextHopType": "[parameters('nextHopType')]",
+                "nextHopIpAddress": "[parameters('nextHopIpAddress')]"
+              }
+            },
+            {
+              "condition": "[not(equals(parameters('nextHopType'), 'VirtualAppliance'))]",
+              "type": "Microsoft.Network/routeTables/routes",
+              "apiVersion": "2023-05-01",
+              "name": "[format('{0}/{1}', parameters('routeTable_Name'), parameters('routeTableRoute_Name'))]",
+              "properties": {
+                "addressPrefix": "[parameters('addressPrefix')]",
+                "nextHopType": "[parameters('nextHopType')]"
+              }
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'azfw')]",
         "[resourceId('Microsoft.Resources/deployments', 'serverVNet')]"
       ]
     },
@@ -1144,6 +1863,7 @@
           "location": {
             "value": "[parameters('locationClient')]"
           },
+<<<<<<< HEAD
           "privateDNSZoneLinkedVnetIDList": {
             "value": [
               "[reference(resourceId('Microsoft.Resources/deployments', 'clientVNet'), '2022-09-01').outputs.virtualNetwork_ID.value]",
@@ -1180,6 +1900,8 @@
           "usingBlobPrivateEndpoints": {
             "value": true
           },
+=======
+>>>>>>> a0d753352a1da0ad4a3cdfd85f3902b00c9d51cf
           "storageAccount_Name": {
             "value": "[variables('storageAccountUnicornName')]"
           }
@@ -1190,8 +1912,13 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
+<<<<<<< HEAD
               "version": "0.23.1.45101",
               "templateHash": "8513481372193404892"
+=======
+              "version": "0.18.4.5664",
+              "templateHash": "15196234384234794453"
+>>>>>>> a0d753352a1da0ad4a3cdfd85f3902b00c9d51cf
             }
           },
           "parameters": {
@@ -1201,21 +1928,6 @@
                 "description": "Azure Datacenter that the resource is deployed to"
               }
             },
-            "privateEndpoint_VirtualNetwork_Name": {
-              "type": "array",
-              "metadata": {
-                "description": "Name of the Virtual Network that the Private Endpoint will be deployed to."
-              }
-            },
-            "privateDNSZoneLinkedVnetNamesList": {
-              "type": "array"
-            },
-            "privateDNSZoneLinkedVnetIDList": {
-              "type": "array"
-            },
-            "privateEndpoint_SubnetID": {
-              "type": "array"
-            },
             "storageAccount_Name": {
               "type": "string",
               "minLength": 3,
@@ -1223,25 +1935,7 @@
               "metadata": {
                 "description": "Storage account name restrictions:\r\n- Storage account names must be between 3 and 24 characters in length and may contain numbers and lowercase letters only.\r\n- Your storage account name must be unique within Azure. No two storage accounts can have the same name.\r\n"
               }
-            },
-            "usingBlobPrivateEndpoints": {
-              "type": "bool",
-              "defaultValue": true
-            },
-            "usingFilePrivateEndpoints": {
-              "type": "bool",
-              "defaultValue": true
-            },
-            "privateEndpoints_Blob_Name": {
-              "type": "string"
-            },
-            "privateEndpoints_File_Name": {
-              "type": "string"
             }
-          },
-          "variables": {
-            "privateDNSZone_Blob_Name": "privatelink.blob.core.windows.net",
-            "privateDNSZone_File_Name": "privatelink.file.core.windows.net"
           },
           "resources": [
             {
@@ -1315,93 +2009,6 @@
               ]
             },
             {
-              "copy": {
-                "name": "privateEndpoints_Blob",
-                "count": "[length(range(0, length(parameters('privateEndpoint_SubnetID'))))]"
-              },
-              "condition": "[parameters('usingBlobPrivateEndpoints')]",
-              "type": "Microsoft.Network/privateEndpoints",
-              "apiVersion": "2023-04-01",
-              "name": "[format('{0}{1}', parameters('privateEndpoints_Blob_Name'), range(0, length(parameters('privateEndpoint_SubnetID')))[copyIndex()])]",
-              "location": "[parameters('location')]",
-              "properties": {
-                "privateLinkServiceConnections": [
-                  {
-                    "name": "[format('{0}_in_{1}_to_{2}', parameters('privateEndpoints_Blob_Name'), parameters('privateEndpoint_VirtualNetwork_Name'), parameters('storageAccount_Name'))]",
-                    "properties": {
-                      "privateLinkServiceId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccount_Name'))]",
-                      "groupIds": [
-                        "blob"
-                      ]
-                    }
-                  }
-                ],
-                "manualPrivateLinkServiceConnections": [],
-                "subnet": {
-                  "id": "[parameters('privateEndpoint_SubnetID')[range(0, length(parameters('privateEndpoint_SubnetID')))[copyIndex()]]]"
-                },
-                "ipConfigurations": [],
-                "customDnsConfigs": [
-                  {
-                    "fqdn": "[take(substring(reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccount_Name')), '2023-01-01').primaryEndpoints.blob, 7, 8), sub(length(substring(reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccount_Name')), '2023-01-01').primaryEndpoints.blob, 7, 8)), 1))]"
-                  }
-                ]
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccount_Name'))]"
-              ]
-            },
-            {
-              "condition": "[parameters('usingBlobPrivateEndpoints')]",
-              "type": "Microsoft.Network/privateDnsZones",
-              "apiVersion": "2018-09-01",
-              "name": "[variables('privateDNSZone_Blob_Name')]",
-              "location": "global"
-            },
-            {
-              "copy": {
-                "name": "privateDNSZone_StorageAccount_Blob_Group",
-                "count": "[length(range(0, length(parameters('privateEndpoint_SubnetID'))))]"
-              },
-              "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
-              "apiVersion": "2023-04-01",
-              "name": "[format('{0}/{1}', format('{0}{1}', parameters('privateEndpoints_Blob_Name'), range(0, length(parameters('privateEndpoint_SubnetID')))[range(0, length(parameters('privateEndpoint_SubnetID')))[copyIndex()]]), 'blobZoneGroup')]",
-              "properties": {
-                "privateDnsZoneConfigs": [
-                  {
-                    "name": "default",
-                    "properties": {
-                      "privateDnsZoneId": "[resourceId('Microsoft.Network/privateDnsZones', variables('privateDNSZone_Blob_Name'))]"
-                    }
-                  }
-                ]
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.Network/privateDnsZones', variables('privateDNSZone_Blob_Name'))]",
-                "[resourceId('Microsoft.Network/privateEndpoints', format('{0}{1}', parameters('privateEndpoints_Blob_Name'), range(0, length(parameters('privateEndpoint_SubnetID')))[range(0, length(parameters('privateEndpoint_SubnetID')))[copyIndex()]]))]"
-              ]
-            },
-            {
-              "copy": {
-                "name": "virtualNetworkLink_Blob",
-                "count": "[length(range(0, length(parameters('privateDNSZoneLinkedVnetIDList'))))]"
-              },
-              "condition": "[parameters('usingBlobPrivateEndpoints')]",
-              "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
-              "apiVersion": "2018-09-01",
-              "name": "[format('{0}/{1}', variables('privateDNSZone_Blob_Name'), format('{0}_to_{1}', variables('privateDNSZone_Blob_Name'), parameters('privateDNSZoneLinkedVnetNamesList')[range(0, length(parameters('privateDNSZoneLinkedVnetIDList')))[copyIndex()]]))]",
-              "location": "global",
-              "properties": {
-                "registrationEnabled": false,
-                "virtualNetwork": {
-                  "id": "[parameters('privateDNSZoneLinkedVnetIDList')[range(0, length(parameters('privateDNSZoneLinkedVnetIDList')))[copyIndex()]]]"
-                }
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.Network/privateDnsZones', variables('privateDNSZone_Blob_Name'))]"
-              ]
-            },
-            {
               "type": "Microsoft.Storage/storageAccounts/fileServices",
               "apiVersion": "2023-01-01",
               "name": "[format('{0}/{1}', parameters('storageAccount_Name'), 'default')]",
@@ -1420,92 +2027,6 @@
               "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts/fileServices', parameters('storageAccount_Name'), 'default')]"
               ]
-            },
-            {
-              "copy": {
-                "name": "privateEndpoints_File",
-                "count": "[length(range(0, length(parameters('privateEndpoint_SubnetID'))))]"
-              },
-              "condition": "[parameters('usingFilePrivateEndpoints')]",
-              "type": "Microsoft.Network/privateEndpoints",
-              "apiVersion": "2023-05-01",
-              "name": "[format('{0}{1}', parameters('privateEndpoints_File_Name'), range(0, length(parameters('privateEndpoint_SubnetID')))[copyIndex()])]",
-              "location": "[parameters('location')]",
-              "properties": {
-                "privateLinkServiceConnections": [
-                  {
-                    "name": "[format('{0}_in_{1}_to_{2}', parameters('privateEndpoints_File_Name'), parameters('privateEndpoint_VirtualNetwork_Name'), parameters('storageAccount_Name'))]",
-                    "properties": {
-                      "privateLinkServiceId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccount_Name'))]",
-                      "groupIds": [
-                        "file"
-                      ]
-                    }
-                  }
-                ],
-                "manualPrivateLinkServiceConnections": [],
-                "subnet": {
-                  "id": "[parameters('privateEndpoint_SubnetID')[range(0, length(parameters('privateEndpoint_SubnetID')))[copyIndex()]]]"
-                },
-                "ipConfigurations": [],
-                "customDnsConfigs": [
-                  {
-                    "fqdn": "[take(substring(reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccount_Name')), '2023-01-01').primaryEndpoints.file, 7, 8), sub(length(substring(reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccount_Name')), '2023-01-01').primaryEndpoints.file, 7, 8)), 1))]"
-                  }
-                ]
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccount_Name'))]"
-              ]
-            },
-            {
-              "type": "Microsoft.Network/privateDnsZones",
-              "apiVersion": "2020-06-01",
-              "name": "[variables('privateDNSZone_File_Name')]",
-              "location": "global"
-            },
-            {
-              "copy": {
-                "name": "privateDNSZone_StorageAccount_File_Group",
-                "count": "[length(range(0, length(parameters('privateEndpoint_SubnetID'))))]"
-              },
-              "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
-              "apiVersion": "2023-04-01",
-              "name": "[format('{0}/{1}', format('{0}{1}', parameters('privateEndpoints_File_Name'), range(0, length(parameters('privateEndpoint_SubnetID')))[range(0, length(parameters('privateEndpoint_SubnetID')))[copyIndex()]]), 'fileZoneGroup')]",
-              "properties": {
-                "privateDnsZoneConfigs": [
-                  {
-                    "name": "default",
-                    "properties": {
-                      "privateDnsZoneId": "[resourceId('Microsoft.Network/privateDnsZones', variables('privateDNSZone_File_Name'))]"
-                    }
-                  }
-                ]
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.Network/privateDnsZones', variables('privateDNSZone_File_Name'))]",
-                "[resourceId('Microsoft.Network/privateEndpoints', format('{0}{1}', parameters('privateEndpoints_File_Name'), range(0, length(parameters('privateEndpoint_SubnetID')))[range(0, length(parameters('privateEndpoint_SubnetID')))[copyIndex()]]))]"
-              ]
-            },
-            {
-              "copy": {
-                "name": "virtualNetworkLink_File",
-                "count": "[length(range(0, length(parameters('privateDNSZoneLinkedVnetIDList'))))]"
-              },
-              "condition": "[parameters('usingFilePrivateEndpoints')]",
-              "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
-              "apiVersion": "2018-09-01",
-              "name": "[format('{0}/{1}', variables('privateDNSZone_File_Name'), format('{0}_to_{1}', variables('privateDNSZone_File_Name'), parameters('privateDNSZoneLinkedVnetNamesList')[range(0, length(parameters('privateDNSZoneLinkedVnetIDList')))[copyIndex()]]))]",
-              "location": "global",
-              "properties": {
-                "registrationEnabled": false,
-                "virtualNetwork": {
-                  "id": "[parameters('privateDNSZoneLinkedVnetIDList')[range(0, length(parameters('privateDNSZoneLinkedVnetIDList')))[copyIndex()]]]"
-                }
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.Network/privateDnsZones', variables('privateDNSZone_File_Name'))]"
-              ]
             }
           ],
           "outputs": {
@@ -1521,6 +2042,10 @@
               "type": "string",
               "value": "[parameters('storageAccount_Name')]"
             },
+            "storageAccount_ID": {
+              "type": "string",
+              "value": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccount_Name'))]"
+            },
             "storageAccountFileShare_Name": {
               "type": "string",
               "value": "defaultfileshare"
@@ -1531,8 +2056,186 @@
             }
           }
         }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "client_StorageAccount_File_PrivateEndpoint",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "fqdn": {
+            "value": "[format('{0}.file.{1}', parameters('storageAccount_Name'), environment().suffixes.storage)]"
+          },
+          "groupID": {
+            "value": "file"
+          },
+          "location": {
+            "value": "[parameters('locationClient')]"
+          },
+          "privateDNSZone_Name": {
+            "value": "[format('privatelink.file.{0}', environment().suffixes.storage)]"
+          },
+          "privateEndpoint_Name": {
+            "value": "[format('{0}_file_pe', parameters('storageAccount_Name'))]"
+          },
+          "privateEndpoint_SubnetID": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'clientVNet'), '2022-09-01').outputs.privateEndpoint_SubnetID.value]"
+          },
+          "privateLinkServiceId": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'storageAccount'), '2022-09-01').outputs.storageAccount_ID.value]"
+          },
+          "virtualNetwork_IDs": {
+            "value": [
+              "[reference(resourceId('Microsoft.Resources/deployments', 'clientVNet'), '2022-09-01').outputs.virtualNetwork_ID.value]",
+              "[reference(resourceId('Microsoft.Resources/deployments', 'serverVNet'), '2022-09-01').outputs.virtualNetwork_ID.value]"
+            ]
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.18.4.5664",
+              "templateHash": "4992159741547619207"
+            }
+          },
+          "parameters": {
+            "location": {
+              "type": "string",
+              "metadata": {
+                "description": "Azure Datacenter that the resource is deployed to"
+              }
+            },
+            "privateEndpoint_Name": {
+              "type": "string",
+              "metadata": {
+                "description": "Name of the Private Endpoint"
+              }
+            },
+            "privateLinkServiceId": {
+              "type": "string"
+            },
+            "privateEndpoint_SubnetID": {
+              "type": "string",
+              "metadata": {
+                "description": "Subnet ID that the Private Endpoint will be deployed to"
+              }
+            },
+            "virtualNetwork_IDs": {
+              "type": "array",
+              "metadata": {
+                "description": "Resource ID of the Virtual Networks to be linked to the Private DNS Zone"
+              }
+            },
+            "groupID": {
+              "type": "string",
+              "metadata": {
+                "description": "The ID of a group obtained from the remote resource that this private endpoint should connect to."
+              }
+            },
+            "fqdn": {
+              "type": "string",
+              "metadata": {
+                "description": "Fqdn that resolves to private endpoint ip address."
+              }
+            },
+            "privateDNSZone_Name": {
+              "type": "string",
+              "metadata": {
+                "description": "Name of the Private DNS Zone\r\nExample: privatelink.blob.core.windows.net"
+              }
+            }
+          },
+          "variables": {
+            "resource_Name": "[last(split(parameters('privateLinkServiceId'), '/'))]"
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Network/privateEndpoints",
+              "apiVersion": "2023-05-01",
+              "name": "[parameters('privateEndpoint_Name')]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "privateLinkServiceConnections": [
+                  {
+                    "name": "[format('{0}_to_{1}', parameters('privateEndpoint_Name'), variables('resource_Name'))]",
+                    "properties": {
+                      "privateLinkServiceId": "[parameters('privateLinkServiceId')]",
+                      "groupIds": [
+                        "[parameters('groupID')]"
+                      ]
+                    }
+                  }
+                ],
+                "manualPrivateLinkServiceConnections": [],
+                "subnet": {
+                  "id": "[parameters('privateEndpoint_SubnetID')]"
+                },
+                "ipConfigurations": [],
+                "customDnsConfigs": [
+                  {
+                    "fqdn": "[parameters('fqdn')]"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "Microsoft.Network/privateDnsZones",
+              "apiVersion": "2020-06-01",
+              "name": "[parameters('privateDNSZone_Name')]",
+              "location": "global"
+            },
+            {
+              "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
+              "apiVersion": "2023-04-01",
+              "name": "[format('{0}/{1}', parameters('privateEndpoint_Name'), format('{0}ZoneGroup', parameters('groupID')))]",
+              "properties": {
+                "privateDnsZoneConfigs": [
+                  {
+                    "name": "default",
+                    "properties": {
+                      "privateDnsZoneId": "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDNSZone_Name'))]"
+                    }
+                  }
+                ]
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDNSZone_Name'))]",
+                "[resourceId('Microsoft.Network/privateEndpoints', parameters('privateEndpoint_Name'))]"
+              ]
+            },
+            {
+              "copy": {
+                "name": "virtualNetworkLink_File",
+                "count": "[length(parameters('virtualNetwork_IDs'))]"
+              },
+              "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+              "apiVersion": "2018-09-01",
+              "name": "[format('{0}/{1}', parameters('privateDNSZone_Name'), format('{0}_to_{1}', parameters('privateEndpoint_Name'), last(split(parameters('virtualNetwork_IDs')[copyIndex()], '/'))))]",
+              "location": "global",
+              "properties": {
+                "registrationEnabled": false,
+                "virtualNetwork": {
+                  "id": "[parameters('virtualNetwork_IDs')[copyIndex()]]"
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDNSZone_Name'))]",
+                "[resourceId('Microsoft.Network/privateEndpoints', parameters('privateEndpoint_Name'))]"
+              ]
+            }
+          ]
+        }
       },
       "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'storageAccount')]",
         "[resourceId('Microsoft.Resources/deployments', 'clientVNet')]",
         "[resourceId('Microsoft.Resources/deployments', 'serverVNet')]"
       ]
